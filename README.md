@@ -2,5 +2,5 @@
 pyramid-consulting
 
 # branches
-dragon-cave
-guess-the-number
+[x] dragon-cave
+[x] guess-the-number
