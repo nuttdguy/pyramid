@@ -1,6 +1,9 @@
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.*;
 
+import java.io.*;
+import java.util.Scanner;
+
 
 public class GuessNumberTest {
 
@@ -50,5 +53,39 @@ public class GuessNumberTest {
         assertEquals(game.getErrorInvalidType(), "%s is not a valid number.\n", String.format("Error, invalid type message should be %s", game.getErrorInvalidType()));
         assertEquals(game.getErrorInvalidOption(), "%s is not a valid option.\n", String.format("Error, invalid option message should be %s", game.getErrorInvalidOption()));
     }
+
+    @DisplayName("Set the username utilizing input")
+    @Test
+    void setUsernameByInput() {
+        ByteArrayInputStream inputStream = new ByteArrayInputStream("Alice".getBytes());
+
+        game.initInputStream(inputStream);
+        game.setUsernameByInput();
+
+        assertEquals(game.getUsername(), "Alice", String.format("Username should be set to %s", game.getUsername()));
+
+    }
+
+    @DisplayName("Should display game intro")
+    @Test
+    void displayGameIntro() {
+        assertEquals(game.printGameIntro(), "Hello! What is your name?\n", String.format("Should display game intro"));
+    }
+
+    @DisplayName("Should display welcome message with username")
+    @Test
+    void displayWelcomeMessage() {
+        ByteArrayInputStream inputStream = new ByteArrayInputStream("Alice".getBytes());
+
+        game.initInputStream(inputStream);
+        game.setUsernameByInput();
+
+        String username = game.getUsername();
+        int min = game.getGameMin();
+        int max = game.getGameMax();
+
+        assertEquals(game.printWelcomeMessage(), String.format("Well, %s, I am thinking of a number between %s and %s.\n", username, min, max), String.format("Should display game welcome message with username, min and max values"));
+    }
+
 
 }

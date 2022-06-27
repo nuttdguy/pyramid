@@ -1,3 +1,6 @@
+import java.io.InputStream;
+import java.io.PrintStream;
+import java.nio.channels.AsynchronousServerSocketChannel;
 import java.util.Scanner;
 
 public class Game {
@@ -20,6 +23,7 @@ public class Game {
     private boolean playGame;
     private String playAgain;
     private String username;
+    private Scanner scanner;
 
     public Game() {
         setGameMin(1);
@@ -130,26 +134,42 @@ public class Game {
         return playAgain;
     }
 
-    private void setUsername(String _username) {
-        this.username = _username;
+    public void setUsername(String _username) {
+        this.username = _username;;
+    }
+
+    public void initInputStream(InputStream inputStream) {
+        this.scanner = new Scanner(inputStream);
+    }
+
+    public void setUsernameByInput() {
+        this.username = scanner.next();
     }
 
     public String getUsername() {
         return username;
     }
 
+    public String printGameIntro() {
+        return getGameIntro();
+    }
+
+    public String printWelcomeMessage() {
+        return String.format(getWelcomeMessage(), getUsername(), getGameMin(), getGameMax());
+    }
+
     public void StartGame() {
 
-        Scanner scanner = new Scanner(System.in);
+        initInputStream(System.in);
 
         // print the game intro
-        System.out.println(gameIntro);
+        System.out.println(printGameIntro());
 
-        // request the users name
-        username = scanner.nextLine();
+        // set the users name by input
+        setUsernameByInput();
 
         // welcome / greet the user and ask question to pick number
-        System.out.printf((welcomeMessage) + "%n", username, gameMin, gameMax);
+        System.out.println(printWelcomeMessage());
 
         do {
             System.out.println(gameQuestion);
