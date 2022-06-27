@@ -41,6 +41,33 @@ public class Game {
         setPlayAgain("n");
         setUsername("");
     }
+    public String getGameIntro() {
+        return gameIntro;
+    }
+    public String getWelcomeMessage() {
+        return welcomeMessage;
+    }
+    public String getGameQuestion() {
+        return gameQuestion;
+    }
+    public String getHighGuessMessage() {
+        return highGuessMessage;
+    }
+    public String getLowGuessMessage() {
+        return lowGuessMessage;
+    }
+    public String getWinMessage() {
+        return winMessage;
+    }
+    public String getPlayAgainMessage() {
+        return playAgainMessage;
+    }
+    public String getErrorInvalidType() {
+        return errorInvalidType;
+    }
+    public String getErrorInvalidOption() {
+        return errorInvalidOption;
+    }
 
     private void setGameMin(int gameMin) {
         this.gameMin = gameMin;

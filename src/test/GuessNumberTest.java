@@ -30,9 +30,25 @@ public class GuessNumberTest {
     @DisplayName("Set the min and max game range of parameterized constructor.")
     @Test
     void initGameConstructorWithMinMaxValues() {
-        game = new Game(1, 20);
-        assertEquals(game.getGameMin(), 1, String.format("Game min set to %n", 1));
-        assertEquals(game.getGameMax(), 20, String.format("Game max ser to %n", 20));
+        int gameMin = 1;
+        int gameMax = 20;
+        game = new Game(gameMin, gameMax);
+        assertEquals(game.getGameMin(), gameMin, String.format("Game min set to %n", gameMin));
+        assertEquals(game.getGameMax(), gameMax, String.format("Game max set to %n", gameMax));
+    }
+
+    @DisplayName("Validate the games descriptive text messages")
+    @Test
+    void validateGameText() {
+        assertEquals(game.getGameIntro(), "Hello! What is your name?\n", String.format("Game Intro text should be %s", game.getGameIntro()));
+        assertEquals(game.getWelcomeMessage(), "Well, %s, I am thinking of a number between %s and %s.\n", String.format("Game welcome message should be %s", game.getWelcomeMessage()));
+        assertEquals(game.getGameQuestion(), "Take a guess.\n", String.format("Game Question should be %s", game.getGameQuestion()));
+        assertEquals(game.getHighGuessMessage(), "Your guess is too high.\n", String.format("High guess message should be %s", game.getHighGuessMessage()));
+        assertEquals(game.getLowGuessMessage(), "your guess is too low.\n", String.format("Low guess message should be %s", game.getLowGuessMessage()));
+        assertEquals(game.getWinMessage(), "Good job, %s! You guessed my number in %s guesses!\n", String.format("Win message should be %s", game.getWinMessage()));
+        assertEquals(game.getPlayAgainMessage(), "Would you like to play again? (y or n)\n", String.format("Play again message should be %s", game.getPlayAgainMessage()));
+        assertEquals(game.getErrorInvalidType(), "%s is not a valid number.\n", String.format("Error, invalid type message should be %s", game.getErrorInvalidType()));
+        assertEquals(game.getErrorInvalidOption(), "%s is not a valid option.\n", String.format("Error, invalid option message should be %s", game.getErrorInvalidOption()));
     }
 
 }
