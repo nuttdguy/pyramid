@@ -88,7 +88,7 @@ public class Game {
         return gameMax;
     }
 
-    private void incrementGuessCounter() {
+    public void incrementGuessCounter() {
         this.guessCounter++;
     }
 
@@ -96,14 +96,15 @@ public class Game {
         this.guessCounter = 0;
     }
 
-    private int getGuessCounter() {
+    public int getGuessCounter() {
         return guessCounter;
     }
 
-    private void incrementUserGuess() {
-        this.userGuess++;
-    }
     private void setUserGuess() {this.userGuess = 0;}
+    public void setUserGuessByInput() {
+        this.userGuess = scanner.nextInt();
+    }
+
     public int getUserGuess() {
         return userGuess;
     }
@@ -175,10 +176,10 @@ public class Game {
             System.out.println(gameQuestion);
 
             try {
-                userGuess = scanner.nextInt();
+                userGuess = getUserGuess();
                 System.out.println();
 
-                guessCounter++;
+                incrementGuessCounter();
 
                 if (userGuess > winNumber) {
                     System.out.println(highGuessMessage);

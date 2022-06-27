@@ -87,5 +87,27 @@ public class GuessNumberTest {
         assertEquals(game.printWelcomeMessage(), String.format("Well, %s, I am thinking of a number between %s and %s.\n", username, min, max), String.format("Should display game welcome message with username, min and max values"));
     }
 
+    @DisplayName("Should accept users guess from input")
+    @Test
+    void setGuessByInput() {
+        ByteArrayInputStream inputStream = new ByteArrayInputStream("4".getBytes());
+
+        game.initInputStream(inputStream);
+        game.setUserGuessByInput();
+
+        int userGuess = game.getUserGuess();
+        assertEquals(userGuess, 4, String.format("Users guess should equal %s", userGuess));
+
+    }
+
+    @DisplayName("Should increment the guess counter by 1")
+    @Test
+    void incrementGuessCounter() {
+        assertEquals(game.getGuessCounter(), 0, String.format("Guess counter should equal 0"));
+
+        game.incrementGuessCounter();
+        assertEquals(game.getGuessCounter(), 1, String.format("Guess counter should equal 1"));
+
+    }
 
 }
