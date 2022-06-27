@@ -110,4 +110,54 @@ public class GuessNumberTest {
 
     }
 
+    @DisplayName("Should return whether guess is correct")
+    @Test
+    void isUserGuessCorrect() {
+        ByteArrayInputStream inputStream = new ByteArrayInputStream( String.valueOf(game.getWinNumber()).getBytes());
+
+        game.initInputStream(inputStream);
+        game.setUserGuessByInput();
+
+        int winNumber = game.getWinNumber();
+        int guess = game.getUserGuess();
+
+        assertEquals(game.isGuessCorrect(guess, winNumber),
+                String.format(game.getWinMessage(), game.getUsername(), game.getGuessCounter()),
+                String.format(game.getWinMessage(), game.getUsername(), game.getGuessCounter()));
+
+    }
+
+    @DisplayName("Should display guess too high message when guess is higher than win number.")
+    @Test
+    void displayHighMessage() {
+        ByteArrayInputStream inputStream = new ByteArrayInputStream( String.valueOf(game.getWinNumber()).getBytes());
+
+        game.initInputStream(inputStream);
+        game.setUserGuessByInput();
+
+        int winNumber = game.getWinNumber();
+        int guess = game.getUserGuess() + 1;
+
+        assertEquals(game.isGuessCorrect(guess, winNumber),
+                String.format(game.getHighGuessMessage()),
+                String.format(game.getHighGuessMessage()));
+    }
+
+    @DisplayName("Should display guess too low message when guess is lower than win number.")
+    @Test
+    void displayLowMessage() {
+        ByteArrayInputStream inputStream = new ByteArrayInputStream( String.valueOf(game.getWinNumber()).getBytes());
+
+        game.initInputStream(inputStream);
+        game.setUserGuessByInput();
+
+        int winNumber = game.getWinNumber();
+        int guess = game.getUserGuess() + 1;
+
+        assertEquals(game.isGuessCorrect(guess, winNumber),
+                String.format(game.getHighGuessMessage()),
+                String.format(game.getHighGuessMessage()));
+    }
+
+
 }

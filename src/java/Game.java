@@ -108,14 +108,13 @@ public class Game {
     public int getUserGuess() {
         return userGuess;
     }
-    private void setWinNumber(int _winNumber) {
-        this.winNumber = this.generateGameNumber(_winNumber);;
+    public void setWinNumber(int _max) {
+        this.winNumber = this.generateGameNumber(_max);;
     }
-
-    private int getWinNumber() {
+    public int getWinNumber() {
         return winNumber;
     }
-    private int generateGameNumber(int _max) {
+    public int generateGameNumber(int _max) {
         return (int) (Math.random() * _max);
     }
 
@@ -159,7 +158,14 @@ public class Game {
         return String.format(getWelcomeMessage(), getUsername(), getGameMin(), getGameMax());
     }
 
-    public void StartGame() {
+    public String isGuessCorrect(int _guess, int _winNumber) {
+        if (_guess == _winNumber) {
+            return String.format(getWinMessage(), getUsername(), getGuessCounter());
+        }
+        return _guess > _winNumber ? getHighGuessMessage() : getLowGuessMessage();
+    }
+
+    public void startGame() {
 
         initInputStream(System.in);
 
@@ -176,22 +182,16 @@ public class Game {
             System.out.println(gameQuestion);
 
             try {
-                userGuess = getUserGuess();
+                setUserGuessByInput(); // get users guess
+                incrementGuessCounter(); // increment the guess counter
                 System.out.println();
 
-                incrementGuessCounter();
+                String gameMessage = isGuessCorrect(getUserGuess(), getWinNumber());
 
-                if (userGuess > winNumber) {
-                    System.out.println(highGuessMessage);
-                }
-                else if (userGuess < winNumber) {
-                    System.out.println(lowGuessMessage);
-                }
-                else {
-                    System.out.printf((winMessage) + "%n", username, guessCounter);
+                if (gameMessage.equals(String.format(getWinMessage(), getUsername(), getGuessCounter()))) {
 
-                    // play again prompt
-                    System.out.println(playAgainMessage);
+                    System.out.println(gameMessage); // print winning game message
+                    System.out.println(playAgainMessage); // play again prompt
 
                     try {
                         playAgain = scanner.next();
@@ -202,7 +202,9 @@ public class Game {
 
                             // welcome / greet the user and ask question to pick number
                             System.out.println();
-                            winNumber = generateGameNumber(gameMax);
+                            generateGameNumber(gameMax);
+                            setGuessCounter();
+
                             System.out.printf((welcomeMessage) + "%n", username, gameMin, gameMax);
                         }
 
@@ -210,6 +212,14 @@ public class Game {
                     } catch (Exception e) {
                         System.out.printf((errorInvalidOption) + "%n", playAgain);
                     }
+                }
+
+                if (gameMessage.equals(getHighGuessMessage())) {
+                    System.out.println(getHighGuessMessage());
+                }
+
+                if (gameMessage.equals(getLowGuessMessage())) {
+                    System.out.println(getLowGuessMessage());
                 }
 
             } catch (Exception e) {
