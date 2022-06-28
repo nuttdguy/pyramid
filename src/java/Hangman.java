@@ -16,44 +16,44 @@ public class Hangman {
     private char[][] gameGrid;
 
 
-    public Hangman() {}
+    public Hangman() {
+    }
 
-    public static char[][] createGameGrid(int rows, int cols, int poleOffset) {
-        char[][] grid = new char[rows][cols];
+    public char[][] initGameGrid(int rows, int cols, int poleOffset, int footerOffset) {
+        gameGrid = new char[rows][cols];
         for (int r = 0; r < rows; r++) {
 
             for (int c = 0; c < cols; c++) {
-                if (r == 0) {
+                if (r == 0) {  // header row
                     if (c == 0 || c == cols-1) {
-                        grid[r][c] = '+';
+                        gameGrid[r][c] = '+';
                     } else {
-                        grid[r][c] = '-';
+                        gameGrid[r][c] = '-';
                     }
-                } else if (r == rows - 1 &&  c > poleOffset - 3) {
-                    grid[r][c] = '=';
+                } else if (r == rows - 1 &&  c > poleOffset - footerOffset) {  // footer row
+                    gameGrid[r][c] = '=';
                 } else if (c == poleOffset) {
-                    grid[r][c] = '|';
+                    gameGrid[r][c] = '|';  // right pole column
                 } else {
-                    grid[r][c] = ' ';
+                    gameGrid[r][c] = ' ';  // common columns
                 }
             }
         }
-        return grid;
+        return gameGrid;
     }
 
-    public static void printGameHeader(String header) {
+    public void printGameHeader(String header) {
         System.out.printf("%s\n", header);
     }
 
-    public static void printGameGrid(char[][] grid) {
-        for (int r = 0; r < grid.length; r++) {
-            char[] row = grid[r];
+    public void printGameGrid(char[][] gameGrid) {
+        for (int r = 0; r < gameGrid.length; r++) {
+            char[] row = gameGrid[r];
 
             for (int c = 0; c < row.length; c++) {
                 System.out.print(row[c]);
             }
             System.out.println();
-
         }
     }
 
