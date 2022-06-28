@@ -66,7 +66,7 @@ public class HangmanTest {
         String headerText = hangman.getHeaderText();
         String header = "HANGMAN";
 
-        assertTrue(headerText == header, String.format("Header should equal %s == %s", headerText, header));
+        assertTrue(headerText.equals(header), String.format("Header should equal %s == %s", headerText, header));
     }
 
     @DisplayName("Should return String of missed letter text")
@@ -74,7 +74,7 @@ public class HangmanTest {
     void printMissedLetterTest() {
         String letterMissText = hangman.getLetterMissText();
         String letterMiss = "Missed letters: ";
-        assertTrue(letterMissText == letterMiss,
+        assertTrue(letterMissText.equals(letterMiss),
                 String.format("Text for missed letters should equal %s == %s", letterMissText, letterMiss));
     }
 
@@ -83,7 +83,7 @@ public class HangmanTest {
     void printLetterGuessTest() {
         String letterGuessText = hangman.getLetterGuessText();
         String letterGuess = "Guess a letter. ";
-        assertTrue(letterGuessText == letterGuess,
+        assertTrue(letterGuessText.equals(letterGuess),
                 String.format("Guessed letter text should equal %s == %s", letterGuessText, letterGuess));
     }
 
@@ -92,11 +92,20 @@ public class HangmanTest {
     void printLetterDuplicateTextGuess() {
         String letterDuplicateText = hangman.getLetterDuplicateText();
         String letterDuplicate = "You have already guessed that letter. Choose again. ";
-        assertTrue(letterDuplicateText == letterDuplicate,
+        assertTrue(letterDuplicateText.equals(letterDuplicate),
                 String.format("Guessing duplicate letter should print %s", letterDuplicateText));
     }
 
+    @DisplayName("Should return String of win game text")
+    @Test
+    void printWinGameTextTest() {
+        String gameWord = "Blue";
+        String winGameText = hangman.getWinGameText(gameWord);
+        String testText = "Yes! The secret word is \""+gameWord+"\"! You have won!";
 
+        assertTrue(winGameText.equals(testText),
+                String.format("Win game text should show winning word \n%s = \n%s ", winGameText, testText));
+    }
 
     @AfterEach
     void afterEach() {

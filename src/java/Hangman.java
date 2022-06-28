@@ -7,12 +7,13 @@ public class Hangman {
     private final String letterMissText = "Missed letters: ";
     private final String letterGuessText = "Guess a letter. ";
     private final String letterDuplicateText = "You have already guessed that letter. Choose again. ";
-    private final String gameWinText = "";
-    private final String gamePlayAgainText = "";
+    private final String winGameText = "Yes! The secret word is \"%s\"! You have won!";
+    private final String playGameAgainText = "";
 
     private List<String> guessCorrectList;
     private List<String> guessIncorrectList;
     private HashMap<Integer, String[]> wordList;
+    private String gameWord;
     private char[][] gameGrid;
 
 
@@ -23,6 +24,7 @@ public class Hangman {
     public String getLetterMissText() {return letterMissText;}
     public String getLetterGuessText() {return letterGuessText;}
     public String getLetterDuplicateText() {return letterDuplicateText;}
+    public String getWinGameText(String gameWord) {return String.format(winGameText, gameWord);}
 
     public char[][] initGameGrid(int rows, int cols, int poleOffset, int footerOffset) {
         gameGrid = new char[rows][cols];
