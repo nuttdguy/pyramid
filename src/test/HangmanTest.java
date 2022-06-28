@@ -2,6 +2,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.*;
 
 import java.util.Arrays;
+import java.util.HashMap;
 
 public class HangmanTest {
 
@@ -120,9 +121,9 @@ public class HangmanTest {
 
     @DisplayName("Should return the String of words as an array with default size = 30")
     @Test
-    void initWordListTest() {
-        String[] wordList = hangman.initWordList();
-        String testWordOne = "bird";
+    void initWordsTest() {
+        String[] wordList = hangman.initWords();
+        String testWordOne = "data";
         int testWordIndex = 0;
         String testWordTwo = "year";
 
@@ -131,8 +132,57 @@ public class HangmanTest {
         assertTrue( Arrays.asList(wordList).contains(testWordTwo), String.format("Word list should contain %s", testWordTwo));
     }
 
+    @DisplayName("Should return a hashmap of words k = length, v = words of length k")
+    @Test
+    void setWordListTest() {
+        String[] words = hangman.initWords();
+        HashMap<Integer, String[]> wordList = hangman.setWordList(words);
+        boolean containsAll = true;
+
+        for (Integer k : wordList.keySet()) {
+            String[] values = wordList.get(k);
+            if (!Arrays.stream(values).allMatch((v) -> Arrays.asList(words).contains(v))) {
+                containsAll = false;
+            }
+        }
+
+        assertTrue(containsAll, String.format("All words in words should be included in wordList"));
+
+        // assert test will fail when extra word is added to wordList
+        wordList.put(5, new String[]{"FailTest"});
+        for (Integer k : wordList.keySet()) {
+            String[] values = wordList.get(k);
+            if (!Arrays.stream(values).allMatch((v) -> Arrays.asList(words).contains(v))) {
+                containsAll = false;
+            }
+        }
+        assertFalse(containsAll, "Extra word(s) should not be allowed");
+
+    }
+
+
     @AfterEach
     void afterEach() {
 
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -72,37 +72,57 @@ public class Hangman {
     }
     public int getWordsMaxInWordList() {return wordsMaxInWordList;}
     public void setWordsMaxInWordList(int wordsMaxInWordList) {this.wordsMaxInWordList = wordsMaxInWordList;}
-    public String[] initWordList() {
-        String words = "bird\n" +
-                "meat\n" +
-                "unit\n" +
-                "army\n" +
-                "mode\n" +
-                "dad\n" +
-                "tea\n" +
-                "math\n" +
-                "oven\n" +
-                "road\n" +
-                "hair\n" +
-                "year\n" +
+    public String[] initWords() {
+        String words = "data\n" +
                 "law\n" +
-                "tale\n" +
-                "ear\n" +
-                "dirt\n" +
-                "two\n" +
-                "way\n" +
-                "gene\n" +
-                "idea\n" +
-                "meal\n" +
-                "king\n" +
                 "ad\n" +
+                "desk\n" +
+                "fact\n" +
+                "mood\n" +
+                "gene\n" +
+                "town\n" +
+                "poet\n" +
+                "king\n" +
+                "cell\n" +
+                "unit\n" +
+                "loss\n" +
+                "army\n" +
+                "bath\n" +
+                "hat\n" +
+                "oven\n" +
+                "gate\n" +
+                "lake\n" +
+                "song\n" +
+                "dirt\n" +
+                "mode\n" +
+                "meal\n" +
                 "food\n" +
-                "beer\n" +
-                "news\n" +
-                "city\n" +
-                "sir\n" +
+                "lady\n" +
+                "tale\n" +
                 "menu\n" +
-                "son";
+                "year\n" +
+                "disk\n" +
+                "hall\n" +
+                "poem\n" +
+                "soup\n" +
+                "idea\n" +
+                "goal\n" +
+                "user\n" +
+                "city\n" +
+                "art\n" +
+                "son\n" +
+                "tea\n" +
+                "sir\n" +
+                "girl\n" +
+                "wood\n" +
+                "mom\n" +
+                "role\n" +
+                "pie\n" +
+                "ear\n" +
+                "road\n" +
+                "debt\n" +
+                "mall\n" +
+                "hair";
 
         int maxWordsInGameList = getWordsMaxInWordList();
         String[] wordArray = new String[maxWordsInGameList];
@@ -110,6 +130,9 @@ public class Hangman {
         int idx = 0;
         String currentWord = "";
         for (char s : words.toCharArray()) {
+            if (idx == maxWordsInGameList) {
+                break;
+            }
             if (s == '\n') {
                 wordArray[idx] = currentWord;
                 currentWord = "";
@@ -121,10 +144,22 @@ public class Hangman {
 
         return wordArray;
     }
-    public HashMap<Integer, String[]> loadWordList(String[] words) {
+    public HashMap<Integer, String[]> setWordList(String[] words) {
         // sort words by length, k = length of word, v = words of k length
         HashMap<Integer, String[]> wordList = new HashMap<>();
 
+        for (int i = 0; i < words.length; i++) { // iterate through words
+            if (!wordList.containsKey(words[i].length())) { // if key does not exist, add key and init element
+                String[] tempArr = new String[]{words[i]};
+                wordList.put(words[i].length(), tempArr);
+
+            } else {  // when key exists, get old values from old array and add new item
+                String[] tempArr = wordList.get(words[i].length());
+                tempArr = Arrays.copyOf(tempArr, tempArr.length+1);
+                tempArr[tempArr.length-1] = words[i];
+                wordList.put(words[i].length(), tempArr);
+            }
+        }
 
         return wordList;
     }
