@@ -21,9 +21,7 @@ public class Hangman {
 
     public String getHeaderText() {return headerText; }
     public String getLetterMissText() {return letterMissText;}
-
-
-
+    public String getLetterGuessText() {return letterGuessText;}
 
     public char[][] initGameGrid(int rows, int cols, int poleOffset, int footerOffset) {
         gameGrid = new char[rows][cols];

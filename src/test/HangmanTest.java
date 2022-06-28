@@ -47,7 +47,7 @@ public class HangmanTest {
 
     }
 
-    @DisplayName("Should print the game grid")
+    @DisplayName("Should return String of the game grid")
     @Test
     void printGameGridTest() {
         String grid = hangman.printGameGrid(gameGrid);
@@ -60,7 +60,7 @@ public class HangmanTest {
         assertTrue(grid.equals(gridPattern), String.format("Generated String grid should match pattern \n%s = \n%s", grid, gridPattern));
     }
 
-    @DisplayName("Should print the game header")
+    @DisplayName("Should return String of the game header")
     @Test
     void printGameHeaderTest() {
         String headerText = hangman.getHeaderText();
@@ -69,7 +69,7 @@ public class HangmanTest {
         assertTrue(headerText == header, String.format("Header should equal %s == %s", headerText, header));
     }
 
-    @DisplayName("Should return missed letter text")
+    @DisplayName("Should return String of missed letter text")
     @Test
     void printMissedLetterTest() {
         String letterMissText = hangman.getLetterMissText();
@@ -77,6 +77,16 @@ public class HangmanTest {
         assertTrue(letterMissText == letterMiss,
                 String.format("Text for missed letters should equal %s == %s", letterMissText, letterMiss));
     }
+
+    @DisplayName("Should return String of the letter guess text")
+    @Test
+    void printLetterGuessTest() {
+        String letterGuessText = hangman.getLetterGuessText();
+        String letterGuess = "Guess a letter. ";
+        assertTrue(letterGuessText == letterGuess,
+                String.format("Guessed letter text should equal %s == %s", letterGuessText, letterGuess));
+    }
+
 
     @AfterEach
     void afterEach() {
