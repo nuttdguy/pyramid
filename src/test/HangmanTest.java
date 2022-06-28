@@ -1,7 +1,6 @@
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.*;
 
-import java.lang.reflect.Array;
 import java.util.Arrays;
 
 public class HangmanTest {
@@ -59,6 +58,15 @@ public class HangmanTest {
                 .concat("   ====\n");
 
         assertTrue(grid.equals(gridPattern), String.format("Generated String grid should match pattern \n%s = \n%s", grid, gridPattern));
+    }
+
+    @DisplayName("Should print the game header")
+    @Test
+    void printGameHeaderTest() {
+        String headerText = hangman.getHeaderText();
+        String header = "HANGMAN";
+
+        assertTrue(headerText == header, String.format("Header should equal %s == %s", headerText, header));
     }
 
     @AfterEach

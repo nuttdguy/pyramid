@@ -19,6 +19,9 @@ public class Hangman {
     public Hangman() {
     }
 
+    public String getHeaderText() {
+        return headerText;
+    }
 
     public char[][] initGameGrid(int rows, int cols, int poleOffset, int footerOffset) {
         gameGrid = new char[rows][cols];
@@ -43,8 +46,8 @@ public class Hangman {
         return gameGrid;
     }
 
-    public void printGameHeader(String header) {
-        System.out.printf("%s\n", header);
+    public String printGameHeader(String header) {
+        return String.format("%s\n", header);
     }
 
     public String printGameGrid(char[][] gameGrid) {
