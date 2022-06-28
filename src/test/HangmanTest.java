@@ -69,6 +69,15 @@ public class HangmanTest {
         assertTrue(headerText == header, String.format("Header should equal %s == %s", headerText, header));
     }
 
+    @DisplayName("Should return missed letter text")
+    @Test
+    void printMissedLetterTest() {
+        String letterMissText = hangman.getLetterMissText();
+        String letterMiss = "Missed letters: ";
+        assertTrue(letterMissText == letterMiss,
+                String.format("Text for missed letters should equal %s == %s", letterMissText, letterMiss));
+    }
+
     @AfterEach
     void afterEach() {
 

@@ -4,7 +4,7 @@ import java.util.List;
 public class Hangman {
 
     private final String headerText = "HANGMAN";
-    private final String letterMissText = "Missed letters:";
+    private final String letterMissText = "Missed letters: ";
     private final String letterGuessText = "Guess a letter. ";
     private final String letterDuplicateText = "";
     private final String gameWinText = "";
@@ -19,9 +19,11 @@ public class Hangman {
     public Hangman() {
     }
 
-    public String getHeaderText() {
-        return headerText;
-    }
+    public String getHeaderText() {return headerText; }
+    public String getLetterMissText() {return letterMissText;}
+
+
+
 
     public char[][] initGameGrid(int rows, int cols, int poleOffset, int footerOffset) {
         gameGrid = new char[rows][cols];
