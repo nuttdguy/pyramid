@@ -3,9 +3,9 @@ import java.util.List;
 
 public class Hangman {
 
-    private final String headerText = "";
-    private final String letterMissText = "";
-    private final String letterGuessText = "";
+    private final String headerText = "HANGMAN";
+    private final String letterMissText = "Missed letters:";
+    private final String letterGuessText = "Guess a letter. ";
     private final String letterDuplicateText = "";
     private final String gameWinText = "";
     private final String gamePlayAgainText = "";
@@ -18,6 +18,7 @@ public class Hangman {
 
     public Hangman() {
     }
+
 
     public char[][] initGameGrid(int rows, int cols, int poleOffset, int footerOffset) {
         gameGrid = new char[rows][cols];
@@ -46,15 +47,17 @@ public class Hangman {
         System.out.printf("%s\n", header);
     }
 
-    public void printGameGrid(char[][] gameGrid) {
+    public String printGameGrid(char[][] gameGrid) {
+        StringBuilder grid = new StringBuilder();
         for (int r = 0; r < gameGrid.length; r++) {
             char[] row = gameGrid[r];
 
             for (int c = 0; c < row.length; c++) {
-                System.out.print(row[c]);
+                grid.append(row[c]);
             }
-            System.out.println();
+            grid.append("\n");
         }
+        return grid.toString();
     }
 
 }
