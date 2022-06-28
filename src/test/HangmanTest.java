@@ -118,7 +118,18 @@ public class HangmanTest {
         assertTrue(playAgainText.equals(testText), String.format("Play again text should equal %s", testText));
     }
 
+    @DisplayName("Should return the String of words as an array with default size = 30")
+    @Test
+    void initWordListTest() {
+        String[] wordList = hangman.initWordList();
+        String testWordOne = "bird";
+        int testWordIndex = 0;
+        String testWordTwo = "year";
 
+        assertTrue(wordList.length == 30, String.format("String of words should result in new array of length %s", wordList.length));
+        assertTrue( wordList[testWordIndex].equals(testWordOne), String.format("Word list should contain word %s at index %s", testWordOne, testWordIndex));
+        assertTrue( Arrays.asList(wordList).contains(testWordTwo), String.format("Word list should contain %s", testWordTwo));
+    }
 
     @AfterEach
     void afterEach() {
