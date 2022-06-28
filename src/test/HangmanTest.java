@@ -87,6 +87,16 @@ public class HangmanTest {
                 String.format("Guessed letter text should equal %s == %s", letterGuessText, letterGuess));
     }
 
+    @DisplayName("Should return String of duplicate guess text")
+    @Test
+    void printLetterDuplicateTextGuess() {
+        String letterDuplicateText = hangman.getLetterDuplicateText();
+        String letterDuplicate = "You have already guessed that letter. Choose again. ";
+        assertTrue(letterDuplicateText == letterDuplicate,
+                String.format("Guessing duplicate letter should print %s", letterDuplicateText));
+    }
+
+
 
     @AfterEach
     void afterEach() {

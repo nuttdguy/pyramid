@@ -6,7 +6,7 @@ public class Hangman {
     private final String headerText = "HANGMAN";
     private final String letterMissText = "Missed letters: ";
     private final String letterGuessText = "Guess a letter. ";
-    private final String letterDuplicateText = "";
+    private final String letterDuplicateText = "You have already guessed that letter. Choose again. ";
     private final String gameWinText = "";
     private final String gamePlayAgainText = "";
 
@@ -22,6 +22,7 @@ public class Hangman {
     public String getHeaderText() {return headerText; }
     public String getLetterMissText() {return letterMissText;}
     public String getLetterGuessText() {return letterGuessText;}
+    public String getLetterDuplicateText() {return letterDuplicateText;}
 
     public char[][] initGameGrid(int rows, int cols, int poleOffset, int footerOffset) {
         gameGrid = new char[rows][cols];
