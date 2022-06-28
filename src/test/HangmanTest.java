@@ -47,11 +47,13 @@ public class HangmanTest {
 
     }
 
-    @DisplayName("Should return String of the game grid")
+    @DisplayName("Should return String of the game grid with header")
     @Test
     void printGameGridTest() {
-        String grid = hangman.printGameGrid(gameGrid);
-        String gridPattern = "".concat("+-----+\n")
+        String header = hangman.getHeaderText();
+        String grid = hangman.printGameGridWithHeader(gameGrid, header);
+        String gridPattern = "HANGMAN\n"
+                .concat("+-----+\n")
                 .concat("     | \n")
                 .concat("     | \n")
                 .concat("     | \n")
@@ -60,7 +62,7 @@ public class HangmanTest {
         assertTrue(grid.equals(gridPattern), String.format("Generated String grid should match pattern \n%s = \n%s", grid, gridPattern));
     }
 
-    @DisplayName("Should return String of the game header")
+    @DisplayName("Should return String of the game header text")
     @Test
     void printGameHeaderTest() {
         String headerText = hangman.getHeaderText();
@@ -115,6 +117,8 @@ public class HangmanTest {
 
         assertTrue(playAgainText.equals(testText), String.format("Play again text should equal %s", testText));
     }
+
+
 
     @AfterEach
     void afterEach() {

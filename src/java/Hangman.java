@@ -1,5 +1,6 @@
 import java.util.HashMap;
 import java.util.List;
+import java.util.Scanner;
 
 public class Hangman {
 
@@ -15,6 +16,7 @@ public class Hangman {
     private HashMap<Integer, String[]> wordList;
     private String gameWord;
     private char[][] gameGrid;
+    private Scanner scanner;
 
 
     public Hangman() {
@@ -26,7 +28,6 @@ public class Hangman {
     public String getLetterDuplicateText() {return letterDuplicateText;}
     public String getWinGameText(String gameWord) {return String.format(winGameText, gameWord);}
     public String getPlayGameAgainText() {return playGameAgainText; }
-
     public char[][] initGameGrid(int rows, int cols, int poleOffset, int footerOffset) {
         gameGrid = new char[rows][cols];
         for (int r = 0; r < rows; r++) {
@@ -49,13 +50,13 @@ public class Hangman {
         }
         return gameGrid;
     }
+    private String printGameHeader(String header) {return String.format("%s\n", header);}
 
-    public String printGameHeader(String header) {
-        return String.format("%s\n", header);
-    }
-
-    public String printGameGrid(char[][] gameGrid) {
+    public String printGameGridWithHeader(char[][] gameGrid, String headerText) {
         StringBuilder grid = new StringBuilder();
+        String header = printGameHeader(headerText);
+
+        grid.append(header); // append the header
         for (int r = 0; r < gameGrid.length; r++) {
             char[] row = gameGrid[r];
 
