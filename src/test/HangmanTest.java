@@ -107,6 +107,15 @@ public class HangmanTest {
                 String.format("Win game text should show winning word \n%s = \n%s ", winGameText, testText));
     }
 
+    @DisplayName("Should return String of play again text")
+    @Test
+    void printPlayAgainText() {
+        String playAgainText = hangman.getPlayGameAgainText();
+        String testText = "Do you want to play again? (yes or no)";
+
+        assertTrue(playAgainText.equals(testText), String.format("Play again text should equal %s", testText));
+    }
+
     @AfterEach
     void afterEach() {
 

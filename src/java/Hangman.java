@@ -8,7 +8,7 @@ public class Hangman {
     private final String letterGuessText = "Guess a letter. ";
     private final String letterDuplicateText = "You have already guessed that letter. Choose again. ";
     private final String winGameText = "Yes! The secret word is \"%s\"! You have won!";
-    private final String playGameAgainText = "";
+    private final String playGameAgainText = "Do you want to play again? (yes or no)";
 
     private List<String> guessCorrectList;
     private List<String> guessIncorrectList;
@@ -25,6 +25,7 @@ public class Hangman {
     public String getLetterGuessText() {return letterGuessText;}
     public String getLetterDuplicateText() {return letterDuplicateText;}
     public String getWinGameText(String gameWord) {return String.format(winGameText, gameWord);}
+    public String getPlayGameAgainText() {return playGameAgainText; }
 
     public char[][] initGameGrid(int rows, int cols, int poleOffset, int footerOffset) {
         gameGrid = new char[rows][cols];
