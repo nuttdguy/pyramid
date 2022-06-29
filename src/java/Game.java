@@ -182,6 +182,7 @@ public class Game {
             System.out.println(gameQuestion);
 
             try {
+
                 setUserGuessByInput(); // get users guess
                 incrementGuessCounter(); // increment the guess counter
                 System.out.println();
@@ -202,7 +203,7 @@ public class Game {
 
                             // welcome / greet the user and ask question to pick number
                             System.out.println();
-                            generateGameNumber(gameMax);
+                            setWinNumber(getGameMax());
                             setGuessCounter();
 
                             System.out.printf((welcomeMessage) + "%n", username, gameMin, gameMax);
