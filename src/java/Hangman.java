@@ -10,6 +10,7 @@ public class Hangman {
     private final String playGameAgainText = "Do you want to play again? (yes or no)";
 
     private int wordsMaxInWordList;
+    private char[] wordInPlay;
     private String[] words;
     private List<String> guessCorrectList;
     private List<String> guessIncorrectList;
@@ -17,7 +18,6 @@ public class Hangman {
     private String gameWord;
     private char[][] gameGrid;
     private Scanner scanner;
-
 
     public Hangman() {
         setWordsMaxInWordList(30);
@@ -163,10 +163,21 @@ public class Hangman {
 
         return wordList;
     }
+    public char[] selectWordInPlay(HashMap<Integer, String[]> wordList, int wordLength) {
+
+        if (!wordList.containsKey(wordLength)) {
+            return wordList.get(3)[0].toCharArray();
+        }
+        int indexRandom = (int) (Math.random() * wordList.get(wordLength).length-1);
+        return wordList.get(wordLength)[indexRandom].toCharArray();
+    }
+    public void setWordInPlay(char[] wordInPlay) { this.wordInPlay = wordInPlay;}
+    public char[] getWordInPlay() {return wordInPlay;}
 
     public void start() {
+        // todo adjust game board method to adjust height according to selected word length
 
-        // initialize game property fields, game board and game word
+        // initialize game property fields, game board, wordList and set game word
 
         // print the game board
 

@@ -160,6 +160,37 @@ public class HangmanTest {
 
     }
 
+    @DisplayName("Should return the selected word")
+    @Test
+    void selectWordInPlayTest() {
+        String[] words = hangman.initWords();
+        HashMap<Integer, String[]> wordList = hangman.setWordList(words);
+
+        int wordLength = 3;
+        char[] wordInPlay = hangman.selectWordInPlay(wordList, wordLength);
+        String[] wordsOfRow = wordList.get(wordLength);
+
+        assertTrue(Arrays.asList(wordsOfRow).contains(String.valueOf(wordInPlay)),
+                String.format("%s should be in words of selected row ", String.valueOf(wordInPlay)));
+    }
+
+    @DisplayName("Should set the wordInPlay property")
+    @Test
+    void setWordInPlayTest() {
+        String[] words = hangman.initWords();
+        HashMap<Integer, String[]> wordList = hangman.setWordList(words);
+
+        int wordLength = 3;
+        char[] wordInPlay = hangman.selectWordInPlay(wordList, wordLength);
+        String[] wordsOfRow = wordList.get(wordLength);
+
+        hangman.setWordInPlay(wordInPlay);
+
+        assertTrue(Arrays.asList(wordsOfRow).contains(String.valueOf(wordInPlay)),
+                String.format("%s should be in words of selected row ", String.valueOf(wordInPlay)));
+        assertTrue(Arrays.equals(hangman.getWordInPlay(), wordInPlay),
+                String.format("Word in play property should be set to %s", String.valueOf(hangman.getWordInPlay())));
+    }
 
     @AfterEach
     void afterEach() {
