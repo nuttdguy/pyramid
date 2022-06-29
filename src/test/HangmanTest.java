@@ -224,6 +224,26 @@ public class HangmanTest {
                 String.format("Output from input stream should equal %s ", testWord));
     }
 
+    @DisplayName("Should return true or false if letter has been already chosen")
+    @Test
+    void isDuplicateLetterTest() {
+        char[] correctList = new char[]{'t', 'e', 's', 't'};
+        char[] incorrectList = new char[]{'a', 'l', 'i', 'c', 'e'};
+        char[] testLetter = new char[]{'t'};
+
+        boolean isCorrect = hangman.isDuplicateLetter(testLetter, correctList);
+        boolean isIncorrect = hangman.isDuplicateLetter(testLetter, incorrectList);
+
+        assertTrue(isCorrect,
+                String.format("Should contain the test letter %s", String.valueOf(testLetter)));
+        assertFalse(isIncorrect,
+                String.format("Should return false when test letter %s is not in list", String.valueOf(testLetter)));
+
+    }
+
+
+
+
     @AfterEach
     void afterEach() {
 

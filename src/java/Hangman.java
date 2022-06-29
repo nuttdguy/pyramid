@@ -208,9 +208,21 @@ public class Hangman {
         return correctList;
     }
     public void setCorrectList(char[] correctList) {this.correctList = correctList;}
-
+    public char[] getCorrectList() {return correctList;}
     public String inputStream(InputStream inputStream) {
         return new Scanner(inputStream).next();
+    }
+    public boolean isDuplicateLetter(char[] letter, char[] list) {
+
+        if (letter.length == 1) {
+            char charLetter = letter[letter.length-1];
+            for (char c : list) {
+                if (c == charLetter) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     public void start() {
@@ -240,8 +252,6 @@ public class Hangman {
         char[] correctList = initCorrectList(this.getWordInPlay());             // init the correct list
         setCorrectList(correctList);                                            // set the correct list
 
-//        Scanner scanner = initInputStream(System.in);                           // init scanner object
-
         boolean play = true;  // todo remove after implementing correct logic
         while (play) {
             String headerText = this.getHeaderText();       // get the header text
@@ -257,16 +267,28 @@ public class Hangman {
             System.out.println(guessLetterText);                                // print guessed letter text
             System.out.println();
 
-            String letter = inputStream(System.in);                             // get letter from user prompt
-            System.out.println(letter);
-            // check if the letter is in missed or correct list
-                // if in, display the duplicate letter text
-                // return
-            // check if letter is contained with word in play
-            // update game board grid
-            // update incorrect list
-            // update correct list
+            String letter;
+            boolean letterIsValid = false;
+            do {
+                letter = inputStream(System.in);                                // get letter from user prompt
+                if (letter.length() != 1) {                                     // check input length
+                    System.out.println("Whoa!, one Letter at a time please");
+                } else {
 
+                    if (!isDuplicateLetter(letter.toCharArray(), this.getIncorrectList())
+                            && !isDuplicateLetter(letter.toCharArray(), this.getCorrectList())) {             // check if the letter is in missed or correct list
+
+                        // check if letter is contained with word in play
+                        // update game board grid
+                        // update incorrect list
+                        // update correct list
+                    } else {
+                        String duplicateLetterText = this.getDuplicateLetterText();     // get duplicate letter text
+                        System.out.println(duplicateLetterText);                // display the duplicate letter text
+                    }
+                }
+            } while (letter.length() > 1);                                      // if greater than 1 & , get new input
+            System.out.println(letter);
 
             play = false; // todo update or remove after implementing logic
         }
