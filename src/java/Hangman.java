@@ -20,7 +20,6 @@ public class Hangman {
     private char[] incorrectList;
     private HashMap<Integer, String[]> wordList;
     private char[][] gameGrid;
-    private Scanner scanner;
 
     public Hangman() {
         setMaxWordsInWordList(30);
@@ -36,10 +35,10 @@ public class Hangman {
     public String getDuplicateLetterText() {return duplicateLetterText;}
     public String getWinGameText(String gameWord) {return String.format(winGameText, gameWord);}
     public String getPlayGameAgainText() {return playGameAgainText; }
-
-
+    public void setGameGrid(char[][] gameGrid) { this.gameGrid = gameGrid; }
+    public char[][] getGameGrid() { return gameGrid;}
     public char[][] initGameGrid(int rows, int cols, int poleOffset, int footerOffset) {
-        gameGrid = new char[rows][cols];
+        char[][] gameGrid = new char[rows][cols];
         for (int r = 0; r < rows; r++) {
 
             for (int c = 0; c < cols; c++) {
@@ -252,6 +251,8 @@ public class Hangman {
                         5,
                         3);
 
+        setGameGrid(gameGrid);                                                  // set the game grid property
+
         int maxGuessAttempt = initMaxGuessAttempt(this.getWordInPlay());        // init max attempts allowed
         setMaxGuessAttempt(maxGuessAttempt);                                    // set max attempts allowed
 
@@ -261,7 +262,6 @@ public class Hangman {
         char[] correctList = initCorrectList(this.getWordInPlay());             // init the correct list
         setCorrectList(correctList);                                            // set the correct list
     }
-
     public boolean isLetterCorrect(char[] letter, char[] wordInPlay) {
         char c;
         try {
@@ -274,6 +274,28 @@ public class Hangman {
         }
         return false;
     }
+
+    public char[] updateCorrectList(char[] correctList, char[] wordInPlay, char[] letter) {
+        char c = letter[letter.length-1];
+        for (int i = 0; i < wordInPlay.length; i++) {
+            if (wordInPlay[i] == c) {
+                correctList[i] = c;
+            }
+        }
+        return correctList;
+    }
+//    public char[][] updateGameGrid(char[][] gameGrid, char[] letter) {
+//        int rowsInGrid = gameGrid.length-1; // get the row height
+//        char c = letter[letter.length-1];   // get the char letter
+//        int col = 3;                        // set the column to update
+//        int indexOfLetter;                  // get index of letter
+//        for (int i = 0; i < wordInPlay.length; i++) {
+//            if (wordInPlay[i] == c) { indexOfLetter = i; break; }
+//        }
+//
+//
+//        return null;
+//    }
     public void start() {
         // todo adjust game board method to adjust height according to selected word length
 
@@ -309,11 +331,20 @@ public class Hangman {
                         // check if letter is contained within word in play
                         if (isLetterCorrect(letter.toCharArray(), this.getWordInPlay())) {
 
-                            // update game board grid
-                            // update incorrect list
                             // update correct list
+                            setCorrectList(
+                                    this.updateCorrectList(this.getCorrectList(), this.getWordInPlay(), letter.toCharArray()));
 
-                            break;
+                            // check if word is complete
+                            if (Arrays.equals(getCorrectList(), getWordInPlay())) {
+                                System.out.print("You wom!"); // todo add win text
+                                break;
+                            }
+
+                        } else {
+                            // updateGameGrid(this.getGameGrid(), letter.toCharArray());   // update game board grid
+                            // update incorrect list
+
                         }
                     } else {
                         String duplicateLetterText = this.getDuplicateLetterText();     // get duplicate letter text
