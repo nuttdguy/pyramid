@@ -121,9 +121,9 @@ public class HangmanTest {
     @Test
     void initWordsTest() {
         String[] wordList = hangman.initWords();
-        String testWordOne = "data";
+        String testWordOne = "lab";
         int testWordIndex = 0;
-        String testWordTwo = "year";
+        String testWordTwo = "desk";
 
         assertTrue(wordList.length == 30, String.format("String of words should result in new array of length %s", wordList.length));
         assertTrue( wordList[testWordIndex].equals(testWordOne), String.format("Word list should contain word %s at index %s", testWordOne, testWordIndex));
@@ -241,6 +241,21 @@ public class HangmanTest {
 
     }
 
+    @DisplayName("Should return true or false if letter is in game word")
+    @Test
+    void isLetterCorrectTest() {
+        char[] testInvalidLetter = new char[]{'c'};
+        char[] testValidLetter = new char[]{'t'};
+        char[] testWordInPlay = new char[]{'t', 'e', 's', 't'};
+        boolean isValidLetter = hangman.isLetterCorrect(testValidLetter, testWordInPlay);
+        boolean isInvalidLetter = hangman.isLetterCorrect(testInvalidLetter, testWordInPlay);
+
+        assertTrue(isValidLetter,
+                String.format("%s should be valid letter.", String.valueOf(testValidLetter)));
+
+        assertFalse(isInvalidLetter,
+                String.format("%s should be invalid letter.", String.valueOf(testInvalidLetter)));
+    }
 
 
 

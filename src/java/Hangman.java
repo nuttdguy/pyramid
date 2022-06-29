@@ -1,4 +1,5 @@
 import java.io.InputStream;
+import java.time.temporal.ValueRange;
 import java.util.*;
 
 public class Hangman {
@@ -78,7 +79,17 @@ public class Hangman {
     public int getMaxWordsInWordList() {return maxWordsInWordList;}
     public void setMaxWordsInWordList(int maxWordsInWordList) {this.maxWordsInWordList = maxWordsInWordList;}
     public String[] initWords() {
-        String words = "data\n" +
+        String words = "lab\n" +
+                "son\n" +
+                "art\n" +
+                "ear\n" +
+                "dad\n" +
+                "sir\n" +
+                "mom\n" +
+                "pie\n" +
+                "hat\n" +
+                "law\n" +
+                "data\n" +
                 "law\n" +
                 "ad\n" +
                 "desk\n" +
@@ -132,6 +143,7 @@ public class Hangman {
         int maxWordsInGameList = getMaxWordsInWordList();
         String[] wordArray = new String[maxWordsInGameList];
 
+        int endPos = (int) (Math.random() * 20);  // todo implement dynamic word selection
         int idx = 0;
         String currentWord = "";
 
@@ -224,14 +236,11 @@ public class Hangman {
         }
         return false;
     }
-
-    public void start() {
-        // todo adjust game board method to adjust height according to selected word length
-
+    public void init() {
         // initialize game property fields, game board, wordList and set game word
         String[] words = this.initWords();                                      // set word list
         HashMap<Integer, String[]> wordList = this.setWordList(words);          // sort wordList by length
-        int randomWordLength = (int) (Math.random() * 5);
+        int randomWordLength = 3;                                               // todo improve random logic
         char[] word = this.selectWordInPlay(wordList, randomWordLength);        // select word in play
         setWordInPlay(word);                                                    // set wordInPlay property
 
@@ -251,7 +260,26 @@ public class Hangman {
 
         char[] correctList = initCorrectList(this.getWordInPlay());             // init the correct list
         setCorrectList(correctList);                                            // set the correct list
+    }
 
+    public boolean isLetterCorrect(char[] letter, char[] wordInPlay) {
+        char c;
+        try {
+            c = letter[letter.length-1];
+            for (char t : wordInPlay) {
+                if (c == t) { return true; }
+            }
+        } catch (IndexOutOfBoundsException e) {
+            System.out.println(e.getMessage());
+        }
+        return false;
+    }
+    public void start() {
+        // todo adjust game board method to adjust height according to selected word length
+
+        init();
+
+        System.out.format("word in play: %s\n", String.valueOf(this.getWordInPlay()));   // todo remove
         boolean play = true;  // todo remove after implementing correct logic
         while (play) {
             String headerText = this.getHeaderText();       // get the header text
@@ -276,12 +304,17 @@ public class Hangman {
                 } else {
 
                     if (!isDuplicateLetter(letter.toCharArray(), this.getIncorrectList())
-                            && !isDuplicateLetter(letter.toCharArray(), this.getCorrectList())) {             // check if the letter is in missed or correct list
+                            && !isDuplicateLetter(letter.toCharArray(), this.getCorrectList())) {  // check if the letter is in missed or correct list
 
-                        // check if letter is contained with word in play
-                        // update game board grid
-                        // update incorrect list
-                        // update correct list
+                        // check if letter is contained within word in play
+                        if (isLetterCorrect(letter.toCharArray(), this.getWordInPlay())) {
+
+                            // update game board grid
+                            // update incorrect list
+                            // update correct list
+
+                            break;
+                        }
                     } else {
                         String duplicateLetterText = this.getDuplicateLetterText();     // get duplicate letter text
                         System.out.println(duplicateLetterText);                // display the duplicate letter text
