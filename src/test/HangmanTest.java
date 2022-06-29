@@ -274,6 +274,36 @@ public class HangmanTest {
 
     }
 
+    @DisplayName("Should update incorrect list with all incorrect letter(s) at correct index")
+    @Test
+    void updateIncorrectListTest() {
+        char[] testLetterOne = new char[]{'a'};
+        char[] testLetterTwo = new char[]{'d'};
+        char[] testLetterThree = new char[]{'e'};
+        char[] testLetterFour = new char[]{'f'};
+        char[] incorrectList = new char[]{'_', '_', '_', '_'};
+
+        incorrectList = hangman.updateIncorrectList(incorrectList, testLetterOne);
+        incorrectList = hangman.updateIncorrectList(incorrectList, testLetterTwo);
+        incorrectList = hangman.updateIncorrectList(incorrectList, testLetterThree);
+        incorrectList = hangman.updateIncorrectList(incorrectList, testLetterFour);
+
+        assertEquals(incorrectList[0], testLetterOne[0],
+                String.format("%s should be at position 0 of incorrect list", testLetterOne[0]));
+        assertEquals(incorrectList[1], testLetterOne[0],
+                String.format("%s should be at position 1 of incorrect list", testLetterOne[0]));
+        assertEquals(incorrectList[2], testLetterOne[0],
+                String.format("%s should be at position 2 of incorrect list", testLetterOne[0]));
+        assertEquals(incorrectList[3], testLetterOne[0],
+                String.format("%s should be at position 3 of incorrect list", testLetterOne[0]));
+
+    }
+
+
+
+
+
+
     @AfterEach
     void afterEach() {
 

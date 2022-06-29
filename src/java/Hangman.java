@@ -284,18 +284,29 @@ public class Hangman {
         }
         return correctList;
     }
-//    public char[][] updateGameGrid(char[][] gameGrid, char[] letter) {
-//        int rowsInGrid = gameGrid.length-1; // get the row height
-//        char c = letter[letter.length-1];   // get the char letter
-//        int col = 3;                        // set the column to update
-//        int indexOfLetter;                  // get index of letter
-//        for (int i = 0; i < wordInPlay.length; i++) {
-//            if (wordInPlay[i] == c) { indexOfLetter = i; break; }
-//        }
-//
-//
-//        return null;
-//    }
+
+    public char[] updateIncorrectList(char[] incorrectList, char[] letter) {
+        char c = letter[letter.length-1];
+        for (int i = 0; i < incorrectList.length; i++) {
+            if (incorrectList[i] == '_') {
+                incorrectList[i] = c;
+            }
+        }
+
+        return incorrectList;
+    }
+    public char[][] updateGameGrid(char[][] gameGrid, char[] letter) {
+        int rowsInGrid = gameGrid.length-1; // get the row height
+        char c = letter[letter.length-1];   // get the char letter
+        int col = 3;                        // set the column to update
+        int indexOfLetter;                  // get index of letter
+        for (int i = 0; i < wordInPlay.length; i++) {
+            if (wordInPlay[i] == c) { indexOfLetter = i; break; }
+        }
+
+
+        return null;
+    }
     public void start() {
         // todo adjust game board method to adjust height according to selected word length
 
@@ -303,7 +314,8 @@ public class Hangman {
 
         System.out.format("word in play: %s\n", String.valueOf(this.getWordInPlay()));   // todo remove
         boolean play = true;  // todo remove after implementing correct logic
-        while (play) {
+        int rounds = 0;
+        while (rounds < 2) {
             String headerText = this.getHeaderText();       // get the header text
             String gameGridWithHeader = this.printGameGridWithHeader(gameGrid, headerText);     // print game grid with header
             System.out.print(gameGridWithHeader);
@@ -318,7 +330,6 @@ public class Hangman {
             System.out.println();
 
             String letter;
-            boolean letterIsValid = false;
             do {
                 letter = inputStream(System.in);                                // get letter from user prompt
                 if (letter.length() != 1) {                                     // check input length
@@ -326,7 +337,7 @@ public class Hangman {
                 } else {
 
                     if (!isDuplicateLetter(letter.toCharArray(), this.getIncorrectList())
-                            && !isDuplicateLetter(letter.toCharArray(), this.getCorrectList())) {  // check if the letter is in missed or correct list
+                            && !isDuplicateLetter(letter.toCharArray(), this.getCorrectList())) {   // check if the letter is in missed or correct list
 
                         // check if letter is contained within word in play
                         if (isLetterCorrect(letter.toCharArray(), this.getWordInPlay())) {
@@ -343,17 +354,21 @@ public class Hangman {
 
                         } else {
                             // updateGameGrid(this.getGameGrid(), letter.toCharArray());   // update game board grid
+
                             // update incorrect list
+                            setIncorrectList(
+                                   this.updateIncorrectList(this.getIncorrectList(), letter.toCharArray()));
 
                         }
                     } else {
                         String duplicateLetterText = this.getDuplicateLetterText();     // get duplicate letter text
-                        System.out.println(duplicateLetterText);                // display the duplicate letter text
+                        System.out.println(duplicateLetterText);                        // display the duplicate letter text
                     }
                 }
-            } while (letter.length() > 1);                                      // if greater than 1 & , get new input
+            } while (letter.length() > 1);                                              // if greater than 1 & , get new input
             System.out.println(letter);
 
+            rounds++; // todo remove
             play = false; // todo update or remove after implementing logic
         }
 
