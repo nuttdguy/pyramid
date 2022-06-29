@@ -314,6 +314,16 @@ public class Hangman {
 
         return gameGrid;
     }
+    public int tallyIncorrectList(char[] incorrectList) {
+        int count = 0;
+        for (char c : incorrectList) {
+            if (c != '_') {
+                count++;
+            }
+        }
+        return count;
+    }
+
     public void start() {
         // todo adjust game board method to adjust height according to selected word length
 
@@ -322,7 +332,7 @@ public class Hangman {
         System.out.format("word in play: %s\n", String.valueOf(this.getWordInPlay()));   // todo remove
         boolean play = true;  // todo remove after implementing correct logic
         int rounds = 0;
-        while (rounds < 4) {
+        while (rounds < 6) {
             String headerText = this.getHeaderText();       // get the header text
             String gameGridWithHeader = this.printGameGridWithHeader(gameGrid, headerText);     // print game grid with header
             System.out.print(gameGridWithHeader);
@@ -362,13 +372,15 @@ public class Hangman {
                         } else {
 
                             // check incorrect list is not full
-
-                            // update incorrect list
-                            setIncorrectList(
-                                   this.updateIncorrectList(this.getIncorrectList(), letter.toCharArray()));
-
-                            // update game board grid
-                            setGameGrid(updateGameGrid(this.getGameGrid()));
+                            if (this.getIncorrectList().length >= this.getWordInPlay().length) {
+                                return;
+                            } else {
+                                // update incorrect list
+                                setIncorrectList(
+                                        this.updateIncorrectList(this.getIncorrectList(), letter.toCharArray()));
+                                // update game board grid
+                                setGameGrid(updateGameGrid(this.getGameGrid()));
+                            }
 
                         }
                     } else {

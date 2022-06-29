@@ -313,6 +313,23 @@ public class HangmanTest {
 
     }
 
+    @DisplayName("Should count the number of incorrect guesses")
+    @Test
+    void tallyIncorrectListTest() {
+        char[] incorrectList = new char[]{'t', 'e', 's', 't', '_'};
+
+        int count = hangman.tallyIncorrectList(incorrectList);
+        assertEquals(count, 4, "Count should be 4");
+
+        incorrectList[4] = 's';
+        count = hangman.tallyIncorrectList(incorrectList);
+        assertEquals(count, 5, "Count should be 5");
+
+    }
+
+
+
+
 
     @AfterEach
     void afterEach() {
