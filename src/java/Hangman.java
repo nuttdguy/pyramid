@@ -64,6 +64,7 @@ public class Hangman {
         StringBuilder grid = new StringBuilder();
 //        String header = this.printGameHeader(headerText);
 
+        grid.append("\n");
         grid.append(headerText +"\n"); // append the header
         for (int r = 0; r < gameGrid.length; r++) {
             char[] row = gameGrid[r];
@@ -327,12 +328,12 @@ public class Hangman {
     public void start() {
         // todo adjust game board method to adjust height according to selected word length
 
-        init();
+        init();  // initialize the game grid and text
 
-        System.out.format("word in play: %s\n", String.valueOf(this.getWordInPlay()));   // todo remove
-        boolean play = true;  // todo remove after implementing correct logic
-        int rounds = 0;
-        while (rounds < 6) {
+        boolean play = true;
+        while (play) {
+
+//            System.out.format("word in play: %s\n", String.valueOf(this.getWordInPlay()));   // todo remove
             String headerText = this.getHeaderText();       // get the header text
             String gameGridWithHeader = this.printGameGridWithHeader(gameGrid, headerText);     // print game grid with header
             System.out.print(gameGridWithHeader);
@@ -350,7 +351,7 @@ public class Hangman {
             do {
                 letter = inputStream(System.in);                                // get letter from user prompt
                 if (letter.length() != 1) {                                     // check input length
-                    System.out.println("Whoa!, one Letter at a time please");
+                    System.out.println("Whoa, one Letter at a time please!");
                 } else {
 
                     if (!isDuplicateLetter(letter.toCharArray(), this.getIncorrectList())
@@ -365,15 +366,58 @@ public class Hangman {
 
                             // check if word is complete
                             if (Arrays.equals(getCorrectList(), getWordInPlay())) {
-                                System.out.print("You wom!"); // todo add win text
-                                break;
+                                // print win game text
+                                String winGameText = this.getWinGameText( String.valueOf(this.getWordInPlay()) );
+                                System.out.println(winGameText);
+
+                                String playAgainText = this.getPlayGameAgainText();
+                                System.out.println(playAgainText);              // print play again test
+
+
+                                String playAgain = "";
+
+                                do {
+                                    playAgain = this.inputStream(System.in); // prompt user for yes or no
+
+                                    if (playAgain.equals("yes")) {
+                                        play = true;
+                                        init();                             // reset / init new game
+
+                                    } else if (playAgain.equals("no")) {
+                                        play = false;
+                                    } else {
+                                        System.out.println("Please type \"Yes\" or \"no\" ");
+                                    }
+                                } while (! (playAgain.equals("yes") || playAgain.equals("no")) );
+
                             }
 
                         } else {
 
                             // check incorrect list is not full
-                            if (this.getIncorrectList().length >= this.getWordInPlay().length) {
-                                return;
+                            if (this.tallyIncorrectList(this.getIncorrectList()) >= this.getWordInPlay().length) {
+                                System.out.println(String.format("Sorry, you did not guess the word %s.",
+                                        String.valueOf(this.getWordInPlay()) ));
+
+                                String playAgainText = this.getPlayGameAgainText();
+                                System.out.println(playAgainText);              // print play again test
+
+                                String playAgain = "";
+
+                                do {
+                                    playAgain = this.inputStream(System.in); // prompt user for yes or no
+
+                                    if (playAgain.equals("yes")) {
+                                        play = true;
+                                        init();                             // reset / init new game
+
+                                    } else if (playAgain.equals("no")) {
+                                        play = false;
+                                    } else {
+                                        System.out.println("Please type \"Yes\" or \"no\" ");
+                                    }
+                                } while (! (playAgain.equals("yes") || playAgain.equals("no")) );
+
                             } else {
                                 // update incorrect list
                                 setIncorrectList(
@@ -389,10 +433,7 @@ public class Hangman {
                     }
                 }
             } while (letter.length() > 1);                                              // if greater than 1 & , get new input
-            System.out.println(letter);
 
-            rounds++; // todo remove
-            play = false; // todo update or remove after implementing logic
         }
 
 
