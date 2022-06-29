@@ -14,7 +14,7 @@ public class HangmanTest {
         hangman = new Hangman();
 
         int rows = 5, cols = 7, poleOffset = 5, footerOffset = 3;
-        gameGrid = hangman.initGameGrid(rows, cols,poleOffset, footerOffset);
+        gameGrid = hangman.initGameGrid(rows, cols, poleOffset, footerOffset);
     }
 
     @DisplayName("Should init and return the game grid")
@@ -24,13 +24,7 @@ public class HangmanTest {
         char[] headerRowPattern = new char[]{'+', '-', '-', '-', '-', '-', '+'};
         char[] commonRowPattern = new char[]{' ', ' ', ' ', ' ', '|', ' ', ' '};
         char[] footerRowPattern = new char[]{' ', ' ', ' ', '=', '=', '=', '='};
-
-        assertTrue(gameGrid[0][0] == headerRowPattern[0], String.format("Row 0, column 0 should equal %s == %s)", gameGrid[0][0], headerRowPattern[0]));
-        assertTrue(gameGrid[0][1] == headerRowPattern[1], String.format("Row 0, column 0 should equal %s == %s)", gameGrid[0][1], headerRowPattern[1]));
-        assertTrue(gameGrid[0][2] == headerRowPattern[2], String.format("Row 0, column 0 should equal %s == %s)", gameGrid[0][2], headerRowPattern[2]));
-        assertTrue(gameGrid[0][3] == headerRowPattern[3], String.format("Row 0, column 0 should equal %s == %s)", gameGrid[0][3], headerRowPattern[3]));
-        assertTrue(gameGrid[0][4] == headerRowPattern[4], String.format("Row 0, column 0 should equal %s == %s)", gameGrid[0][4], headerRowPattern[4]));
-
+        int rowCount = (int) Arrays.stream(gameGrid).count();
 
         assertTrue(Arrays.equals(gameGrid[0], headerRowPattern),
                 String.format("Header row should match pattern: %s == %s",
@@ -42,9 +36,12 @@ public class HangmanTest {
                 () -> Arrays.equals(gameGrid[2], commonRowPattern),
                 () -> Arrays.equals(gameGrid[3], commonRowPattern));
 
-        assertTrue(Arrays.equals(gameGrid[4], footerRowPattern),
-                String.format("Footer row should match pattern: %s == %s",
-                        String.valueOf(gameGrid[4]).toString(), String.valueOf(footerRowPattern).toString()));
+        assertTrue(Arrays.equals(gameGrid[gameGrid.length-1], footerRowPattern),
+                String.format("Footer row should match pattern: %s :: %s ",
+                        String.valueOf(gameGrid[gameGrid.length-1]).toString(), String.valueOf(footerRowPattern).toString()));
+
+        assertTrue(rowCount == gameGrid.length,
+                String.format("Row count should equal number of grid rows %s :: %s ", rowCount, gameGrid.length));
 
     }
 
@@ -188,9 +185,10 @@ public class HangmanTest {
 
         assertTrue(Arrays.asList(wordsOfRow).contains(String.valueOf(wordInPlay)),
                 String.format("%s should be in words of selected row ", String.valueOf(wordInPlay)));
-        assertTrue(Arrays.equals(hangman.getWordInPlay(), wordInPlay),
+        assertArrayEquals(hangman.getWordInPlay(), wordInPlay,
                 String.format("Word in play property should be set to %s", String.valueOf(hangman.getWordInPlay())));
     }
+
 
     @AfterEach
     void afterEach() {

@@ -15,7 +15,6 @@ public class Hangman {
     private List<String> guessCorrectList;
     private List<String> guessIncorrectList;
     private HashMap<Integer, String[]> wordList;
-    private String gameWord;
     private char[][] gameGrid;
     private Scanner scanner;
 
@@ -43,7 +42,7 @@ public class Hangman {
                     } else {
                         gameGrid[r][c] = '-';
                     }
-                } else if (r == rows - 1 &&  c > poleOffset - footerOffset) {  // footer row
+                } else if (r == rows - 1 &&  c >= footerOffset) {  // footer row
                     gameGrid[r][c] = '=';
                 } else if (c == poleOffset) {
                     gameGrid[r][c] = '|';  // right pole column
@@ -129,10 +128,12 @@ public class Hangman {
 
         int idx = 0;
         String currentWord = "";
+
         for (char s : words.toCharArray()) {
-            if (idx == maxWordsInGameList) {
+            if (idx >= maxWordsInGameList) {
                 break;
             }
+
             if (s == '\n') {
                 wordArray[idx] = currentWord;
                 currentWord = "";
@@ -178,6 +179,17 @@ public class Hangman {
         // todo adjust game board method to adjust height according to selected word length
 
         // initialize game property fields, game board, wordList and set game word
+        String[] words = this.initWords();                                  // set word list
+        HashMap<Integer, String[]> wordList = this.setWordList(words);           // sort wordList by length
+        char[] word = this.selectWordInPlay(wordList, 3);              // select word in play
+        setWordInPlay(word);                                                // set wordInPlay property
+
+        // init game board with word length as height + 2 of game board
+        char[][] gameGrid =
+                initGameGrid(7, word.length + 2, word.length - 3, word.length - 5);
+
+        // update init game board test
+
 
         // print the game board
 
