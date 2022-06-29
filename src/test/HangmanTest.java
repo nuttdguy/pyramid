@@ -290,18 +290,28 @@ public class HangmanTest {
 
         assertEquals(incorrectList[0], testLetterOne[0],
                 String.format("%s should be at position 0 of incorrect list", testLetterOne[0]));
-        assertEquals(incorrectList[1], testLetterOne[0],
+        assertEquals(incorrectList[1], testLetterTwo[0],
                 String.format("%s should be at position 1 of incorrect list", testLetterOne[0]));
-        assertEquals(incorrectList[2], testLetterOne[0],
+        assertEquals(incorrectList[2], testLetterThree[0],
                 String.format("%s should be at position 2 of incorrect list", testLetterOne[0]));
-        assertEquals(incorrectList[3], testLetterOne[0],
+        assertEquals(incorrectList[3], testLetterFour[0],
                 String.format("%s should be at position 3 of incorrect list", testLetterOne[0]));
 
     }
 
+    @DisplayName("Should update game grid when letter is incorrect")
+    @Test
+    void updateGameGridTest() {
+        char[][] gameGrid = this.gameGrid;
 
+        // every method call should add a new game piece
+        gameGrid = hangman.updateGameGrid(gameGrid);
+        gameGrid = hangman.updateGameGrid(gameGrid);
 
+        assertTrue(gameGrid[1][3] == 'O', "Row 1, col 3 should contain \"O\" ");
+        assertTrue(gameGrid[2][3] == '|', "Row 1, col 3 should contain \"|\" ");
 
+    }
 
 
     @AfterEach

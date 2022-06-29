@@ -23,7 +23,7 @@ public class Hangman {
 
     public Hangman() {
         setMaxWordsInWordList(30);
-        setTryMultiplier(2);
+        setTryMultiplier(1);
     }
 
     public Hangman(int _maxWordsInGameList) {
@@ -274,7 +274,6 @@ public class Hangman {
         }
         return false;
     }
-
     public char[] updateCorrectList(char[] correctList, char[] wordInPlay, char[] letter) {
         char c = letter[letter.length-1];
         for (int i = 0; i < wordInPlay.length; i++) {
@@ -284,28 +283,36 @@ public class Hangman {
         }
         return correctList;
     }
-
     public char[] updateIncorrectList(char[] incorrectList, char[] letter) {
         char c = letter[letter.length-1];
         for (int i = 0; i < incorrectList.length; i++) {
             if (incorrectList[i] == '_') {
                 incorrectList[i] = c;
+                break;
             }
         }
 
         return incorrectList;
     }
-    public char[][] updateGameGrid(char[][] gameGrid, char[] letter) {
-        int rowsInGrid = gameGrid.length-1; // get the row height
-        char c = letter[letter.length-1];   // get the char letter
-        int col = 3;                        // set the column to update
-        int indexOfLetter;                  // get index of letter
-        for (int i = 0; i < wordInPlay.length; i++) {
-            if (wordInPlay[i] == c) { indexOfLetter = i; break; }
+    public char[][] updateGameGrid(char[][] gameGrid) {
+        int colToUpdate = 3;                        // set the column to update
+        int rowIndexToInsert = 0;
+
+        for (int i = 0; i < gameGrid.length; i++) {
+            char[] row = gameGrid[i];
+            if (row[colToUpdate] == ' ') {
+                rowIndexToInsert = i;
+                break;
+            }
         }
 
+        if (rowIndexToInsert == 1) {
+            gameGrid[rowIndexToInsert][colToUpdate] = 'O';
+        } else {
+            gameGrid[rowIndexToInsert][colToUpdate] = '|';
+        }
 
-        return null;
+        return gameGrid;
     }
     public void start() {
         // todo adjust game board method to adjust height according to selected word length
@@ -315,7 +322,7 @@ public class Hangman {
         System.out.format("word in play: %s\n", String.valueOf(this.getWordInPlay()));   // todo remove
         boolean play = true;  // todo remove after implementing correct logic
         int rounds = 0;
-        while (rounds < 2) {
+        while (rounds < 4) {
             String headerText = this.getHeaderText();       // get the header text
             String gameGridWithHeader = this.printGameGridWithHeader(gameGrid, headerText);     // print game grid with header
             System.out.print(gameGridWithHeader);
@@ -353,11 +360,15 @@ public class Hangman {
                             }
 
                         } else {
-                            // updateGameGrid(this.getGameGrid(), letter.toCharArray());   // update game board grid
+
+                            // check incorrect list is not full
 
                             // update incorrect list
                             setIncorrectList(
                                    this.updateIncorrectList(this.getIncorrectList(), letter.toCharArray()));
+
+                            // update game board grid
+                            setGameGrid(updateGameGrid(this.getGameGrid()));
 
                         }
                     } else {
