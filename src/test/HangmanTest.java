@@ -1,6 +1,7 @@
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.*;
 
+import java.io.ByteArrayInputStream;
 import java.util.Arrays;
 import java.util.HashMap;
 
@@ -212,7 +213,16 @@ public class HangmanTest {
                 String.format("Correct list should return pattern %s", String.valueOf(testCorrectListPattern)));
     }
 
+    @DisplayName("Should return a String from input stream")
+    @Test
+    void inputStreamTest() {
+        String testWord = "test";
+        ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(testWord.getBytes());
+        String testInput = hangman.inputStream(byteArrayInputStream);
 
+        assertTrue(testInput.equals(testWord),
+                String.format("Output from input stream should equal %s ", testWord));
+    }
 
     @AfterEach
     void afterEach() {

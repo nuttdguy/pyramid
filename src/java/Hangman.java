@@ -1,5 +1,4 @@
-import org.jetbrains.annotations.NotNull;
-
+import java.io.InputStream;
 import java.util.*;
 
 public class Hangman {
@@ -210,6 +209,10 @@ public class Hangman {
     }
     public void setCorrectList(char[] correctList) {this.correctList = correctList;}
 
+    public String inputStream(InputStream inputStream) {
+        return new Scanner(inputStream).next();
+    }
+
     public void start() {
         // todo adjust game board method to adjust height according to selected word length
 
@@ -237,6 +240,8 @@ public class Hangman {
         char[] correctList = initCorrectList(this.getWordInPlay());             // init the correct list
         setCorrectList(correctList);                                            // set the correct list
 
+//        Scanner scanner = initInputStream(System.in);                           // init scanner object
+
         boolean play = true;  // todo remove after implementing correct logic
         while (play) {
             String headerText = this.getHeaderText();       // get the header text
@@ -252,7 +257,8 @@ public class Hangman {
             System.out.println(guessLetterText);                                // print guessed letter text
             System.out.println();
 
-            // get letter from user prompt
+            String letter = inputStream(System.in);                             // get letter from user prompt
+            System.out.println(letter);
             // check if the letter is in missed or correct list
                 // if in, display the duplicate letter text
                 // return
