@@ -17,7 +17,7 @@ public class HangmanTest {
         gameGrid = hangman.initGameGrid(rows, cols, poleOffset, footerOffset);
     }
 
-    @DisplayName("Should init and return the game grid")
+    @DisplayName("Should init and return top, common and footer rows of the game grid")
     @Test
     void initGameGridTest() {
 
@@ -60,14 +60,14 @@ public class HangmanTest {
         assertTrue(grid.equals(gridPattern), String.format("Generated String grid should match pattern \n%s = \n%s", grid, gridPattern));
     }
 
-    @DisplayName("Should return String of the game header text")
-    @Test
-    void printGameHeaderTest() {
-        String headerText = hangman.getHeaderText();
-        String header = "HANGMAN";
-
-        assertTrue(headerText.equals(header), String.format("Header should equal %s == %s", headerText, header));
-    }
+//    @DisplayName("Should return String of the game header text")
+//    @Test
+//    void printGameHeaderTest() {
+//        String headerText = hangman.getHeaderText();
+//        String header = "HANGMAN";
+//
+//        assertTrue(headerText.equals(header), String.format("Header should equal %s == %s", headerText, header));
+//    }
 
     @DisplayName("Should return String of missed letter text")
     @Test

@@ -53,12 +53,12 @@ public class Hangman {
         }
         return gameGrid;
     }
-    private String printGameHeader(String header) {return String.format("%s\n", header);}
+//    private String printGameHeader(String header) {return String.format("%s\n", header);}
     public String printGameGridWithHeader(char[][] gameGrid, String headerText) {
         StringBuilder grid = new StringBuilder();
-        String header = printGameHeader(headerText);
+//        String header = this.printGameHeader(headerText);
 
-        grid.append(header); // append the header
+        grid.append(headerText +"\n"); // append the header
         for (int r = 0; r < gameGrid.length; r++) {
             char[] row = gameGrid[r];
 
@@ -179,19 +179,25 @@ public class Hangman {
         // todo adjust game board method to adjust height according to selected word length
 
         // initialize game property fields, game board, wordList and set game word
-        String[] words = this.initWords();                                  // set word list
-        HashMap<Integer, String[]> wordList = this.setWordList(words);           // sort wordList by length
-        char[] word = this.selectWordInPlay(wordList, 3);              // select word in play
-        setWordInPlay(word);                                                // set wordInPlay property
+        String[] words = this.initWords();                                      // set word list
+        HashMap<Integer, String[]> wordList = this.setWordList(words);          // sort wordList by length
+        int randomWordLength = (int) (Math.random() * 5);
+        char[] word = this.selectWordInPlay(wordList, randomWordLength);        // select word in play
+        setWordInPlay(word);                                                    // set wordInPlay property
 
         // init game board with word length as height + 2 of game board
         char[][] gameGrid =
-                initGameGrid(7, word.length + 2, word.length - 3, word.length - 5);
+                initGameGrid(
+                        word.length + 3,
+                        7,
+                        5,
+                        3);
 
-        // update init game board test
+        String headerText = this.getHeaderText();       // get the header text
+        String gameGridWithHeader = this.printGameGridWithHeader(gameGrid, headerText);     // print game grid with header
+        System.out.print(gameGridWithHeader);
 
-
-        // print the game board
+        // print missed letter text
 
 
 
