@@ -1,36 +1,43 @@
+import org.jetbrains.annotations.NotNull;
+
 import java.util.*;
 
 public class Hangman {
 
-    private final String headerText = "HANGMAN";
-    private final String letterMissText = "Missed letters: ";
-    private final String letterGuessText = "Guess a letter. ";
-    private final String letterDuplicateText = "You have already guessed that letter. Choose again. ";
+    private final String headerText = "H A N G M A N";
+    private final String incorrectText = "Missed letters: ";
+    private final String guessLetterText = "Guess a letter. ";
+    private final String duplicateLetterText = "You have already guessed that letter. Choose again. ";
     private final String winGameText = "Yes! The secret word is \"%s\"! You have won!";
     private final String playGameAgainText = "Do you want to play again? (yes or no)";
 
-    private int wordsMaxInWordList;
+    private int tryMultiplier;
+    private int maxWordsInWordList;
+    private int maxGuessAttempt;
     private char[] wordInPlay;
     private String[] words;
-    private List<String> guessCorrectList;
-    private List<String> guessIncorrectList;
+    private char[] correctList;
+    private char[] incorrectList;
     private HashMap<Integer, String[]> wordList;
     private char[][] gameGrid;
     private Scanner scanner;
 
     public Hangman() {
-        setWordsMaxInWordList(30);
+        setMaxWordsInWordList(30);
+        setTryMultiplier(2);
     }
 
     public Hangman(int _maxWordsInGameList) {
-        setWordsMaxInWordList(_maxWordsInGameList);
+        setMaxWordsInWordList(_maxWordsInGameList);
     }
     public String getHeaderText() {return headerText; }
-    public String getLetterMissText() {return letterMissText;}
-    public String getLetterGuessText() {return letterGuessText;}
-    public String getLetterDuplicateText() {return letterDuplicateText;}
+    public String getIncorrectText() {return incorrectText;}
+    public String getGuessLetterText() {return guessLetterText;}
+    public String getDuplicateLetterText() {return duplicateLetterText;}
     public String getWinGameText(String gameWord) {return String.format(winGameText, gameWord);}
     public String getPlayGameAgainText() {return playGameAgainText; }
+
+
     public char[][] initGameGrid(int rows, int cols, int poleOffset, int footerOffset) {
         gameGrid = new char[rows][cols];
         for (int r = 0; r < rows; r++) {
@@ -69,8 +76,8 @@ public class Hangman {
         }
         return grid.toString();
     }
-    public int getWordsMaxInWordList() {return wordsMaxInWordList;}
-    public void setWordsMaxInWordList(int wordsMaxInWordList) {this.wordsMaxInWordList = wordsMaxInWordList;}
+    public int getMaxWordsInWordList() {return maxWordsInWordList;}
+    public void setMaxWordsInWordList(int maxWordsInWordList) {this.maxWordsInWordList = maxWordsInWordList;}
     public String[] initWords() {
         String words = "data\n" +
                 "law\n" +
@@ -123,7 +130,7 @@ public class Hangman {
                 "mall\n" +
                 "hair";
 
-        int maxWordsInGameList = getWordsMaxInWordList();
+        int maxWordsInGameList = getMaxWordsInWordList();
         String[] wordArray = new String[maxWordsInGameList];
 
         int idx = 0;
@@ -174,6 +181,34 @@ public class Hangman {
     }
     public void setWordInPlay(char[] wordInPlay) { this.wordInPlay = wordInPlay;}
     public char[] getWordInPlay() {return wordInPlay;}
+    public char[] getIncorrectList() {return incorrectList; }
+    public void setIncorrectList(char[] incorrectList) {
+        this.incorrectList = incorrectList;
+    }
+    public char[] initIncorrectList(char[] wordInPlay) {
+        char[] incorrectList = new char[wordInPlay.length * this.getTryMultiplier()];
+        int index = 0;
+        for (char n : incorrectList) {
+            incorrectList[index] = '_';
+            index++;
+        }
+        return incorrectList;
+    }
+    public int initMaxGuessAttempt(char[] wordInPlay) {return wordInPlay.length * this.getTryMultiplier();}
+    public void setTryMultiplier(int tryMultiplier) {this.tryMultiplier = tryMultiplier;}
+    public int getTryMultiplier() {return tryMultiplier;}
+    public int getMaxGuessAttempt() {return maxGuessAttempt;}
+    public void setMaxGuessAttempt(int maxGuessAttempt) {this.maxGuessAttempt = maxGuessAttempt;}
+    public char[] initCorrectList(char[] wordInPlay) {
+        char[] correctList = new char[wordInPlay.length];
+        int index = 0;
+        for (char n : correctList) {
+            correctList[index] = '_';
+            index++;
+        }
+        return correctList;
+    }
+    public void setCorrectList(char[] correctList) {this.correctList = correctList;}
 
     public void start() {
         // todo adjust game board method to adjust height according to selected word length
@@ -193,11 +228,43 @@ public class Hangman {
                         5,
                         3);
 
-        String headerText = this.getHeaderText();       // get the header text
-        String gameGridWithHeader = this.printGameGridWithHeader(gameGrid, headerText);     // print game grid with header
-        System.out.print(gameGridWithHeader);
+        int maxGuessAttempt = initMaxGuessAttempt(this.getWordInPlay());        // init max attempts allowed
+        setMaxGuessAttempt(maxGuessAttempt);                                    // set max attempts allowed
 
-        // print missed letter text
+        char[] incorrectList = initIncorrectList(this.getWordInPlay());         // init the incorrect list
+        this.setIncorrectList(incorrectList);                                   // set incorrectList
+
+        char[] correctList = initCorrectList(this.getWordInPlay());             // init the correct list
+        setCorrectList(correctList);                                            // set the correct list
+
+        boolean play = true;  // todo remove after implementing correct logic
+        while (play) {
+            String headerText = this.getHeaderText();       // get the header text
+            String gameGridWithHeader = this.printGameGridWithHeader(gameGrid, headerText);     // print game grid with header
+            System.out.print(gameGridWithHeader);
+
+            String missedLetterText = this.getIncorrectText();                  // print missed letter text
+            System.out.print(missedLetterText);
+            System.out.println(String.valueOf(getIncorrectList()));             // print missed letters
+
+            String guessLetterText = this.getGuessLetterText();                 // get the guessed letter text
+            System.out.println(String.valueOf(correctList));                    // print guessed letters
+            System.out.println(guessLetterText);                                // print guessed letter text
+            System.out.println();
+
+            // get letter from user prompt
+            // check if the letter is in missed or correct list
+                // if in, display the duplicate letter text
+                // return
+            // check if letter is contained with word in play
+            // update game board grid
+            // update incorrect list
+            // update correct list
+
+
+            play = false; // todo update or remove after implementing logic
+        }
+
 
 
 

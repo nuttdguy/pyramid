@@ -50,7 +50,7 @@ public class HangmanTest {
     void printGameGridTest() {
         String header = hangman.getHeaderText();
         String grid = hangman.printGameGridWithHeader(gameGrid, header);
-        String gridPattern = "HANGMAN\n"
+        String gridPattern = "H A N G M A N\n"
                 .concat("+-----+\n")
                 .concat("     | \n")
                 .concat("     | \n")
@@ -71,29 +71,29 @@ public class HangmanTest {
 
     @DisplayName("Should return String of missed letter text")
     @Test
-    void printMissedLetterTest() {
-        String letterMissText = hangman.getLetterMissText();
-        String letterMiss = "Missed letters: ";
-        assertTrue(letterMissText.equals(letterMiss),
-                String.format("Text for missed letters should equal %s == %s", letterMissText, letterMiss));
+    void printIncorrectTextTest() {
+        String incorrectText = hangman.getIncorrectText();
+        String testText = "Missed letters: ";
+        assertTrue(incorrectText.equals(testText),
+                String.format("Text for missed letters should equal %s == %s", incorrectText, testText));
     }
 
     @DisplayName("Should return String of the letter guess text")
     @Test
-    void printLetterGuessTest() {
-        String letterGuessText = hangman.getLetterGuessText();
-        String letterGuess = "Guess a letter. ";
-        assertTrue(letterGuessText.equals(letterGuess),
-                String.format("Guessed letter text should equal %s == %s", letterGuessText, letterGuess));
+    void printGuessLetterTest() {
+        String letterGuessText = hangman.getGuessLetterText();
+        String testText = "Guess a letter. ";
+        assertTrue(letterGuessText.equals(testText),
+                String.format("Guessed letter text should equal %s == %s", letterGuessText, testText));
     }
 
     @DisplayName("Should return String of duplicate guess text")
     @Test
-    void printLetterDuplicateTextGuess() {
-        String letterDuplicateText = hangman.getLetterDuplicateText();
-        String letterDuplicate = "You have already guessed that letter. Choose again. ";
-        assertTrue(letterDuplicateText.equals(letterDuplicate),
-                String.format("Guessing duplicate letter should print %s", letterDuplicateText));
+    void printDuplicateLetterTextGuess() {
+        String duplicateLetterText = hangman.getDuplicateLetterText();
+        String testText = "You have already guessed that letter. Choose again. ";
+        assertTrue(duplicateLetterText.equals(testText),
+                String.format("Guessing duplicate letter should print %s", duplicateLetterText));
     }
 
     @DisplayName("Should return String of win game text")
@@ -188,6 +188,30 @@ public class HangmanTest {
         assertArrayEquals(hangman.getWordInPlay(), wordInPlay,
                 String.format("Word in play property should be set to %s", String.valueOf(hangman.getWordInPlay())));
     }
+
+    @DisplayName("Should initialize incorrect list using word length")
+    @Test
+    void intiIncorrectListTest() {
+        char[] testWord = new char[]{'t', 'e', 's', 't'};
+        char[] testIncorrectListPattern = new char[]{'_', '_', '_', '_', '_', '_', '_', '_'};
+        char[] incorrectList = hangman.initIncorrectList(testWord);
+
+        assertTrue(Arrays.equals(testIncorrectListPattern, incorrectList),
+                String.format("Incorrect list should return pattern %s", String.valueOf(testIncorrectListPattern)));
+
+    }
+
+    @DisplayName("Should initialize correct list using word length")
+    @Test
+    void initCorrectListTest() {
+        char[] testWord = new char[]{'t', 'e', 's', 't'};
+        char[] testCorrectListPattern = new char[]{'_', '_', '_', '_'};
+        char[] correctList = hangman.initCorrectList(testWord);
+
+        assertTrue(Arrays.equals(testCorrectListPattern, correctList),
+                String.format("Correct list should return pattern %s", String.valueOf(testCorrectListPattern)));
+    }
+
 
 
     @AfterEach
