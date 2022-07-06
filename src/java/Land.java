@@ -1,7 +1,7 @@
 public class Land extends Grid {
 
-    Land() {}
-
-    
+    Land() {
+        super();
+    }
 
 }
