@@ -3,9 +3,9 @@ import java.util.Arrays;
 import static org.junit.jupiter.api.Assertions.*;
 
 
-public class Tests {
+public class GridTests {
 
-    Grid land;
+    Land land;
 
     @BeforeEach
     void beforeEach() {
@@ -26,15 +26,15 @@ public class Tests {
     @Test
     void generateTheGridTest() {
         int height = 10, width = 10;
-        char[][] land = Grid.generateTheGrid(height, width);
+        char[][] expected = land.generateTheGrid(height, width);
         int actualCount = 0;
-        for (char[] c : land) {
+        for (char[] c : expected) {
             for (char k : c) {
                 actualCount++;
             }
         }
 
-        assertTrue(land[0].length == height, "Width should return expected width");
+        assertTrue(expected[0].length == height, "Width should return expected width");
         assertTrue(actualCount == height * width, "Height should return expected cell count :: " + actualCount);
     }
 
@@ -43,8 +43,8 @@ public class Tests {
     void fillGridTest() {
         int height = 2, width = 4;
         char[][] expected = new char[][]{{'+', '+', '+', '+'}, {'+', '+', '+', '+'}};
-        char[][] actual = Grid.generateTheGrid(height, width);
-        actual = Grid.fillTheGrid(actual);
+        char[][] actual = land.generateTheGrid(height, width);
+        actual = land.fillTheGrid(actual);
 
         assertTrue(Arrays.deepEquals(expected, actual), "Should match expected");
     }
@@ -53,8 +53,8 @@ public class Tests {
     @Test
     void getElementPositionTest() {
         int height = 4, width = 4;
-        char[][] expectedGrid = Grid.generateTheGrid(height, width);
-        expectedGrid = Grid.fillTheGrid(expectedGrid);
+        char[][] expectedGrid = land.generateTheGrid(height, width);
+        expectedGrid = land.fillTheGrid(expectedGrid);
         land.setGrid(expectedGrid);
         char actual = land.setElementPosition(2, 2, 'x');
         char expected = land.getElementAtPosition(2, 2);
@@ -67,8 +67,8 @@ public class Tests {
     @Test
     void displayTheGrid() {
         int height = 4, width = 8;
-        char[][] expectedGrid = Grid.generateTheGrid(height, width);
-        expectedGrid = Grid.fillTheGrid(expectedGrid);
+        char[][] expectedGrid = land.generateTheGrid(height, width);
+        expectedGrid = land.fillTheGrid(expectedGrid);
         land.setGrid(expectedGrid);
 
         String expected = "" +
@@ -76,9 +76,22 @@ public class Tests {
                 "+      +\n" +
                 "+      +\n" +
                 "++++++++\n";
-        String actual = Grid.displayTheGrid(land.getGrid());
+        String actual = land.displayTheGrid(land.getGrid());
 
         assertTrue(actual.equals(expected), String.format("Should match \n%s", expected));
     }
 
+    @DisplayName("Should return a char from stat header options")
+    @Test
+    void getCharOfStatHeaderTest() {
+        char expectedFirst = 'S';
+        char expectedLast = 'H';
+        char[][] grid = land.getGrid();
+        char actualFirst = land.getCharOfStatHeader(grid, 0, 3);
+        char actualLast = land.getCharOfStatHeader(grid, 7, 3);
+
+        assertEquals(actualFirst, expectedFirst);
+        assertEquals(actualLast, expectedLast);
+
+    }
 }

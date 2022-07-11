@@ -1,15 +1,7 @@
 public class Game {
 
+        Game() {}
 
-        public void getItem() {
-
-        }
-
-        class test {
-                String getItem() {
-                        return "Test";
-                }
-        }
 }
 
 

@@ -1,2 +1,4 @@
-public class Goblin {
+public class Goblin extends Specie {
+    Goblin() {}
+
 }
