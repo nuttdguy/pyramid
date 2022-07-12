@@ -39,4 +39,6 @@ public class CharacterTests {
         assertTrue(goblin.getCoordinateY() >= 0);
 
     }
+
+
 }

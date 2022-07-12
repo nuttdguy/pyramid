@@ -16,7 +16,7 @@ public class GridTests {
     @Test
     void getRandomDimensionTest() {
         int maxDimension = 100;
-        int actual = Grid.getRandomDimension(maxDimension);
+        int actual = Grid.getRandomWithin(maxDimension);
 
         assertTrue(actual < maxDimension, "Should return value less than max dimension");
         assertTrue(actual >= 0, "Should return value greater than 0");
@@ -81,17 +81,5 @@ public class GridTests {
         assertTrue(actual.equals(expected), String.format("Should match \n%s", expected));
     }
 
-    @DisplayName("Should return a char from stat header options")
-    @Test
-    void getCharOfStatHeaderTest() {
-        char expectedFirst = 'S';
-        char expectedLast = 'H';
-        char[][] grid = land.getGrid();
-        char actualFirst = land.getCharOfStatHeader(grid, 0, 3);
-        char actualLast = land.getCharOfStatHeader(grid, 7, 3);
 
-        assertEquals(actualFirst, expectedFirst);
-        assertEquals(actualLast, expectedLast);
-
-    }
 }

@@ -1,18 +1,17 @@
 import java.util.ArrayList;
-import java.util.Arrays;
 
 abstract class Grid {
     private char[][] grid;
     Grid() {
         init();
     }
-    public static int getRandomDimension(int _maxDimension) {
-        return (int) (Math.random() * _maxDimension);
+    public static int getRandomWithin(int _maxBoundary) {
+        return (int) (Math.random() * _maxBoundary);
     }
-    public char[][] generateTheGrid(int _yHeight, int _xWidth) {
+    protected char[][] generateTheGrid(int _yHeight, int _xWidth) {
         return new char[_yHeight][_xWidth];
     }
-    public char[][] fillTheGrid(char[][] land) {
+    protected char[][] fillTheGrid(char[][] land) {
         char fill = ' ';
         char border = '+';
         if (land.length == 0) { return land; }
@@ -33,12 +32,12 @@ abstract class Grid {
 
         return land;
     }
-    public char[][] fillTheGridWithStat(char[][] land) {
+    protected char[][] fillTheGridWithStat(char[][] land) {
         char fill = ' ';
         char border = '+';
         if (land.length == 0) { return land; }
 
-        int statOffSet = land[0].length - (land[0].length / 3);
+        int statOffSet = getStatOffset();
         int statOffSetWithPadding = statOffSet + 2;
 
         for (int y = 0; y < land.length; y++) {
@@ -71,6 +70,9 @@ abstract class Grid {
 
         return land;
     }
+    protected int getStatOffset() {
+        return this.grid[0].length - (grid[0].length / 5);
+    }
     protected char getCharOfStatHeader(char[][] grid, int letterPosition, int row) {
         char[][] statHeader =
                 new char[][]{
@@ -78,7 +80,7 @@ abstract class Grid {
                         {'S', 'T', 'R', 'E', 'N', 'G', 'T', 'H'},
                         {'D', 'E', 'F', 'E', 'N', 'S', 'E'},
                         {'M', 'O', 'V', 'E'},
-                        {'E', 'N', 'E', 'M', 'I', 'E', 'S'}
+                        {'G', 'O', 'B', 'L', 'I', 'N', 'S'}
                 };
         char letter = ' ';
         try {
@@ -99,8 +101,7 @@ abstract class Grid {
 
         return letter;
     }
-
-    public String displayTheGrid(char[][] _grid) {
+    protected String displayTheGrid(char[][] _grid) {
         String gridView = "";
         for (char[] y : _grid) {
             for (char x : y) {
@@ -110,7 +111,7 @@ abstract class Grid {
         }
         return gridView;
     }
-    public String displayTheHeader(String _headerText) {
+    protected String displayTheHeader(String _headerText) {
         int paddingLength = (this.getGrid()[0].length - _headerText.length()) / 2;
         String padding = "";
         for (int i = 0; i < paddingLength-1; i++) {
@@ -118,8 +119,10 @@ abstract class Grid {
         }
         return String.format("%s %s %s", padding, _headerText, padding);
     }
-    protected char getElementAtPosition(int _x, int _y) {return getGrid()[_x][_y];}
-    protected char setElementPosition(int _x, int _y, char _element) {return getGrid()[_x][_y] = _element;}
+    protected char getElementAtPosition(int _x, int _y) {return getGrid()[_y][_x];}
+    protected char setElementPosition(int _x, int _y, char _element) {
+        return getGrid()[_y][_x] = _element;
+    }
     protected char[][] getGrid() {
         return grid;
     }
@@ -128,7 +131,7 @@ abstract class Grid {
     }
     protected void init() {
         int y = 15; // Grid.getRandomDimension(50);
-        int x = 60; // Grid.getRandomDimension(100);
+        int x = 75; // Grid.getRandomDimension(100);
         this.grid = generateTheGrid(y, x);
         this.fillTheGridWithStat(this.grid);
     }

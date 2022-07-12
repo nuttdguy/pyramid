@@ -3,14 +3,13 @@
   <component name="ChangeListManager">
     <list default="true" id="5a7bbe8d-c466-47cf-a156-6713a5a89d2d" name="Changes" comment="# // TEMPLATE&#10;# Subject line (try to keep under 50 characters)&#10;&#10;# Multi-line description of commit,&#10;# feel free to be detailed.&#10;&#10;# [Ticket: X]">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/java/Game.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/java/Game.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/java/Game.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/java/Goblin.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/java/Goblin.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/java/Grid.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/java/Grid.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/java/Human.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/java/Human.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/java/Land.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/java/Land.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/java/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/java/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/java/Specie.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/java/Specie.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/Tests.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/GridTests.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/CharacterTests.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/CharacterTests.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/GridTests.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/GridTests.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -55,7 +54,7 @@
     &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;
   }
 }</component>
-  <component name="RunManager" selected="JUnit.CharacterTests">
+  <component name="RunManager" selected="Application.Main">
     <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="Main" />
       <module name="humans_vs_goblins" />
@@ -82,6 +81,16 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="GameTests.playerFactoryTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="humans_vs_goblins" />
+      <option name="PACKAGE_NAME" value="" />
+      <option name="MAIN_CLASS_NAME" value="GameTests" />
+      <option name="METHOD_NAME" value="playerFactoryTest" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="GridTests" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="humans_vs_goblins" />
       <option name="PACKAGE_NAME" value="" />
@@ -91,23 +100,13 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="GridTests.reverseAStringTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="humans_vs_goblins" />
-      <option name="PACKAGE_NAME" value="" />
-      <option name="MAIN_CLASS_NAME" value="GridTests" />
-      <option name="METHOD_NAME" value="reverseAStringTest" />
-      <option name="TEST_OBJECT" value="method" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="JUnit.CharacterTests" />
         <item itemvalue="Application.Main" />
         <item itemvalue="JUnit.GridTests" />
+        <item itemvalue="JUnit.GameTests.playerFactoryTest" />
+        <item itemvalue="JUnit.CharacterTests" />
         <item itemvalue="JUnit.CharacterTests.humanClassTest" />
-        <item itemvalue="JUnit.GridTests.reverseAStringTest" />
       </list>
     </recent_temporary>
   </component>
