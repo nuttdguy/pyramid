@@ -4,10 +4,9 @@
     <list default="true" id="5a7bbe8d-c466-47cf-a156-6713a5a89d2d" name="Changes" comment="# // TEMPLATE&#10;# Subject line (try to keep under 50 characters)&#10;&#10;# Multi-line description of commit,&#10;# feel free to be detailed.&#10;&#10;# [Ticket: X]">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/java/Game.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/java/Game.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/java/Grid.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/java/Grid.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/java/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/java/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/java/Mobilize.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/java/Mobilize.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/java/Specie.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/java/Specie.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/java/Stat.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/java/Stat.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/CharacterTests.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/CharacterTests.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -52,7 +51,7 @@
     &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;
   }
 }</component>
-  <component name="RunManager" selected="JUnit.CharacterTests">
+  <component name="RunManager" selected="Application.Main">
     <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="Main" />
       <module name="humans_vs_goblins" />
@@ -100,9 +99,9 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Application.Main" />
         <item itemvalue="JUnit.CharacterTests" />
         <item itemvalue="JUnit.GridTests" />
-        <item itemvalue="Application.Main" />
         <item itemvalue="JUnit.GameTests.playerFactoryTest" />
         <item itemvalue="JUnit.CharacterTests.humanClassTest" />
       </list>
@@ -129,16 +128,5 @@
         </entry>
       </map>
     </option>
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/java/Game.java</url>
-          <line>147</line>
-          <option name="timeStamp" value="20" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
   </component>
 </project>

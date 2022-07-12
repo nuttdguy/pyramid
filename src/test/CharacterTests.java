@@ -20,7 +20,7 @@ public class CharacterTests {
         assertTrue(human.getHealth() >= 0);
         assertTrue(human.getDefense() >= 0);
         assertTrue(human.getStrength() >= 0);
-        assertTrue(human.getMoveDistance() >= 0);
+        assertTrue(human.getMovePerTurn() >= 0);
         assertTrue(human.getCoordinateX() >= 0);
         assertTrue(human.getCoordinateY() >= 0);
 
@@ -34,7 +34,7 @@ public class CharacterTests {
         assertTrue(goblin.getHealth() >= 0);
         assertTrue(goblin.getDefense() >= 0);
         assertTrue(goblin.getStrength() >= 0);
-        assertTrue(goblin.getMoveDistance() >= 0);
+        assertTrue(goblin.getMovePerTurn() >= 0);
         assertTrue(goblin.getCoordinateX() >= 0);
         assertTrue(goblin.getCoordinateY() >= 0);
 

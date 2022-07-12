@@ -46,7 +46,7 @@ abstract class Specie implements Stat, Mobilize, Combatable {
     }
 
     @Override
-    public int getMoveDistance() {
+    public int getMovePerTurn() {
         return this.moveDistance;
     }
 

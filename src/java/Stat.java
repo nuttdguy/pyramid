@@ -3,7 +3,7 @@ public interface Stat {
     double getHealth();
     double getStrength();
     double getDefense();
-    int getMoveDistance();
+    int getMovePerTurn();
 
     void setHealth(double _health);
     void setStrength(double _strength);

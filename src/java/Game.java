@@ -39,7 +39,7 @@ public class Game {
         String stat = type.equals(StatType.HEALTH) ? String.valueOf(player.getHealth()) :
                 type.equals(StatType.STRENGTH) ? String.valueOf(player.getStrength()) :
                 type.equals(StatType.DEFENSE) ? String.valueOf(player.getDefense()) :
-                type.equals(StatType.MOVE_DISTANCE) ? String.valueOf(player.getMoveDistance()) : null;
+                type.equals(StatType.MOVE_DISTANCE) ? String.valueOf(player.getMovePerTurn()) : null;
 
         if (stat != null) {
             updateStatOfHelper(col, row, stat);
@@ -97,13 +97,12 @@ public class Game {
         }
         return players;
     }
-
     protected char keyPress() {
         return new Scanner(in).next().charAt(0);
     }
 
     protected boolean moveOnePlayer(Human player) {
-        int movesLeft = player.getMoveDistance();
+        int movesLeft = player.getMovePerTurn();
         char action;
         do {
             // prompt player for action, i.e. walk or defend
@@ -112,59 +111,59 @@ public class Game {
             action = keyPress();
             if (action == 'm') {
                 out.println("Do you want to move n, e, s oe w?");
-                char key = keyPress();
-                if (key == 'n' || key == 'e' || key == 's' || key == 'w') {
+                char direction = keyPress();
+                if (direction == 'n' || direction == 'e' || direction == 's' || direction == 'w') {
                     try {
-                        handleOnePlayerMove(player, key);
-                        movesLeft--;
+                        // check boundary here
+                        int row = player.getCoordinates()[0], col = player.getCoordinates()[1];
+                        if (isPlayerMoveWithinGameBounds(row, col)) {
+                            char elementAtPlayerXy = land.getElementAtPosition(row, col - 1);
+                            if (elementAtPlayerXy == 'G') {
+                                // combat
+                            } else {
+                                handleOnePlayerMove(player, direction, row, col);
+                                out.println(land.displayTheHeader());
+                                out.println(land.displayTheGrid(land.getGrid()));
+                                movesLeft--;
+                                out.println("You moved 1 space " + direction + ". You have " + movesLeft + " moves left.");
+                                if (movesLeft == 0) { action = 'd'; }
+                            }
+
+                        } else {
+                            out.println("You cannot move in that direction");
+                        }
+
                     } catch (IndexOutOfBoundsException e) {
                         out.println(e);
                     }
 
                 } else {
-                    out.println("Invalid option " + key + ". Try again?");
+                    out.println("Invalid option " + direction + ". Try again?");
                 }
             }
 
-        } while (action != 'd' || movesLeft > 0 );
+        } while (movesLeft > 0 || action != 'd' );
 
         return true;
     }
+    protected boolean isPlayerMoveWithinGameBounds(int row, int col) {
+        return (row > 0 && row < land.rowHeight() - 1) && (col > 0 && col < land.colWidth() - land.colOffset() - 1);
+    }
 
-    protected void handleOnePlayerMove(Human player, char direction) throws IndexOutOfBoundsException {
-        int row = player.getCoordinates()[0], col = player.getCoordinates()[1];
-        int colBoundary = land.colWidth();
-        int rowBoundary = land.rowHeight();
-        char elementAtPlayerXy;
+    protected Human handleOnePlayerMove(Human player, char direction, int row, int col) throws IndexOutOfBoundsException {
+        land.setElementPosition(row, col, land.defaultMarker()); // set the default marker before updating move
         if (direction == 'n') {
-            // if index does not work, move fails, return for user input
-            elementAtPlayerXy = land.getElementAtPosition(row, col - 1);
-            if (elementAtPlayerXy == 'G') {
-                // enter battle
-            } else {
-                // extract into own helper func to check boundary
-                if ((row > 0 && row < rowBoundary) && (col > 0 && col < colBoundary)) {
-                    // update last marker with default and new marker with human marker
-                    land.setElementPosition(row, col, land.defaultMarker());
-                    land.setElementPosition(row-1, col, player.getMarker());
-                    player.setCoordinate(row-1, col);
-                } else {
-                    out.println("You cannot move in that direction");
-                }
-                out.println(land.displayTheHeader());
-                out.println(land.displayTheGrid(land.getGrid()));
-            }
+            row -= 1;
+        } else if (direction == 's') {
+            row += 1;
+        } else if (direction == 'w') {
+            col -= 1;
+        } else if (direction == 'e') {
+            col += 1;
         }
-        out.println("You moved 1 space " + direction);
-        // on each keypress, move player 1 space
-        // get current xy pos, then if left, x-1, right x+1, north=y+1, south y-1
-        // check if grid has enemy
-        // when enemy, engage combat
-        // when not enemy, update map, prompt for next action
-
-        // when defend, engage in replenish health
-        // end turn
-
+        land.setElementPosition(row, col, player.getMarker());
+        player.setCoordinate(row, col);
+        return player;
     }
 
     public void start() {
