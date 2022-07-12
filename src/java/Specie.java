@@ -108,23 +108,7 @@ abstract class Specie implements Stat, Mobilize, Combatable {
 
     @Override
     public double attack() {
-        // todo implement
-        // while health of player1 or player 2 not less than or equal to zero
-            // get player1 attack damage using math.random * strength
-                // debit health of player2 (player1 attack - player2 defense)
-                // display combat narrative
-                // update player2 stats
-                // if player2 health is not zero
-                    // get player2 attack damage using math.random * strength
-                        // debit health of player1 by player 2 attack - player1 defense
-                        // display combat narrative
-                        // update player1 stats
-                        // if player2 health is not zero
-                            // return to top
-                // if player1 or player2 health is zero
-                    // return the winning player
-                    // update position xy of player
-        return 2.3;
+        return Math.random() * getStrength();
     }
 
     public static double getARandom(double _max) {

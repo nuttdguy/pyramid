@@ -117,13 +117,22 @@ public class Game {
                         // check boundary here
                         int row = player.getCoordinates()[0], col = player.getCoordinates()[1];
                         if (isPlayerMoveWithinGameBounds(row, col)) {
-                            char elementAtPlayerXy = land.getElementAtPosition(row, col - 1);
-                            if (elementAtPlayerXy == 'G') {
+
+                            int[] rowCol = rowColToMoveOnto(direction, row, col);
+                            if (land.getElementAtPosition(rowCol[0], rowCol[1]) == 'G') {
+                                // get the correct goblin to battle by its position
+                                Goblin goblin = null;
+                                for (Goblin g : this.goblins) {
+                                    if (g.getCoordinateX() == rowCol[0] && g.getCoordinateY() == rowCol[1]) {
+                                        goblin = g;
+                                    }
+                                }
                                 // combat
+                                engageCombat(player, goblin);
+                                out.println("Battle!!!" + goblin.attack());
                             } else {
                                 handleOnePlayerMove(player, direction, row, col);
-                                out.println(land.displayTheHeader());
-                                out.println(land.displayTheGrid(land.getGrid()));
+                                displayGameBoard();
                                 movesLeft--;
                                 out.println("You moved 1 space " + direction + ". You have " + movesLeft + " moves left.");
                                 if (movesLeft == 0) { action = 'd'; }
@@ -146,8 +155,67 @@ public class Game {
 
         return true;
     }
+    protected void engageCombat(Human player, Goblin goblin) {
+        // extract the correct goblin,
+        // todo implement
+        double goblinHealth = goblin.getHealth();
+        double playerHealth = player.getHealth();
+        while (goblinHealth >= 0 && playerHealth >= 0) {
+            double playerAttack = player.attack();
+            double goblinAttack = goblin.attack();
+
+            goblinHealth = goblinHealth - player.attack();
+            out.println(String.format("Player hits Goblin for [ %.2f ]", playerAttack));
+            goblin.setHealth(goblinHealth);
+            if (goblinHealth <= 0) {
+                out.println(String.format("Goblin's health is now [ %.2f ]", 0.00));
+                break;
+            } else {
+                out.println(String.format("Goblin's health is now [ %.2f ]", goblinHealth));
+            }
+
+            playerHealth = playerHealth - goblinAttack;
+            out.println(String.format("Goblin hits Player for [ %.2f ]", goblinAttack));
+            out.println(String.format("Player's health is now [ %.2f ]", playerHealth));
+            player.setHealth(playerHealth);
+
+        }
+        // while health of player1 or player 2 not less than or equal to zero
+        // get player1 attack damage using math.random * strength
+        // debit health of player2 (player1 attack - player2 defense)
+        // display combat narrative
+        // update player2 stats
+        // if player2 health is not zero
+        // get player2 attack damage using math.random * strength
+        // debit health of player1 by player 2 attack - player1 defense
+        // display combat narrative
+        // update player1 stats
+        // if player2 health is not zero
+        // return to top
+        // if player1 or player2 health is zero
+        // return the winning player
+        // update position xy of player
+        out.println(String.format("Great victory, player's health is now %.2f.", player.getHealth()));
+    }
+
+    protected void displayGameBoard() {
+        out.println(land.displayTheHeader());
+        out.println(land.displayTheGrid(land.getGrid()));
+    }
     protected boolean isPlayerMoveWithinGameBounds(int row, int col) {
         return (row > 0 && row < land.rowHeight() - 1) && (col > 0 && col < land.colWidth() - land.colOffset() - 1);
+    }
+    protected int[] rowColToMoveOnto(char direction, int row, int col) {
+        if (direction == 'n') {
+            row -= 1;
+        } else if (direction == 's') {
+            row += 1;
+        } else if (direction == 'w') {
+            col -= 1;
+        } else if (direction == 'e') {
+            col += 1;
+        }
+        return new int[]{row, col};
     }
 
     protected Human handleOnePlayerMove(Human player, char direction, int row, int col) throws IndexOutOfBoundsException {
@@ -168,7 +236,18 @@ public class Game {
 
     public void start() {
 
-        moveOnePlayer(this.humans.get(0));
+        // loop game until goblins or humans have been defeated
+//        int goblinsLeft = ;
+//        int humansLeft = this.humans.size();
+        while(this.goblins.size() > 0 || this.humans.size() > 0) {
+            try {
+                moveOnePlayer(this.humans.get(0));
+                out.println("END OF TURN. Enemy will move now. ");
+            } catch (IndexOutOfBoundsException e) {
+                out.println(e);
+                break;
+            }
+        }
 
     }
 
