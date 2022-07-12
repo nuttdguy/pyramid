@@ -2,78 +2,92 @@ import java.util.ArrayList;
 
 abstract class Grid {
     private char[][] grid;
+
     Grid() {
         init();
     }
+    protected String headerTextForGame() {
+        return "HUMANS VERSUS GOBLINS";
+    }
+    protected int dividerForStat() {
+        return 3; }
+    protected int colWidth() {
+        return this.getGrid()[0].length-1;
+    }
+    protected int rowHeight() {
+        return this.getGrid().length-1;
+    }
+    protected int colOffset() {
+        return (getGrid()[0].length / dividerForStat()) - 1;
+    }
+    protected char defaultMarker() {
+        return ' '; }
     public static int getRandomWithin(int _maxBoundary) {
         return (int) (Math.random() * _maxBoundary);
     }
-    protected char[][] generateTheGrid(int _yHeight, int _xWidth) {
-        return new char[_yHeight][_xWidth];
+    protected char[][] generateTheGrid(int row, int col) {
+        return new char[row][col];
     }
-    protected char[][] fillTheGrid(char[][] land) {
+    protected char[][] fillTheGrid(char[][] grid) {
         char fill = ' ';
         char border = '+';
-        if (land.length == 0) { return land; }
+        if (grid.length == 0) { return grid; }
 
-        for (int y = 0; y < land.length; y++) {
-            for (int x = 0; x < land[y].length; x++) {
-                if ((x == 0 && y == 0)  ||
-                        (x == land[y].length-1 && y == land.length-1)) {
-                    land[y][x] = border;
-                } else if (y == 0 || y == land.length-1 ||
-                        x == 0 || x == land[y].length-1) {
-                    land[y][x] = border;
+        for (int row = 0; row < grid.length; row++) {
+            for (int col = 0; col < grid[row].length; col++) {
+                if ((col == 0 && row == 0)  ||
+                        (col == grid[row].length-1 && row == grid.length-1)) {
+                    grid[row][col] = border;
+                } else if (row == 0 || row == grid.length-1 ||
+                        col == 0 || col == grid[row].length-1) {
+                    grid[row][col] = border;
                 } else {
-                    land[y][x] = fill;
+                    grid[row][col] = fill;
                 }
             }
         }
 
-        return land;
+        return grid;
     }
-    protected char[][] fillTheGridWithStat(char[][] land) {
+    protected char[][] fillTheGridWithStat(char[][] grid) {
         char fill = ' ';
         char border = '+';
-        if (land.length == 0) { return land; }
+        if (grid.length == 0) { return grid; }
 
-        int statOffSet = getStatOffset();
+        int statOffSet = colWidth() - colOffset();
         int statOffSetWithPadding = statOffSet + 2;
 
-        for (int y = 0; y < land.length; y++) {
+        for (int row = 0; row < grid.length; row++) {
 
             int letterPosition = 0; // use to position the letters of stat header
-            for (int x = 0; x < land[y].length; x++) {
+            for (int col = 0; col < grid[row].length; col++) {
 
                 // stat column
-                if (x == statOffSet) {
-                    land[y][x] = border;
-                } else if ( (x > statOffSetWithPadding && x < land[y].length-2) &&
-                        ( y==1 || y==3 || y==5 || y==7 || y==9) ) {
+                if (col == statOffSet) {
+                    grid[row][col] = border;
+                } else if ( (col > statOffSetWithPadding && col < grid[row].length-2) &&
+                        ( row==1 || row==3 || row==5 || row==7 || row==9) ) {
                     // get the current letter of the stat header
-                    land[y][x] = getCharOfStatHeader(land, letterPosition, y);
+                    grid[row][col] = charLetterForStatHeader(letterPosition, row);
                     letterPosition++;
                 }
 
-                else if ((x == 0 && y == 0)  ||
-                        (x == land[y].length-1 && y == land.length-1)
+                else if ((row == 0 && col == 0)  ||
+                        (col == grid[row].length-1 && row == grid.length-1)
                 ) {
-                    land[y][x] = border;
-                } else if (y == 0 || y == land.length-1 ||
-                        x == 0 || x == land[y].length-1) {
-                    land[y][x] = border;
+                    grid[row][col] = border;
+                } else if (row == 0 || row == grid.length-1 ||
+                        col == 0 || col == grid[row].length-1) {
+                    grid[row][col] = border;
                 } else {
-                    land[y][x] = fill;
+                    grid[row][col] = fill;
                 }
             }
         }
 
-        return land;
+        return grid;
     }
-    protected int getStatOffset() {
-        return this.grid[0].length - (grid[0].length / 5);
-    }
-    protected char getCharOfStatHeader(char[][] grid, int letterPosition, int row) {
+    protected char charLetterForStatHeader(int letterPosition, int row) {
         char[][] statHeader =
                 new char[][]{
                         {'H', 'E', 'A', 'L', 'T', 'H'},
@@ -111,28 +125,31 @@ abstract class Grid {
         }
         return gridView;
     }
-    protected String displayTheHeader(String _headerText) {
-        int paddingLength = (this.getGrid()[0].length - _headerText.length()) / 2;
+    protected String displayTheHeader() {
+        int paddingLength = (this.getGrid()[0].length - headerTextForGame().length()) / 2;
         String padding = "";
         for (int i = 0; i < paddingLength-1; i++) {
             padding += " ";
         }
-        return String.format("%s %s %s", padding, _headerText, padding);
+        return String.format("%s %s %s", padding, headerTextForGame(), padding);
     }
-    protected char getElementAtPosition(int _x, int _y) {return getGrid()[_y][_x];}
-    protected char setElementPosition(int _x, int _y, char _element) {
-        return getGrid()[_y][_x] = _element;
+    protected char getElementAtPosition(int row, int col) {
+        return getGrid()[row][col];
+    }
+    protected char setElementPosition(int row, int col, char _element) {
+        this.grid[row][col] = _element;
+        return _element;
     }
     protected char[][] getGrid() {
-        return grid;
+        return this.grid;
     }
     protected void setGrid(char[][] grid) {
         this.grid = grid;
     }
     protected void init() {
-        int y = 15; // Grid.getRandomDimension(50);
-        int x = 75; // Grid.getRandomDimension(100);
-        this.grid = generateTheGrid(y, x);
+        int row = 15; // Grid.getRandomDimension(100);
+        int col = 40; // Grid.getRandomDimension(50);
+        this.grid = generateTheGrid(row, col);
         this.fillTheGridWithStat(this.grid);
     }
     protected void subArray() {

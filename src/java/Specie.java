@@ -76,7 +76,7 @@ abstract class Specie implements Stat, Mobilize, Combatable {
     }
 
     @Override
-    public int[] getCoordinatesXY() {
+    public int[] getCoordinates() {
         return new int[] {this.getCoordinateX(), this.getCoordinateY()};
     }
 

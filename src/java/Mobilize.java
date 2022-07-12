@@ -10,7 +10,7 @@ public interface Mobilize {
     void setCoordinate(int x, int y);
     int getCoordinateX();
     int getCoordinateY();
-    int[] getCoordinatesXY();
+    int[] getCoordinates();
     String walk();
     String run();
 
