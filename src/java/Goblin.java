@@ -8,11 +8,11 @@ public class Goblin extends Specie {
         return marker;
     }
     public double factor() {
-        return 0.33;
+        return Math.random() * 1;
     }
 
     @Override
     public double attack() {
-        return (Math.random() * this.getStrength()) * factor();
+        return (Math.random() * factor()) * this.getStrength();
     }
 }

@@ -6,7 +6,6 @@
       <change beforePath="$PROJECT_DIR$/src/java/Game.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/java/Game.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/java/Goblin.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/java/Goblin.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/java/Human.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/java/Human.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/java/Specie.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/java/Specie.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
