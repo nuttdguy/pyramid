@@ -1,3 +1,4 @@
+import java.lang.reflect.Array;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -215,6 +216,44 @@ public class Game {
     private void handleMoveOutOfBound() {
         out.println("You cannot move in that direction");
     }
+    protected <T extends Player> T engageCombatBetween(Human human, Goblin goblin) {
+
+        double goblinHealth = goblin.getHealth();
+        double humanHealth = human.getHealth();
+        DecimalFormat df = new DecimalFormat("0.00");
+
+        while (goblinHealth >= 0 && humanHealth >= 0) {
+            double humanAttack = human.attack();
+            double goblinAttack = goblin.attack();
+
+            goblinHealth = goblinHealth - humanAttack;
+            goblin.setHealth(Double.parseDouble(df.format(goblinHealth)));
+            out.println(String.format("Player attack's Goblin for [ %.2f ]", humanAttack));
+            if (goblinHealth <= 0) {
+                out.println(String.format("Goblin's  [ health ] is now [ %.2f ]", 0.00));
+                out.println(String.format("Victory! Player's [ health ] is now [ %.2f ]", human.getHealth()));
+                out.println("----");
+                return (T) human;
+            } else {
+                out.println(String.format("Goblin's [ health ] is now [ %.2f ]", goblin.getHealth()));
+            }
+
+            out.println("----");
+            humanHealth = humanHealth - goblinAttack;
+            human.setHealth(Double.parseDouble(df.format(humanHealth)));
+            out.println(String.format("Goblin attack's Player for [ %.2f ]", goblinAttack));
+
+            if (humanHealth <= 0) {
+                out.println(String.format("Defeat! Player's [ health ] is now [ %.2f ]", 0.00));
+                out.println("----");
+            } else {
+                out.println(String.format("Player's [ health ] is now [ %.2f ]", human.getHealth()));
+                out.println("----");
+            }
+        }
+
+        return (T) human; // should remove return since objects are reference types
+    }
     protected <T extends Player> T moveOnePlayer(Human player) {
         int movesLeft = player.getMovesPerTurn();
         char chosenAction;
@@ -262,43 +301,15 @@ public class Game {
 
         return (T) player;
     }
-    protected <T extends Player> T engageCombatBetween(Human human, Goblin goblin) {
 
-        double goblinHealth = goblin.getHealth();
-        double humanHealth = human.getHealth();
-        DecimalFormat df = new DecimalFormat("0.00");
-
-        while (goblinHealth >= 0 && humanHealth >= 0) {
-            double humanAttack = human.attack();
-            double goblinAttack = goblin.attack();
-
-            goblinHealth = goblinHealth - humanAttack;
-            goblin.setHealth(Double.parseDouble(df.format(goblinHealth)));
-            out.println(String.format("Player attack's Goblin for [ %.2f ]", humanAttack));
-            if (goblinHealth <= 0) {
-                out.println(String.format("Goblin's  [ health ] is now [ %.2f ]", 0.00));
-                out.println(String.format("Victory! Player's [ health ] is now [ %.2f ]", human.getHealth()));
-                out.println("----");
-                return (T) human;
-            } else {
-                out.println(String.format("Goblin's [ health ] is now [ %.2f ]", goblin.getHealth()));
-            }
-
-            out.println("----");
-            humanHealth = humanHealth - goblinAttack;
-            human.setHealth(Double.parseDouble(df.format(humanHealth)));
-            out.println(String.format("Goblin attack's Player for [ %.2f ]", goblinAttack));
-
-            if (humanHealth <= 0) {
-                out.println(String.format("Defeat! Player's [ health ] is now [ %.2f ]", 0.00));
-                out.println("----");
-            } else {
-                out.println(String.format("Player's [ health ] is now [ %.2f ]", human.getHealth()));
-                out.println("----");
-            }
-        }
-
-        return (T) human; // should remove return since objects are reference types
+    protected <T extends Player> T handleTurnOf(ArrayList<T> t, Human player) {
+        // get the human players position
+        // move goblins towards human position
+            // calc distance to human position, then move the shortest path
+                // when goblin is w or e, move +1 or -1
+                // when goblin is n or s, move +1 or -1
+                //
+        return null;
     }
 
     public void start() {
@@ -318,6 +329,7 @@ public class Game {
                     out.println("END OF TURN. ");
                     out.println("GOBLINS WILL MOVE NOW. ");
                     // handle goblin moves
+
                 }
 
             } catch (IndexOutOfBoundsException e) {
