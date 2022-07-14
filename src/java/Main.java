@@ -6,8 +6,7 @@ public class Main {
         System.out.println(game.getLand().displayTheGrid(game.getLand().getGrid()));
         game.start();
 
-//        land.subArray();
-//        land.nthPascal(4);
+
     }
 
 }

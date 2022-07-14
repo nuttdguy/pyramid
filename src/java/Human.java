@@ -1,18 +1,17 @@
-import java.math.BigDecimal;
 import java.text.DecimalFormat;
 
-public class Human extends Specie {
+public class Human extends Player {
 
     public final char marker = 'H';
     private int movesRemaining;
     private double maxHealth;
 
     Human() {
-        setMovesRemaining(super.getMovePerTurn());
+        setMovesRemaining(super.getMovesPerTurn());
         this.maxHealth = super.getHealth();
     }
     public char getMarker() {
-        return marker;
+        return this.marker;
     }
 
     public double factor() { return 1.32;}
@@ -28,7 +27,7 @@ public class Human extends Specie {
     }
 
     public int getMovesRemaining() {
-        return movesRemaining;
+        return this.movesRemaining;
     }
 
     public void setMovesRemaining(int movesRemaining) {
@@ -36,7 +35,19 @@ public class Human extends Specie {
     }
 
     public double getMaxHealth() {
-        return maxHealth;
+        return this.maxHealth;
     }
-
+    @Override
+    public String toString() {
+        return "Human{" +
+                "id=" + super.getObjectId() +
+                "marker=" + marker +
+                "strength="+ super.getStrength() +
+                "health=" + super.getHealth() +
+                "defense=" + super.getHealth() +
+                "movesRemaining=" + movesRemaining +
+                "maxHealth=" + maxHealth +
+                "row position=" + super.getCoordinateX() +
+                "col position=" + super.getCoordinateY() + '}';
+    }
 }

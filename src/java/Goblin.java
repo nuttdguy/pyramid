@@ -1,8 +1,8 @@
-public class Goblin extends Specie {
+public class Goblin extends Player {
 
     public final char marker = 'G';
 
-    Goblin() {}
+    Goblin() {super.setObjectId();}
 
     public char getMarker() {
         return marker;
@@ -14,5 +14,17 @@ public class Goblin extends Specie {
     @Override
     public double attack() {
         return (Math.random() * factor()) * this.getStrength();
+    }
+
+    @Override
+    public String toString() {
+        return "Goblin{" +
+                "id=" + super.getObjectId() +
+                "marker=" + marker +
+                "strength="+ super.getStrength() +
+                "health=" + super.getHealth() +
+                "defense=" + super.getHealth() +
+                "row position=" + super.getCoordinateX() +
+                "col position=" + super.getCoordinateY() + '}';
     }
 }

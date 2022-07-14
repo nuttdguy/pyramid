@@ -1,18 +1,26 @@
-abstract class Specie implements Stat, Mobilize, Combatable {
+abstract class Player implements Stat, Mobilize, Combatable {
 
     private double health;
     private double strength;
     private double defense;
-    private int moveDistance;
+    private int movesPerTurn;
     private int coordinateX;
     private int coordinateY;
+    private int objectId = 0;
 
-    Specie() {
+    Player() {
         setHealth(10);
         setStrength(10);
         setDefense(10);
-        setMoveDistance(4);
+        setMovesPerTurn(1);
         setCoordinate(0, 0);
+    }
+
+    public int getObjectId() {
+        return objectId;
+    }
+    protected void setObjectId() {
+        this.objectId = (int) (Math.random() * Integer.MAX_VALUE);
     }
 
     @Override
@@ -46,13 +54,13 @@ abstract class Specie implements Stat, Mobilize, Combatable {
     }
 
     @Override
-    public int getMovePerTurn() {
-        return this.moveDistance;
+    public int getMovesPerTurn() {
+        return this.movesPerTurn;
     }
 
     @Override
-    public void setMoveDistance(int _moveDistance) {
-        this.moveDistance = _moveDistance;
+    public void setMovesPerTurn(int _moveDistance) {
+        this.movesPerTurn = _moveDistance;
     }
     @Override
     public void setCoordinate(int x) {
