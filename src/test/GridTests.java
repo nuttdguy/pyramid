@@ -5,11 +5,11 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class GridTests {
 
-    Land land;
+    Map map;
 
     @BeforeEach
     void beforeEach() {
-        land = new Land();
+        map = new Map();
     }
 
     @DisplayName("Should return number less than max and greater than 1")
@@ -26,7 +26,7 @@ public class GridTests {
     @Test
     void generateTheGridTest() {
         int height = 10, width = 10;
-        char[][] expected = land.generateTheGrid(height, width);
+        char[][] expected = map.generateTheGrid(height, width);
         int actualCount = 0;
         for (char[] c : expected) {
             for (char k : c) {
@@ -43,8 +43,8 @@ public class GridTests {
     void fillGridTest() {
         int height = 2, width = 4;
         char[][] expected = new char[][]{{'+', '+', '+', '+'}, {'+', '+', '+', '+'}};
-        char[][] actual = land.generateTheGrid(height, width);
-        actual = land.fillTheGrid(actual);
+        char[][] actual = map.generateTheGrid(height, width);
+        actual = map.fillTheGrid(actual);
 
         assertTrue(Arrays.deepEquals(expected, actual), "Should match expected");
     }
@@ -53,11 +53,11 @@ public class GridTests {
     @Test
     void getElementPositionTest() {
         int height = 4, width = 4;
-        char[][] expectedGrid = land.generateTheGrid(height, width);
-        expectedGrid = land.fillTheGrid(expectedGrid);
-        land.setGrid(expectedGrid);
-        char actual = land.setElementPosition(2, 2, 'x');
-        char expected = land.getElementAtPosition(2, 2);
+        char[][] expectedGrid = map.generateTheGrid(height, width);
+        expectedGrid = map.fillTheGrid(expectedGrid);
+        map.setGrid(expectedGrid);
+        char actual = map.setElementPosition(2, 2, 'x');
+        char expected = map.getElementAtPosition(2, 2);
 
         assertTrue(actual == expected, "Expected should match expected : " + expected);
 
@@ -67,16 +67,16 @@ public class GridTests {
     @Test
     void displayTheGrid() {
         int height = 4, width = 8;
-        char[][] expectedGrid = land.generateTheGrid(height, width);
-        expectedGrid = land.fillTheGrid(expectedGrid);
-        land.setGrid(expectedGrid);
+        char[][] expectedGrid = map.generateTheGrid(height, width);
+        expectedGrid = map.fillTheGrid(expectedGrid);
+        map.setGrid(expectedGrid);
 
         String expected = "" +
                 "++++++++\n" +
                 "+      +\n" +
                 "+      +\n" +
                 "++++++++\n";
-        String actual = land.displayTheGrid(land.getGrid());
+        String actual = map.displayTheGrid(map.getGrid());
 
         assertTrue(actual.equals(expected), String.format("Should match \n%s", expected));
     }

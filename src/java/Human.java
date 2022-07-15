@@ -14,7 +14,7 @@ public class Human extends Player {
     public double factor() { return 1.32;}
     public double regenerateHealth() {
         DecimalFormat df = new DecimalFormat("0.00");
-        return Double.parseDouble(df.format(super.getHealth() + (Math.random() * 0.3)) );
+        return Double.parseDouble(df.format(super.getHealth() + (Math.random() * 0.5)) );
     }
 
     @Override

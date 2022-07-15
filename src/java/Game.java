@@ -11,12 +11,12 @@ public class Game {
     enum StatType {
         HEALTH, STRENGTH, DEFENSE, MOVE_DISTANCE, GOBLINS, MOVES_LEFT
     }
-    private Land land;
+    private Map map;
     private ArrayList<Human> humans;
     private ArrayList<Goblin> goblins;
 
     Game() {
-        land = new Land();
+        map = new Map();
         setGoblins(this.initializePlayers(PlayerType.GOBLIN, 8));
         setHumans(this.initializePlayers(PlayerType.HUMAN, 1));
         updateStatOf(StatType.HEALTH, this.getHumans().get(0));
@@ -24,8 +24,8 @@ public class Game {
         updateStatOf(StatType.DEFENSE, this.getHumans().get(0));
         updateStatOf(StatType.MOVE_DISTANCE, this.getHumans().get(0));
         updateStatOf(StatType.GOBLINS, this.getHumans().get(0));
-        placePlayersOntoLand(this.getGoblins(), land);
-        placePlayersOntoLand(this.getHumans(), land);
+        placePlayersOntoLand(this.getGoblins(), map);
+        placePlayersOntoLand(this.getHumans(), map);
 
     }
 
@@ -33,14 +33,14 @@ public class Game {
         return new Scanner(in).next().charAt(0);
     }
     protected void displayGameBoard() {
-        out.println(land.displayTheHeader());
-        out.println(land.displayTheGrid(land.getGrid()));
+        out.println(map.displayTheHeader());
+        out.println(map.displayTheGrid(map.getGrid()));
     }
     private void updateStatOf(Enum type) {
         this.updateStatOf(type, null);
     }
     private void updateStatOf(Enum type, Human player) {
-        int col = this.land.colWidth() - this.land.colOffset() + 3;
+        int col = this.map.colWidth() - this.map.colOffset() + 3;
         int row = 10; // set default row to goblin count
         String stat = null;
         // determine the row and col to set the value on
@@ -68,22 +68,22 @@ public class Game {
     private void updateStatOfHelper(int col, int row, String stat) {
         int i = 0;
         for (char s : stat.toCharArray()) {
-            this.land.setElementPosition(row,col + i, s);
+            this.map.setElementPosition(row,col + i, s);
             i++;
         }
     }
-    private <T extends Player> void placePlayersOntoLand(ArrayList<T> T, Land land) {
+    private <T extends Player> void placePlayersOntoLand(ArrayList<T> T, Map map) {
         int col, row, elementInRowCol,
-                rowBoundary = land.rowHeight(),
-                colBoundary = land.colWidth() - land.colOffset();
+                rowBoundary = map.rowHeight(),
+                colBoundary = map.colWidth() - map.colOffset();
         if (T.size() == 0) { return; }
 
         int playerIndex = 0;
         while(playerIndex < T.size()) {
 
-            col = Land.getRandomWithin(colBoundary); // get the current player
-            row = Land.getRandomWithin(rowBoundary); // get random x and y
-            elementInRowCol = land.getElementAtPosition(row, col); // get current element at pos
+            col = Map.getRandomWithin(colBoundary); // get the current player
+            row = Map.getRandomWithin(rowBoundary); // get random x and y
+            elementInRowCol = map.getElementAtPosition(row, col); // get current element at pos
 
             // determine which class
             String tClass = T.get(playerIndex).getClass().getName();
@@ -91,10 +91,10 @@ public class Game {
             // try, set player at location if empty
             if (elementInRowCol == ' ') {
                 if (tClass.equals("Human")) {
-                    land.setElementPosition(row, col, ((Human) T.get(playerIndex)).getMarker() );
+                    map.setElementPosition(row, col, ((Human) T.get(playerIndex)).getMarker() );
                     T.get(playerIndex).setCoordinate(row, col );
                 } else if (tClass.equals("Goblin")) {
-                    land.setElementPosition(row, col, ((Goblin) T.get(playerIndex)).getMarker() );
+                    map.setElementPosition(row, col, ((Goblin) T.get(playerIndex)).getMarker() );
                     T.get(playerIndex).setCoordinate(row, col);
                 }
                 playerIndex++;
@@ -136,8 +136,8 @@ public class Game {
     protected <T extends Player> T updateMapMarkerOf(T player, int nextRow, int nextCol, int oldRow, int oldCol) {
         String tClass = player.getClass().getName();
         if (tClass.equals("Human")) {
-            land.setElementPosition(nextRow, nextCol, ((Human) player).getMarker());
-            land.setElementPosition(oldRow, oldCol, land.defaultMarker());
+            map.setElementPosition(nextRow, nextCol, ((Human) player).getMarker());
+            map.setElementPosition(oldRow, oldCol, map.defaultMarker());
             player.setCoordinate(nextRow, nextCol);
             return player;
         }
@@ -167,7 +167,6 @@ public class Game {
                         switch(rowColElement) {
                             case 'G' -> handleEncounterWithGoblin(chosenDirection, row, col, player);
                             case ' ' -> moveOnePlayer(chosenDirection, row, col, player);
-                            default -> out.println("There was an uncaught character...");
                         }
 
                         // handle out of bounds and don't decrement move counter
@@ -194,11 +193,11 @@ public class Game {
         return (T) player;
     }
     protected <T extends Player> T moveOnePlayer(char direction, int row, int col, T player) throws IndexOutOfBoundsException {
-        land.setElementPosition(row, col, land.defaultMarker()); // set the default marker before updating move
+        map.setElementPosition(row, col, map.defaultMarker()); // set the default marker before updating move
 
         // set the element values of the new position
         int[] rowCol = rowColToMoveOnto(direction, row, col);
-        land.setElementPosition(rowCol[0], rowCol[1], player.getMarker());
+        map.setElementPosition(rowCol[0], rowCol[1], player.getMarker());
         player.setCoordinate(rowCol[0], rowCol[1]);
         return player;
     }
@@ -245,7 +244,7 @@ public class Game {
     }
     private char getMapElementAt(char chosenDirection, int row, int col) {
         int[] rowCol = rowColToMoveOnto(chosenDirection, row, col);
-        return land.getElementAtPosition(rowCol[0], rowCol[1]);
+        return map.getElementAtPosition(rowCol[0], rowCol[1]);
     }
     private int handleMovesLeft(int movesLeft, Human player) {
         movesLeft--;
@@ -277,37 +276,38 @@ public class Game {
         double humanHealth = attacker.getHealth();
         DecimalFormat df = new DecimalFormat("0.00");
 
-        boolean continueBattle = true;
         while (true) {
             double humanAttack = attacker.attack();
             double goblinAttack = defender.attack();
 
             goblinHealth = goblinHealth - humanAttack;
-            defender.setHealth(Double.parseDouble(df.format(goblinHealth)));
-            displayCombatNarrative(1, attacker.getClass().getName(), defender.getClass().getName(), humanAttack);
-
             if (goblinHealth <= 0) {
+                defender.setHealth(Double.parseDouble(df.format(goblinHealth)));
+                displayCombatNarrative(1, attacker.getClass().getName(), defender.getClass().getName(), humanAttack);
                 displayCombatNarrative(2, attacker.getClass().getName(), defender.getClass().getName(), defender.getHealth());
                 displayCombatNarrative(4, attacker.getClass().getName(), defender.getClass().getName(), attacker.getHealth());
                 out.println("----");
                 return;
 //                return (T) attacker;
             } else {
+                defender.setHealth(Double.parseDouble(df.format(goblinHealth)));
+                displayCombatNarrative(1, attacker.getClass().getName(), defender.getClass().getName(), humanAttack);
                 displayCombatNarrative(2, attacker.getClass().getName(), defender.getClass().getName(), defender.getHealth());
             }
 
             out.println("----");
             humanHealth = humanHealth - goblinAttack;
-            attacker.setHealth(Double.parseDouble(df.format(humanHealth)));
-            displayCombatNarrative(1, defender.getClass().getName(), attacker.getClass().getName(), goblinAttack);
-
             if (humanHealth <= 0) {
+                attacker.setHealth(Double.parseDouble(df.format(humanHealth)));
+                displayCombatNarrative(1, defender.getClass().getName(), attacker.getClass().getName(), goblinAttack);
                 displayCombatNarrative(2, defender.getClass().getName(), attacker.getClass().getName(), attacker.getHealth());
                 displayCombatNarrative(4, defender.getClass().getName(), attacker.getClass().getName(), defender.getHealth());
                 out.println("----");
 //                return (T) defender;
                 return;
             } else {
+                attacker.setHealth(Double.parseDouble(df.format(humanHealth)));
+                displayCombatNarrative(1, defender.getClass().getName(), attacker.getClass().getName(), goblinAttack);
                 displayCombatNarrative(3, attacker.getClass().getName(), defender.getClass().getName(), attacker.getHealth());
                 out.println("----");
             }
@@ -348,7 +348,7 @@ public class Game {
                     engageCombatBetween(player, (Goblin) goblin);
                     if (goblin.getHealth() <= 0) {
                         removePlayer(t, goblin); // remove player from original
-                        this.getLand().setElementPosition(player.getCoordinateX(), player.getCoordinateY(), player.getMarker());
+                        this.getMap().setElementPosition(player.getCoordinateX(), player.getCoordinateY(), player.getMarker());
                         updateStatOf(StatType.HEALTH, player);
                         updateStatOf(StatType.GOBLINS);
                         movesLeft = 0;
@@ -368,10 +368,11 @@ public class Game {
             try {
                 Human player = this.humans.get(0);
 
-                if ( this.goblins.size() == 0) {
+                if ( this.getGoblins().isEmpty() ) {
                     out.println("END OF GAME - YOU DEFEATED ALL THE GOBLINS!");
                     return;
                 } else {
+                    player = moveOnePlayer(player);
                     out.println("END OF TURN. ");
                     out.println("GOBLINS WILL MOVE NOW. ");
                     // handle goblin moves
@@ -383,8 +384,6 @@ public class Game {
                     }
                 }
 
-                player = moveOnePlayer(player);
-
             } catch (IndexOutOfBoundsException e) {
                 out.println(e);
                 break;
@@ -393,8 +392,8 @@ public class Game {
 
     }
 
-    public Land getLand() {
-        return land;
+    public Map getMap() {
+        return map;
     }
 
     public ArrayList<Human> getHumans() {

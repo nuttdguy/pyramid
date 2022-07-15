@@ -41,14 +41,14 @@ public class GameTests {
         char statTestPosition2 = String.valueOf(human.getHealth()).charAt(1);
         char statTestPosition3 = String.valueOf(human.getHealth()).charAt(2);
         char statTestPosition4 = String.valueOf(human.getHealth()).charAt(3);
-        char expected1 = game.getLand()
-                .getElementAtPosition(2, game.getLand().colWidth() -game.getLand().colOffset() + 3);
-        char expected2 = game.getLand()
-                .getElementAtPosition(2, game.getLand().colWidth() -game.getLand().colOffset() + 4);
-        char expected3 = game.getLand()
-                .getElementAtPosition(2, game.getLand().colWidth() -game.getLand().colOffset() + 5);
-        char expected4 = game.getLand()
-                .getElementAtPosition(2, game.getLand().colWidth() -game.getLand().colOffset() + 6);
+        char expected1 = game.getMap()
+                .getElementAtPosition(2, game.getMap().colWidth() -game.getMap().colOffset() + 3);
+        char expected2 = game.getMap()
+                .getElementAtPosition(2, game.getMap().colWidth() -game.getMap().colOffset() + 4);
+        char expected3 = game.getMap()
+                .getElementAtPosition(2, game.getMap().colWidth() -game.getMap().colOffset() + 5);
+        char expected4 = game.getMap()
+                .getElementAtPosition(2, game.getMap().colWidth() -game.getMap().colOffset() + 6);
 
         assertEquals(statTestPosition1, expected1, "Char value should be found an expected location");
         assertEquals(statTestPosition2, expected2, "Char value should be found an expected location");
@@ -64,11 +64,11 @@ public class GameTests {
         int humanCount = game.getHumans().size();
         char expectedGoblinMarker = game.getGoblins().get(0).getMarker();
         char expectedHumanMarker = game.getHumans().get(0).getMarker();
-        char[][] land = game.getLand().getGrid();
+        char[][] land = game.getMap().getGrid();
 
         int actualGoblinMarkers = 0;
         int actualHumanMarkers = 0;
-        int gameBoundary = game.getLand().colWidth() - game.getLand().colOffset();
+        int gameBoundary = game.getMap().colWidth() - game.getMap().colOffset();
         int colCount = 0;
         for (char[] c : land) {
             for (char e : c) {
@@ -165,14 +165,14 @@ public class GameTests {
     }
 
     private <T extends Player> int[][] getMarkerPositionOfHelper(ArrayList<T> t) {
-        char[][] land = game.getLand().getGrid();
+        char[][] land = game.getMap().getGrid();
         String tName = t.get(0).getClass().getName();
         char markerToCheck = tName.equals("Goblin") ? 'G' : 'H';
         int[][] playerPositions = tName.equals("Goblin") ?
                 new int[1][ game.getGoblins().size() * 2] : new int[1][ game.getHumans().size() * 2];
         int positionSlot = 0;
 
-        int landBoundaryToSearch = game.getLand().colWidth() - game.getLand().colOffset();
+        int landBoundaryToSearch = game.getMap().colWidth() - game.getMap().colOffset();
         for (int row = 0; row < land.length; row++) {
             for (int col = 0; col < landBoundaryToSearch; col++) {
                 if (land[row][col] == markerToCheck) {
