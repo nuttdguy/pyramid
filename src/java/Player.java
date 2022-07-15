@@ -1,11 +1,14 @@
 abstract class Player implements Stat, Mobilize, Combatable {
 
     private double health;
+    private double maxHealth;
     private double strength;
     private double defense;
     private int movesPerTurn;
+    private int movesRemaining;
     private int coordinateX;
     private int coordinateY;
+    private char marker;
     private int objectId = 0;
 
     Player() {
@@ -19,10 +22,18 @@ abstract class Player implements Stat, Mobilize, Combatable {
     public int getObjectId() {
         return objectId;
     }
+
     protected void setObjectId() {
         this.objectId = (int) (Math.random() * Integer.MAX_VALUE);
     }
-
+    @Override
+    public char getMarker() {
+        return this.marker;
+    }
+    @Override
+    public void setMarker(char marker) {
+        this.marker = marker;
+    }
     @Override
     public double getHealth() {
         return this.health;
@@ -31,6 +42,16 @@ abstract class Player implements Stat, Mobilize, Combatable {
     @Override
     public void setHealth(double _health) {
         this.health = _health;
+    }
+
+    @Override
+    public double getMaxHealth() {
+        return this.maxHealth;
+    }
+
+    @Override
+    public void setMaxHealth(double maxHealth) {
+        this.maxHealth = maxHealth;
     }
 
     @Override
@@ -89,26 +110,13 @@ abstract class Player implements Stat, Mobilize, Combatable {
     }
 
     @Override
-    public String walk() {
-        // todo implement
-        // choose direction
-        // move
-            // when obstacle / enemy  exists
-                // enter combat using math.random
-                // continue battle until one player health equals to or less than zero
-                    // set position x and y of the winning player
-                    // update the map
-            // when no obstacle exists and move equals max
-                // set position x and y
-                // update the map
-        return "todo";
+    public int getMovesRemaining() {
+        return this.movesRemaining;
     }
-
     @Override
-    public String run() {
-        return null;
+    public void setMovesRemaining(int movesRemaining){
+        this.movesRemaining = movesRemaining;
     }
-
     @Override
     public double defend() {
         return 0;

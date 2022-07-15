@@ -2,52 +2,37 @@ import java.text.DecimalFormat;
 
 public class Human extends Player {
 
-    public final char marker = 'H';
-    private int movesRemaining;
-    private double maxHealth;
-
     Human() {
-        setMovesRemaining(super.getMovesPerTurn());
-        this.maxHealth = super.getHealth();
-    }
-    public char getMarker() {
-        return this.marker;
+        this.setObjectId();
+        this.setMovesPerTurn(1);
+        this.setHealth(20);
+        this.setMaxHealth(this.getHealth());
+        this.setMarker('H');
+        this.setMovesRemaining(this.getMovesPerTurn());
     }
 
     public double factor() { return 1.32;}
-
-    @Override
-    public double attack() {
-        return (Math.random() * this.getStrength()) * factor();
-    }
-
     public double regenerateHealth() {
         DecimalFormat df = new DecimalFormat("0.00");
         return Double.parseDouble(df.format(super.getHealth() + (Math.random() * 0.3)) );
     }
 
-    public int getMovesRemaining() {
-        return this.movesRemaining;
-    }
-
-    public void setMovesRemaining(int movesRemaining) {
-        this.movesRemaining = movesRemaining;
-    }
-
-    public double getMaxHealth() {
-        return this.maxHealth;
+    @Override
+    public double attack() {
+        return (Math.random() * this.getStrength()) * factor();
     }
     @Override
     public String toString() {
         return "Human{" +
-                "id=" + super.getObjectId() +
-                "marker=" + marker +
-                "strength="+ super.getStrength() +
-                "health=" + super.getHealth() +
-                "defense=" + super.getHealth() +
-                "movesRemaining=" + movesRemaining +
-                "maxHealth=" + maxHealth +
-                "row position=" + super.getCoordinateX() +
-                "col position=" + super.getCoordinateY() + '}';
+                "id=" + this.getObjectId() +
+                ", marker=" + this.getMarker() +
+                ", strength="+ this.getStrength() +
+                ", health=" + this.getHealth() +
+                ", defense=" + this.getHealth() +
+                ", movesRemaining=" + this.getMovesRemaining() +
+                ", maxHealth=" + this.getMaxHealth() +
+                ", row position=" + this.getCoordinateX() +
+                ", col position=" + this.getCoordinateY() + '}';
     }
+
 }

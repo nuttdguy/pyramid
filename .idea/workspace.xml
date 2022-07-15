@@ -4,6 +4,12 @@
     <list default="true" id="5a7bbe8d-c466-47cf-a156-6713a5a89d2d" name="Changes" comment="# // TEMPLATE&#10;# Subject line (try to keep under 50 characters)&#10;&#10;# Multi-line description of commit,&#10;# feel free to be detailed.&#10;&#10;# [Ticket: X]">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/java/Game.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/java/Game.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/java/Goblin.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/java/Goblin.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/java/Human.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/java/Human.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/java/Mobilize.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/java/Mobilize.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/java/Player.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/java/Player.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/java/Stat.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/java/Stat.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/GameTests.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/GameTests.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -33,30 +39,23 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Downloaded.Files.Path.Enabled": "false",
-    "Repository.Attach.Annotations": "false",
-    "Repository.Attach.JavaDocs": "false",
-    "Repository.Attach.Sources": "false",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "last_opened_file_path": "C:/GenSpark/pyramid/humans_vs_goblins",
-    "project.structure.last.edited": "Project",
-    "project.structure.proportion": "0.0",
-    "project.structure.side.proportion": "0.2",
-    "settings.editor.selected.configurable": "preferences.lookFeel"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Downloaded.Files.Path.Enabled&quot;: &quot;false&quot;,
+    &quot;Repository.Attach.Annotations&quot;: &quot;false&quot;,
+    &quot;Repository.Attach.JavaDocs&quot;: &quot;false&quot;,
+    &quot;Repository.Attach.Sources&quot;: &quot;false&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/GenSpark/pyramid/humans_vs_goblins&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.lookFeel&quot;
   }
-}]]></component>
-  <component name="RunManager" selected="JUnit.GameTests">
-    <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="Main" />
-      <module name="humans_vs_goblins" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
+}</component>
+  <component name="RunManager" selected="JUnit.GridTests">
     <configuration name="CharacterTests" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="humans_vs_goblins" />
       <option name="PACKAGE_NAME" value="" />
@@ -71,6 +70,16 @@
       <option name="PACKAGE_NAME" value="" />
       <option name="MAIN_CLASS_NAME" value="GameTests" />
       <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="GameTests.initPlayersTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="humans_vs_goblins" />
+      <option name="PACKAGE_NAME" value="" />
+      <option name="MAIN_CLASS_NAME" value="GameTests" />
+      <option name="METHOD_NAME" value="initPlayersTest" />
+      <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -96,10 +105,10 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="JUnit.GameTests" />
-        <item itemvalue="Application.Main" />
         <item itemvalue="JUnit.GridTests" />
         <item itemvalue="JUnit.CharacterTests" />
+        <item itemvalue="JUnit.GameTests" />
+        <item itemvalue="JUnit.GameTests.initPlayersTest" />
         <item itemvalue="JUnit.GameTests.replenishHealthTest" />
       </list>
     </recent_temporary>

@@ -10,4 +10,9 @@ public interface Stat {
     void setDefense(double _defense);
     void setMovesPerTurn(int _moveDistance);
 
+    double getMaxHealth();
+    void setMaxHealth(double maxHealth);
+
+    char getMarker();
+    void setMarker(char marker);
 }

@@ -11,7 +11,7 @@ public interface Mobilize {
     int getCoordinateX();
     int getCoordinateY();
     int[] getCoordinates();
-    String walk();
-    String run();
+    void setMovesRemaining(int movesRemaining);
+    int getMovesRemaining();
 
 }
