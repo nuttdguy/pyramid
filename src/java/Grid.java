@@ -1,5 +1,3 @@
-import java.util.ArrayList;
-
 abstract class Grid {
     private char[][] grid;
 
@@ -116,20 +114,20 @@ abstract class Grid {
         return letter;
     }
     protected String displayTheGrid(char[][] _grid) {
-        String gridView = "";
+        StringBuilder gridView = new StringBuilder();
         for (char[] y : _grid) {
             for (char x : y) {
-                gridView += String.valueOf(x);
+                gridView.append(x);
             }
-            gridView += "\n";
+            gridView.append("\n");
         }
-        return gridView;
+        return gridView.toString();
     }
     protected String displayTheHeader() {
         int paddingLength = (this.getGrid()[0].length - headerTextForGame().length()) / 2;
-        String padding = "";
+        StringBuilder padding = new StringBuilder();
         for (int i = 0; i < paddingLength-1; i++) {
-            padding += " ";
+            padding.append(" ");
         }
         return String.format("%s %s %s", padding, headerTextForGame(), padding);
     }
@@ -149,8 +147,8 @@ abstract class Grid {
     protected void init() {
         int row = 15; // Grid.getRandomDimension(100);
         int col = 40; // Grid.getRandomDimension(50);
-        this.grid = generateTheGrid(row, col);
-        this.fillTheGridWithStat(this.grid);
+        setGrid(generateTheGrid(row, col));
+        setGrid(fillTheGridWithStat(getGrid()));
     }
 
 }

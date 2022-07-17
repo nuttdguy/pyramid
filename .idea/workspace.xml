@@ -3,10 +3,11 @@
   <component name="ChangeListManager">
     <list default="true" id="5a7bbe8d-c466-47cf-a156-6713a5a89d2d" name="Changes" comment="# // TEMPLATE&#10;# Subject line (try to keep under 50 characters)&#10;&#10;# Multi-line description of commit,&#10;# feel free to be detailed.&#10;&#10;# [Ticket: X]">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/java/Combatable.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/java/Combatable.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/java/Game.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/java/Game.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/java/Grid.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/java/Grid.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/java/Human.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/java/Human.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/java/Land.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/java/Map.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/java/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/java/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/java/Player.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/java/Player.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/test/GameTests.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/GameTests.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/test/GridTests.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/GridTests.java" afterDir="false" />
     </list>
@@ -27,8 +28,14 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="MacroExpansionManager">
+    <option name="directoryName" value="fppbwyug" />
+  </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="CurrentFile" />
   </component>
   <component name="ProjectId" id="2BXYQ7J4hqGuTVNpRwLPXrbK28l" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
@@ -51,7 +58,8 @@
     &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
     &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
     &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.lookFeel&quot;
+    &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;
   }
 }</component>
   <component name="RunManager" selected="Application.Main">
@@ -103,9 +111,9 @@
       <list>
         <item itemvalue="Application.Main" />
         <item itemvalue="JUnit.GridTests" />
-        <item itemvalue="JUnit.CharacterTests" />
-        <item itemvalue="JUnit.GameTests" />
         <item itemvalue="JUnit.GameTests.initPlayersTest" />
+        <item itemvalue="JUnit.GameTests" />
+        <item itemvalue="JUnit.CharacterTests" />
       </list>
     </recent_temporary>
   </component>

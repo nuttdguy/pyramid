@@ -117,10 +117,10 @@ abstract class Player implements Stat, Mobilize, Combatable {
     public void setMovesRemaining(int movesRemaining){
         this.movesRemaining = movesRemaining;
     }
-    @Override
-    public double defend() {
-        return 0;
-    }
+//    @Override
+//    public double defend() {
+//        return 0;
+//    }
 
     @Override
     public double attack() {

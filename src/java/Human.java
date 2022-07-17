@@ -4,7 +4,7 @@ public class Human extends Player {
 
     Human() {
         this.setObjectId();
-        this.setMovesPerTurn(1);
+        this.setMovesPerTurn(2);
         this.setHealth(20);
         this.setMaxHealth(this.getHealth());
         this.setMarker('H');
@@ -14,7 +14,7 @@ public class Human extends Player {
     public double factor() { return 1.32;}
     public double regenerateHealth() {
         DecimalFormat df = new DecimalFormat("0.00");
-        return Double.parseDouble(df.format(super.getHealth() + (Math.random() * 0.5)) );
+        return Double.parseDouble(df.format(Math.random() * 1));
     }
 
     @Override

@@ -34,8 +34,8 @@ public class GridTests {
             }
         }
 
-        assertTrue(expected[0].length == height, "Width should return expected width");
-        assertTrue(actualCount == height * width, "Height should return expected cell count :: " + actualCount);
+        assertEquals(expected[0].length, height, "Width should return expected width");
+        assertEquals(actualCount, height * width, "Height should return expected cell count :: " + actualCount);
     }
 
     @DisplayName("Should fill land with open marker")
@@ -59,7 +59,7 @@ public class GridTests {
         char actual = map.setElementPosition(2, 2, 'x');
         char expected = map.getElementAtPosition(2, 2);
 
-        assertTrue(actual == expected, "Expected should match expected : " + expected);
+        assertEquals(actual, expected, "Expected should match expected : " + expected);
 
     }
 
@@ -78,7 +78,7 @@ public class GridTests {
                 "++++++++\n";
         String actual = map.displayTheGrid(map.getGrid());
 
-        assertTrue(actual.equals(expected), String.format("Should match \n%s", expected));
+        assertEquals(actual, expected, String.format("Should match \n%s", expected));
     }
 
 

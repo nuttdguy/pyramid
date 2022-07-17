@@ -25,11 +25,11 @@ public class GameTests {
 
         assertTrue(goblinPlayers.size() > 0,  "Qty should match expected");
         assertTrue(goblin instanceof Goblin, "Should be an instance of expected");
-        assertTrue(goblin.getClass().getName().equals("Goblin"), "Should be Goblin Instance");
+        assertEquals("Goblin", goblin.getClass().getName(), "Should be Goblin Instance");
 
         assertTrue(humanPlayers.size() > 0,  "Qty should match expected");
         assertTrue(human instanceof Human, "Should be an instance of expected");
-        assertTrue(human.getClass().getName().equals("Human"), "Should be Human Instance");
+        assertEquals("Human", human.getClass().getName(), "Should be Human Instance");
 
     }
 
@@ -122,11 +122,7 @@ public class GameTests {
         assertTrue(isRemoved, "Should return true if the id was not found");
 
     }
-    // update game board
-    @DisplayName("Update the map markers of a player")
-    @Test
-    void updateMapMarkersOfTest() {
-    }
+
     @DisplayName("Should move one players position according to the chosen direction ")
     @Test
     void moveOnePlayerTest() {
