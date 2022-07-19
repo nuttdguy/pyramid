@@ -137,7 +137,7 @@ public class WordPanel {
         // call alternative func when length greater than 1
         return Arrays.asList(array).indexOf(letter);
     }
-    private int indexOfRepeatLetterIn(String[] array, String letter) {
+    private String[] findAllIndexOf(String[] array, String letter) {
         // this is for finding multiple letter occurrences and their positions in guess list
         String[] lettersFound = IntStream
                 .range(0, array.length)
@@ -145,22 +145,22 @@ public class WordPanel {
                 .filter(element -> element.split(",")[1].equals(letter))
                 .toArray(String[]::new);
 
+        return lettersFound;
+    }
+    private void insertAll(String[] letters) {
         // check the guess list for each letter of
-        for (String s : lettersFound) {
-            String[] elements = s.split(",");
+        Arrays.asList(letters).forEach(arr -> {
+            String[] elements = arr.split(",");
             int index = Integer.parseInt(elements[0]);
             String letterToMatch = elements[1];
-            if (! (getGuessList()[index].equals(letterToMatch)) ) {
-                return index;
-            }
-        }
-        return indexOfLetterIn(array, letter);
+            getGuessList()[index] = letterToMatch;
+        });
     }
     private void addLetterTo(ListType type, String letter) {
         int indexToInsert = 0;
         if (type.equals(ListType.GUESS_LIST)) {
-            indexToInsert = indexOfRepeatLetterIn(getGameWord(), letter);
-            getGuessList()[indexToInsert] = letter;
+            String[] foundIndexes = findAllIndexOf(getGameWord(), letter);
+            insertAll(foundIndexes);
         } else {
             indexToInsert = indexOfLetterIn(getMissList(), "_");
             if (!(isLetterIn(ListType.MISS_LIST, letter))) {
