@@ -52,17 +52,19 @@ public class WordPanel {
 
         return Arrays.equals(getGameWord(), getGuessList());
     }
-    public void displayNarrative(boolean play, String keyPress) {
+    public void displayGuessNarrative(boolean play) {
+        if (!play) {
+            out.printf(GameText.MISSED.missed(), Arrays.toString(getMissList()));
+            out.printf(GameText.GUESS.guess(), Arrays.toString(getGuessList()));
+        }
+    }
+    public boolean isGameOver(boolean play) {
         if (play) {
-            if (!Arrays.asList(getGuessList()).contains(keyPress)) {
-                out.printf(GameText.GUESS.guess(), Arrays.toString(getGuessList()));
-            } else {
-                out.printf(GameText.MISSED.missed(), Arrays.toString(getMissList()));
-            }
-        } else if (!play) {
             out.printf(GameText.WIN.win(), Arrays.toString(getGuessList()));
             out.printf(GameText.PLAY_AGAIN.playAgain());
+            return true;
         }
+        return false;
     }
 
     //== PROTECTED

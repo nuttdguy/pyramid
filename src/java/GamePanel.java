@@ -23,14 +23,11 @@ public class GamePanel {
 
         while (true) {
             out.printf(GameText.HEADER.header());
-            // get letter from the player
             String key = keyPress(in);
-            // check letter is in game word
 
             boolean play = wordPanel.isCorrect(key);
-            wordPanel.displayNarrative(play, key);
-            String option = keyPress(in);
-            if (option.equals("n")) {
+            wordPanel.displayGuessNarrative(play);
+            if (wordPanel.isGameOver(play) && keyPress(in).equals("n")) {
                 return;
             }
         }
