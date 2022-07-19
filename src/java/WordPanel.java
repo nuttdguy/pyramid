@@ -69,11 +69,7 @@ public class WordPanel {
         out.printf(GameText.PLAY_AGAIN.playAgain());
     }
     public boolean isPlayingAgain(String keyResponse) {
-        if (keyResponse.equals("y")) {
-            init();
-            return true;
-        }
-        return false;
+        return keyResponse.equals("y") && init();
     }
     public boolean isNotEqualToGameWord() {
         return !(Arrays.stream(getMissList())
@@ -92,11 +88,13 @@ public class WordPanel {
     }
 
     //== PRIVATE METHODS
-    private void init() {
+    private boolean init() {
         setAGameWord();
         initGuessList(getGameWord().length);
         initMissList(getGameWord().length);
+        return true;
     }
+
     private void setAGameWord() {
         String[] gameWord = (Arrays.asList(getWordList())
                 .get((int) (Math.random() * getWordList().length)))
@@ -133,19 +131,16 @@ public class WordPanel {
         }
         return Arrays.asList(getMissList()).contains(letter);
     }
-    private int indexOfLetterIn(String[] array, String letter) {
-        // call alternative func when length greater than 1
+    private int indexOfLetterIn(String letter, String[] array) {
         return Arrays.asList(array).indexOf(letter);
     }
-    private String[] findAllIndexOf(String[] array, String letter) {
+    private String[] findAllIndexOf(String letter, String[] array) {
         // this is for finding multiple letter occurrences and their positions in guess list
-        String[] lettersFound = IntStream
+        return IntStream
                 .range(0, array.length)
                 .mapToObj(index -> String.format("%d,%s", index, array[index]))
                 .filter(element -> element.split(",")[1].equals(letter))
                 .toArray(String[]::new);
-
-        return lettersFound;
     }
     private void insertAll(String[] letters) {
         // check the guess list for each letter of
@@ -157,12 +152,11 @@ public class WordPanel {
         });
     }
     private void addLetterTo(ListType type, String letter) {
-        int indexToInsert = 0;
         if (type.equals(ListType.GUESS_LIST)) {
-            String[] foundIndexes = findAllIndexOf(getGameWord(), letter);
+            String[] foundIndexes = findAllIndexOf(letter, getGameWord());
             insertAll(foundIndexes);
         } else {
-            indexToInsert = indexOfLetterIn(getMissList(), "_");
+            int indexToInsert = indexOfLetterIn("_", getMissList());
             if (!(isLetterIn(ListType.MISS_LIST, letter))) {
                 getMissList()[indexToInsert] = letter;
             }

@@ -12,8 +12,7 @@ public class WordPanelTest {
     WordPanel wordPanel;
     File file;
     String[] correctGameWord;
-    String[] incorrectGameWord = new String[]{"b", "o", "b","f", "r"};
-
+    String[] incorrectGameWord = new String[]{"b", "o", "f", "r", "_"};
 
     @BeforeEach
     void beforeEach() {
