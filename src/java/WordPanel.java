@@ -4,6 +4,7 @@ import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import static java.lang.System.out;
@@ -41,15 +42,11 @@ public class WordPanel {
     }
     public boolean isCorrect(String letter) {
         if (isLetterIn(ListType.GAME_WORD, letter)) {
-            // then check if letter is in correctLetter
-            // if not in correctLetter, check the incorrect letter list
-            if (!isLetterIn(ListType.GUESS_LIST, letter)) {
-                addLetterTo(ListType.GUESS_LIST, letter);
-            }
+            addLetterTo(ListType.GUESS_LIST, letter);
         } else {
+            displayDuplicateNarrative(letter);
             addLetterTo(ListType.MISS_LIST, letter);
         }
-
         return Arrays.equals(getGameWord(), getGuessList());
     }
     public void displayGuessNarrative(boolean play) {
@@ -58,13 +55,30 @@ public class WordPanel {
             out.printf(GameText.GUESS.guess(), Arrays.toString(getGuessList()));
         }
     }
-    public boolean isGameOver(boolean play) {
-        if (play) {
-            out.printf(GameText.WIN.win(), Arrays.toString(getGuessList()));
-            out.printf(GameText.PLAY_AGAIN.playAgain());
+    private void displayDuplicateNarrative(String keyPress) {
+        if (isLetterIn(ListType.MISS_LIST, keyPress)) {
+            out.printf(GameText.DUPLICATE.duplicate(), keyPress);
+        }
+    }
+    public void displayWinLoseNarrative() {
+        if (Arrays.equals(getGuessList(), getGameWord())) {
+            out.printf(GameText.WIN.win(), Arrays.toString(getGameWord()));
+        } else {
+            out.printf(GameText.LOSE.lose(), Arrays.toString(getGameWord()));
+        }
+        out.printf(GameText.PLAY_AGAIN.playAgain());
+    }
+    public boolean isPlayingAgain(String keyResponse) {
+        if (keyResponse.equals("y")) {
+            init();
             return true;
         }
         return false;
+    }
+    public boolean isNotEqualToGameWord() {
+        return !(Arrays.stream(getMissList())
+                .filter(e -> !(e.equals("_"))).count() == getGameWord().length ||
+                Arrays.equals(getGuessList(), getGameWord()));
     }
 
     //== PROTECTED
@@ -78,6 +92,11 @@ public class WordPanel {
     }
 
     //== PRIVATE METHODS
+    private void init() {
+        setAGameWord();
+        initGuessList(getGameWord().length);
+        initMissList(getGameWord().length);
+    }
     private void setAGameWord() {
         String[] gameWord = (Arrays.asList(getWordList())
                 .get((int) (Math.random() * getWordList().length)))
@@ -115,16 +134,38 @@ public class WordPanel {
         return Arrays.asList(getMissList()).contains(letter);
     }
     private int indexOfLetterIn(String[] array, String letter) {
+        // call alternative func when length greater than 1
         return Arrays.asList(array).indexOf(letter);
+    }
+    private int indexOfRepeatLetterIn(String[] array, String letter) {
+        // this is for finding multiple letter occurrences and their positions in guess list
+        String[] lettersFound = IntStream
+                .range(0, array.length)
+                .mapToObj(index -> String.format("%d,%s", index, array[index]))
+                .filter(element -> element.split(",")[1].equals(letter))
+                .toArray(String[]::new);
+
+        // check the guess list for each letter of
+        for (String s : lettersFound) {
+            String[] elements = s.split(",");
+            int index = Integer.parseInt(elements[0]);
+            String letterToMatch = elements[1];
+            if (! (getGuessList()[index].equals(letterToMatch)) ) {
+                return index;
+            }
+        }
+        return indexOfLetterIn(array, letter);
     }
     private void addLetterTo(ListType type, String letter) {
         int indexToInsert = 0;
         if (type.equals(ListType.GUESS_LIST)) {
-            indexToInsert = indexOfLetterIn(getGameWord(), letter);
+            indexToInsert = indexOfRepeatLetterIn(getGameWord(), letter);
             getGuessList()[indexToInsert] = letter;
         } else {
             indexToInsert = indexOfLetterIn(getMissList(), "_");
-            getMissList()[indexToInsert] = letter;
+            if (!(isLetterIn(ListType.MISS_LIST, letter))) {
+                getMissList()[indexToInsert] = letter;
+            }
         }
     }
 

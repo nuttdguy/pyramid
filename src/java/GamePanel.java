@@ -23,12 +23,17 @@ public class GamePanel {
 
         while (true) {
             out.printf(GameText.HEADER.header());
-            String key = keyPress(in);
 
-            boolean play = wordPanel.isCorrect(key);
-            wordPanel.displayGuessNarrative(play);
-            if (wordPanel.isGameOver(play) && keyPress(in).equals("n")) {
-                return;
+            boolean play;
+            if (wordPanel.isNotEqualToGameWord()) {
+                String key = keyPress(in);
+                play = wordPanel.isCorrect(key);
+                wordPanel.displayGuessNarrative(play);
+            } else {
+                wordPanel.displayWinLoseNarrative();
+                if (!(wordPanel.isPlayingAgain(keyPress(in)))) {
+                    return;
+                }
             }
         }
     }
