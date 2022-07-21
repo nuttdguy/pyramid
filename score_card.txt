@@ -34,3 +34,21 @@ Misses:3, Missed letters: [o, l, n, _, _, _, _]
 Guesses:7, Guessed letters: [p, i, c, t, u, r, e]
 Score:10
 ;
+Name:tom
+Word:[e, n, g, i, n, e]
+Misses:6, Missed letters: [a, o, r, d, s, l]
+Guesses:4, Guessed letters: [e, _, g, i, _, e]
+Score:-6
+;
+Name:tom
+Word:[f, r, i, g, h, t, e, n, i, n, g]
+Misses:3, Missed letters: [a, u, s, _, _, _, _, _, _, _, _]
+Guesses:11, Guessed letters: [f, r, i, g, h, t, e, n, i, n, g]
+Score:14
+;
+Name:tom
+Word:[t, a, n, g, i, b, l, e]
+Misses:8, Missed letters: [r, y, u, o, p, s, f, d]
+Guesses:6, Guessed letters: [t, a, n, _, i, _, l, e]
+Score:-8
+;

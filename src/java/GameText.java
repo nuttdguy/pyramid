@@ -3,7 +3,7 @@ public enum GameText {
     HEADER, GUESS, DUPLICATE, MISSED, WIN, LOSE, PLAY_AGAIN, GREETING, COLLECT_NAME;
 
     String header() {
-        return "H A N G M A N\n";
+        return "H A N G M A N\n----\n";
     }
 
     String guess() {

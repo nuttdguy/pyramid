@@ -34,40 +34,55 @@ public class Hangman {
         this.name = name;
     }
     private String getName() { return this.name; }
+    public String upCase(String word) {
+        return String.valueOf(word.charAt(0)).toUpperCase() + word.substring(1);
+    }
+    private void displayNameNotSetGreeting() {
+        out.printf(GameText.COLLECT_NAME.collectName());
+        setName(keyPresses(in));
+
+        out.printf(GameText.HEADER.header());
+        out.printf(GameText.GREETING.greeting(), upCase(getName()));
+        wordPanel.displayTheHighScore(upCase(getName()));
+        out.printf(wordPanel.displayGameArt());
+        out.printf(GameText.GUESS.guess(), "");
+    }
+    private void displayGameLoopNarrative() {
+        String key = keyPress(in);
+        boolean play = wordPanel.isCorrect(key);
+
+        out.printf(GameText.HEADER.header());
+        out.printf(wordPanel.displayGameArt());
+        wordPanel.displayGuessNarrative(play);
+    }
+    private void displayPlayAgainNarrative() {
+        out.printf(GameText.HEADER.header());
+        wordPanel.displayTheHighScore(upCase(getName()));
+        out.printf(wordPanel.displayGameArt());
+        out.printf(GameText.GUESS.guess(), "");
+    }
+    private void displayWinLoseNarrative() {
+        out.println("----");
+        wordPanel.displayWinLoseNarrative();
+    }
 
     void run() {
 
         out.printf(GameText.HEADER.header());
         while (true) {
 
-            boolean play;
             if (wordPanel.isNotEqualToGameWord()) {
                 if (isNameNotSet()) {
-                    out.printf(GameText.COLLECT_NAME.collectName());
-                    setName(keyPresses(in));
-                    out.printf(GameText.GREETING.greeting(), getName());
-
-                    out.printf(GameText.HEADER.header());
-                    wordPanel.displayTheHighScoreOf(getName());
-                    out.printf(wordPanel.displayGameArt());
-                    out.printf(GameText.GUESS.guess(), "");
+                    displayNameNotSetGreeting();
                 }
-                String key = keyPress(in);
-                play = wordPanel.isCorrect(key);
-
-                out.printf(GameText.HEADER.header());
-                out.printf(wordPanel.displayGameArt());
-                wordPanel.displayGuessNarrative(play);
+                displayGameLoopNarrative();
             } else {
-                out.println("----");
-                wordPanel.displayWinLoseNarrative();
+
+                displayWinLoseNarrative();
                 if (!(wordPanel.isPlayingAgain(keyPress(in), getName()))) {
                     return;
                 }
-                out.printf(GameText.HEADER.header());
-                wordPanel.displayTheHighScoreOf(getName());
-                out.printf(wordPanel.displayGameArt());
-                out.printf(GameText.GUESS.guess(), "");
+                displayPlayAgainNarrative();
             }
         }
     }

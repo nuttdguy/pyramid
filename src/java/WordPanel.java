@@ -5,7 +5,6 @@ import java.lang.reflect.Array;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -53,8 +52,7 @@ public class WordPanel {
         }
         out.printf(GameText.PLAY_AGAIN.playAgain());
     }
-    // todo display the current users high score
-    public void displayTheHighScoreOf(String player) {
+    public void displayTheHighScore(String playerName) {
         class Score {
             private String name;
             private String word;
@@ -88,7 +86,10 @@ public class WordPanel {
 
             @Override
             public String toString() {
-                return "Highest Score is in " + getScore() + " guesses for a word length of " + getWord().length() + " by " + getName();
+                return "Highest Score is " +
+                        getScore() + " guesses for a word length of " +
+                        getWord().length() + " by " +
+                        String.valueOf(getName().charAt(0)).toUpperCase() + getName().substring(1) +".";
             }
         }
 
@@ -107,21 +108,15 @@ public class WordPanel {
                     })
                     .toArray(Score[]::new);
 
-            int index = 0;
-            int playerIndex = 0;
-            int lowestGuessAmount = scores[0].getScore();
-            for (Score p : scores) {
-                if (p.getScore() > lowestGuessAmount) {
-                    lowestGuessAmount = p.getScore();
-                    playerIndex = index;
-                }
-                index++;
-            }
-            out.printf(scores[playerIndex].toString());
+            Score playerWithHighestScore = Stream.of(scores).reduce((a, c) -> a.getScore() > c.getScore() ? a : c).orElse(scores[0]);
+            out.printf(playerWithHighestScore.toString());
+            out.printf("\n%s, you %s have the highest score.\n", playerName,
+                    playerWithHighestScore.getName().equalsIgnoreCase(playerName) ? "do" : "do not");
+            out.println("----");
+
         }
         // no records exist, do nothing
     }
-
     public String displayGameArt() {
         int idx = indexOfLetterIn("_", getMissList());
         return getDrawings()[idx < 0 ? getDrawings().length-1 : idx] +"\n";
