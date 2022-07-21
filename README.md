@@ -6,3 +6,4 @@ pyramid-consulting
 2. guess-the-number
 3. hangman
 4. humans_vs_goblins
+5. hangman_func (functional)
