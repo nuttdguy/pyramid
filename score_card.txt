@@ -83,3 +83,15 @@ Misses: 10, Missed letters: [q, w, r, y, u, i, o, s, d, f],
 Guesses: 6, Guessed letters: [a, _, _, e, p, t, a, _, _, e],
 Score: -4,
 ;
+Name: alice,
+Word: [f, l, a, t],
+Misses: 4, Missed letters: [w, e, r, y],
+Guesses: 2, Guessed letters: [_, _, a, t],
+Score: -2,
+;
+Name: alice,
+Word: [m, u, d, d, l, e, d],
+Misses: 7, Missed letters: [q, w, r, t, y, i, o],
+Guesses: 2, Guessed letters: [_, u, _, _, _, e, _],
+Score: -5,
+;
