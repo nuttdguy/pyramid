@@ -11,14 +11,15 @@ public class WordPanelTest {
 
     WordPanel wordPanel;
     File file;
-    String[] correctGameWord;
+    String[] correctGameWordForTest;
     String[] incorrectGameWord = new String[]{"b", "o", "f", "r", "_"};
 
     @BeforeEach
     void beforeEach() {
         file = new File("words.txt");
-        correctGameWord = new String[]{"a", "l", "i", "c", "e"};
-        wordPanel = new WordPanel(correctGameWord);
+        wordPanel = new WordPanel(file.getPath());
+        this.correctGameWordForTest = new String[]{"a", "l", "i", "c", "e"};
+        wordPanel.setAGameWord(correctGameWordForTest);
     }
 
     @DisplayName("Should return contents of file into an array")
@@ -53,7 +54,7 @@ public class WordPanelTest {
     @DisplayName("Guess list should equal game word")
     @Test
     void isGuessEqualToGameWordTest() {
-        String[] gameWord = correctGameWord;
+        String[] gameWord = correctGameWordForTest;
         boolean doesGameWordMatchGuessList = false;
         for (String letter : gameWord) {
             doesGameWordMatchGuessList = wordPanel.isCorrect(letter);

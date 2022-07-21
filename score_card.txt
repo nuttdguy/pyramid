@@ -1,97 +1,36 @@
-
-Name: alice,
-Word: [l, a, n, d],
-Misses: 0, Missed letters: [_, _, _, _],
-Guesses: 4, Guessed letters: [l, a, n, d],
-Score: 4,
+Name:tom
+Word:[c, r, o, w, d]
+Misses:5, Missed letters: [a, e, v, b, t]
+Guesses:1, Guessed letters: [c, _, _, _, _]
+Score:-5
 ;
-Name: alice,
-Word: [w, a, k, e, f, u, l],
-Misses: 7, Missed letters: [b, m, v, c, x, z, j],
-Guesses: 4, Guessed letters: [w, a, k, _, _, _, l],
-Score: -3,
+Name:bob
+Word:[p, i, c, t, u, r, e]
+Misses:7, Missed letters: [a, s, v, o, l, m, n]
+Guesses:4, Guessed letters: [_, i, c, _, u, _, e]
+Score:-7
 ;
-Name: alice,
-Word: [s, i, s, t, e, r],
-Misses: 6, Missed letters: [q, w, y, u, p, a],
-Guesses: 4, Guessed letters: [_, i, _, t, e, r],
-Score: -2,
+Name:bob
+Word:[a, b, s, o, r, b, i, n, g]
+Misses:7, Missed letters: [y, p, t, l, w, c, v, _, _]
+Guesses:9, Guessed letters: [a, b, s, o, r, b, i, n, g]
+Score:9
 ;
-Name: alice,
-Word: [h, o, m, e, l, y],
-Misses: 6, Missed letters: [q, w, r, t, u, i],
-Guesses: 2, Guessed letters: [_, _, _, e, _, y],
-Score: -4,
+Name:alex
+Word:[c, r, a, c, k, e, r]
+Misses:7, Missed letters: [i, u, d, f, v, s, m]
+Guesses:4, Guessed letters: [c, _, a, c, _, e, _]
+Score:-7
 ;
-Name: alice,
-Word: [p, a, d, d, l, e],
-Misses: 6, Missed letters: [s, f, g, h, j, k],
-Guesses: 3, Guessed letters: [_, a, d, d, _, _],
-Score: -3,
+Name:alex
+Word:[h, u, g, e]
+Misses:4, Missed letters: [m, n, p, t]
+Guesses:2, Guessed letters: [_, u, _, e]
+Score:-4
 ;
-Name: alice,
-Word: [s, p, u, r, i, o, u, s],
-Misses: 6, Missed letters: [q, w, e, t, y, a, _, _],
-Guesses: 8, Guessed letters: [s, p, u, r, i, o, u, s],
-Score: 2,
-;
-Name: alice,
-Word: [f, a, s, t, e, n],
-Misses: 6, Missed letters: [y, q, w, r, u, i],
-Guesses: 2, Guessed letters: [_, _, _, t, e, _],
-Score: -4,
-;
-Name: alice,
-Word: [f, a, s, t, e, n],
-Misses: 6, Missed letters: [q, w, r, y, u, i],
-Guesses: 3, Guessed letters: [_, a, _, t, e, _],
-Score: -3,
-;
-Name: alice,
-Word: [j, e, l, l, y],
-Misses: 5, Missed letters: [q, w, r, t, u],
-Guesses: 2, Guessed letters: [_, e, _, _, y],
-Score: -3,
-;
-Name: alice,
-Word: [r, e, p, l, y],
-Misses: 5, Missed letters: [w, q, t, u, i],
-Guesses: 3, Guessed letters: [r, e, _, _, y],
-Score: -2,
-;
-Name: alice,
-Word: [a, w, f, u, l],
-Misses: 5, Missed letters: [n, q, e, r, t],
-Guesses: 2, Guessed letters: [a, w, _, _, _],
-Score: -3,
-;
-Name: alice,
-Word: [a, c, c, e, p, t, a, b, l, e],
-Misses: 10, Missed letters: [r, y, u, i, o, k, j, h, g, f],
-Guesses: 7, Guessed letters: [a, _, _, e, p, t, a, _, l, e],
-Score: -3,
-;
-Name: alice,
-Word: [v, e, s, s, e, l],
-Misses: 6, Missed letters: [q, a, d, f, g, h],
-Guesses: 2, Guessed letters: [_, _, s, s, _, _],
-Score: -4,
-;
-Name: alice,
-Word: [a, c, c, e, p, t, a, b, l, e],
-Misses: 10, Missed letters: [q, w, r, y, u, i, o, s, d, f],
-Guesses: 6, Guessed letters: [a, _, _, e, p, t, a, _, _, e],
-Score: -4,
-;
-Name: alice,
-Word: [f, l, a, t],
-Misses: 4, Missed letters: [w, e, r, y],
-Guesses: 2, Guessed letters: [_, _, a, t],
-Score: -2,
-;
-Name: alice,
-Word: [m, u, d, d, l, e, d],
-Misses: 7, Missed letters: [q, w, r, t, y, i, o],
-Guesses: 2, Guessed letters: [_, u, _, _, _, e, _],
-Score: -5,
+Name:alex
+Word:[p, i, c, t, u, r, e]
+Misses:3, Missed letters: [o, l, n, _, _, _, _]
+Guesses:7, Guessed letters: [p, i, c, t, u, r, e]
+Score:10
 ;

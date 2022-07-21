@@ -6,31 +6,36 @@ import static java.lang.System.*;
 public class Hangman {
 
     WordPanel wordPanel;
-    private Scanner scanner;
     private String name;
 
-    Hangman() {}
+    Hangman() {
+        init();
+    }
+    Hangman(String wordFilePath) {
+        init(wordFilePath);
+    }
 
-    public void init() {
-        wordPanel = new WordPanel();
+    private void init() {
+        this.wordPanel = new WordPanel();
     }
-    public String keyPress(InputStream inputStream) {
-        scanner = new Scanner(inputStream);
-        return String.valueOf(scanner.next().charAt(0));
+    private void init(String wordFilePath ) {
+        this.wordPanel = new WordPanel(wordFilePath);
     }
-    public String keyPresses(InputStream inputStream) {
+    private String keyPress(InputStream inputStream) {
+        return String.valueOf(new Scanner(inputStream).next().charAt(0));
+    }
+    private String keyPresses(InputStream inputStream) {
         return new Scanner((inputStream)).nextLine();
     }
-    public boolean isNameNotSet() {
+    private boolean isNameNotSet() {
         return this.name == null;
     }
-    public void setName(String name) {
+    private void setName(String name) {
         this.name = name;
     }
-    public String getName() { return this.name; }
+    private String getName() { return this.name; }
 
     void run() {
-        init();
 
         out.printf(GameText.HEADER.header());
         while (true) {
@@ -43,6 +48,7 @@ public class Hangman {
                     out.printf(GameText.GREETING.greeting(), getName());
 
                     out.printf(GameText.HEADER.header());
+                    wordPanel.displayTheHighScoreOf(getName());
                     out.printf(wordPanel.displayGameArt());
                     out.printf(GameText.GUESS.guess(), "");
                 }
@@ -55,10 +61,11 @@ public class Hangman {
             } else {
                 out.println("----");
                 wordPanel.displayWinLoseNarrative();
-                if (!(wordPanel.isPlayingAgain(keyPress(in)))) {
+                if (!(wordPanel.isPlayingAgain(keyPress(in), getName()))) {
                     return;
                 }
                 out.printf(GameText.HEADER.header());
+                wordPanel.displayTheHighScoreOf(getName());
                 out.printf(wordPanel.displayGameArt());
                 out.printf(GameText.GUESS.guess(), "");
             }

@@ -5,6 +5,8 @@ import java.lang.reflect.Array;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.IntStream;
@@ -30,10 +32,9 @@ public class WordPanel {
     WordPanel() {
         init();
     }
-    WordPanel(String[] gameWord) {
-        init(gameWord);
+    WordPanel(String wordFilePath) {
+        init(wordFilePath);
     }
-
 
     //== PUBLIC METHODS
     public void displayGuessNarrative(boolean play) {
@@ -45,16 +46,85 @@ public class WordPanel {
     public void displayWinLoseNarrative() {
         if (Arrays.equals(getGuessList(), getGameWord())) {
             out.printf(GameText.WIN.win(), Arrays.toString(getGameWord()));
-            writeToFile(getScoreCardPath(), score("alice"));
+
         } else {
             out.printf(GameText.LOSE.lose(), Arrays.toString(getGameWord()));
-            writeToFile(getScoreCardPath(), score("alice"));
+//            writeToFile(getScoreCardPath(), score(name));
         }
         out.printf(GameText.PLAY_AGAIN.playAgain());
     }
+    // todo display the current users high score
+    public void displayTheHighScoreOf(String player) {
+        class Score {
+            private String name;
+            private String word;
+            private String misses;
+            private String guesses;
+            private String score;
+
+            Score() {};
+            Score(String name, String word, String misses, String guesses, String score) {
+                this.name = name;
+                this.word = word;
+                this.misses = misses;
+                this.guesses = guesses;
+                this.score = score;
+            }
+            protected Integer getScore() {
+                return Integer.parseInt(this.score.split(":")[1].replace(",", "").trim());
+            }
+
+            protected String getName() {
+                return this.name.split(":")[1].replace(",", "").trim();
+            }
+
+            protected String getWord() {
+                return this.word.split(":")[1]
+                        .replace(",", "")
+                        .replace("[", "")
+                        .replace("]", "")
+                        .replace(" ", "").trim();
+            }
+
+            @Override
+            public String toString() {
+                return "Highest Score is in " + getScore() + " guesses for a word length of " + getWord().length() + " by " + getName();
+            }
+        }
+
+        String[] scoreRecords = readFromAFile(getScoreCardPath()).split(";\n");
+        Score[] scores;
+        if (!scoreRecords[0].equals("")) {
+            scores = Arrays.stream(scoreRecords)
+                    .map(arr -> {
+                        String[] record = arr.split("\n");
+                        if (record.length < 6) {
+                            return new Score(record[0], record[1], record[2], record[3], record[4]);
+                        } else {
+                            out.println("The score file has been modified, delete the file and try again.");
+                            return new Score();
+                        }
+                    })
+                    .toArray(Score[]::new);
+
+            int index = 0;
+            int playerIndex = 0;
+            int lowestGuessAmount = scores[0].getScore();
+            for (Score p : scores) {
+                if (p.getScore() > lowestGuessAmount) {
+                    lowestGuessAmount = p.getScore();
+                    playerIndex = index;
+                }
+                index++;
+            }
+            out.printf(scores[playerIndex].toString());
+        }
+        // no records exist, do nothing
+    }
+
     public String displayGameArt() {
         int idx = indexOfLetterIn("_", getMissList());
-        return getDrawings()[idx < 0 ? getDrawings().length-1 : idx];
+        return getDrawings()[idx < 0 ? getDrawings().length-1 : idx] +"\n";
     }
     public String[] getWordList() { return this.wordList; }
     public String[] getGuessList() {
@@ -73,7 +143,8 @@ public class WordPanel {
         }
         return Arrays.equals(getGameWord(), getGuessList());
     }
-    public boolean isPlayingAgain(String keyResponse) {
+    public boolean isPlayingAgain(String keyResponse, String name) {
+        writeToFile(getScoreCardPath(), score(name));
         return keyResponse.equals("y") && reload();
     }
     public boolean isNotEqualToGameWord() {
@@ -90,6 +161,16 @@ public class WordPanel {
         } else {
             setAGameWord();
         }
+    }
+    private String[] setAGameWord() {
+
+        String[] gameWord = (Arrays.asList(getWordList())
+                .get((int) (Math.random() * getWordList().length)))
+                .split("");
+        this.gameWord = gameWord.length < 4 ? setAGameWord() : gameWord;
+        initGuessList(this.gameWord.length);
+        initMissList(this.gameWord.length);
+        return gameWord;
     }
 
     //== PRIVATE METHODS
@@ -109,18 +190,16 @@ public class WordPanel {
             out.printf(GameText.DUPLICATE.duplicate(), keyPress);
         }
     }
+    /* Initializes game words from a default file path */
     private void init() {
         setWordList(readFromAFile(this.wordFilePath).split("\r\n"));
         setAGameWord();
-        initGuessList(getGameWord().length);
-        initMissList(getGameWord().length);
         setDrawings();
     }
-    private void init(String[] gameWord) {
-        setWordList(readFromAFile(this.wordFilePath).split("\r\n"));
-        setAGameWord(gameWord);
-        initGuessList(getGameWord().length);
-        initMissList(getGameWord().length);
+    /* Initializes game words from a provided file path */
+    private void init(String wordFilePath) {
+        setWordList(readFromAFile(wordFilePath).split("\r\n"));
+        setAGameWord();
         setDrawings();
     }
     private void initGuessList(int length) {
@@ -151,8 +230,12 @@ public class WordPanel {
     }
     private void writeToFile(String path, String gameData) {
         File file = new File(path);
+        boolean append = false;
         try {
-            FileOutputStream io = new FileOutputStream(file.getAbsolutePath(), true);
+            if (file.exists()) {
+                append = true;
+            }
+            FileOutputStream io = new FileOutputStream(file.getAbsolutePath(), append);
             io.write(gameData.getBytes());
             io.close();
 
@@ -167,11 +250,13 @@ public class WordPanel {
     private String score(String name) {
         int misses = (int) Arrays.stream(getMissList()).filter(e-> !e.equals("_")).count();
         int guesses = (int) Arrays.stream(getGuessList()).filter(e-> !e.equals("_")).count();
-        return "\nName: " + name + ",\n" +
-                "Word: " + Arrays.toString(getGameWord()) + ",\n" +
-                "Misses: " + misses + ", Missed letters: " + Arrays.toString(getMissList()) + ",\n" +
-                "Guesses: " + guesses + ", Guessed letters: " + Arrays.toString(getGuessList()) + ",\n" +
-                "Score: " + (guesses - misses) + ",\n;";
+        int score = Arrays.equals(getGameWord(), getGuessList()) ? guesses + misses : -misses;
+
+        return "Name:" + name + "\n" +
+                "Word:" + Arrays.toString(getGameWord()) + "\n" +
+                "Misses:" + misses + ", Missed letters: " + Arrays.toString(getMissList()) + "\n" +
+                "Guesses:" + guesses + ", Guessed letters: " + Arrays.toString(getGuessList()) + "\n" +
+                "Score:" + score + "\n;\n";
     }
     private String[] findAllIndexOf(String letter, String[] array) {
         // this is for finding multiple letter occurrences and their positions in guess list
@@ -194,14 +279,6 @@ public class WordPanel {
             logger.log(Level.ALL, io.getMessage());
         }
         return data;
-    }
-    private String[] setAGameWord() {
-
-        String[] gameWord = (Arrays.asList(getWordList())
-                .get((int) (Math.random() * getWordList().length)))
-                .split("");
-        this.gameWord = gameWord.length < 4 ? setAGameWord() : gameWord;
-        return gameWord;
     }
     private int indexOfLetterIn(String letter, String[] array) {
         return Arrays.asList(array).indexOf(letter);
