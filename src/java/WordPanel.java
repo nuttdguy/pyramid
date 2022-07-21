@@ -1,6 +1,9 @@
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -11,35 +14,56 @@ import static java.lang.System.out;
 
 public class WordPanel {
 
-    enum ListType { GAME_WORD, GUESS_LIST, MISS_LIST; };
+    static Logger logger = Logger.getLogger(String.valueOf(WordPanel.class));
+    enum ListType { GAME_WORD, GUESS_LIST, MISS_LIST}
+
     private String[] wordList;
     private String[] gameWord;
     private String[] guessList;
     private String[] missList;
-    static Logger logger = Logger.getLogger(String.valueOf(WordPanel.class));
+    private String[] drawings;
 
-    WordPanel(String filePath) {
-        setWordList(readFromAFile(filePath));
-        setAGameWord();
-        initGuessList(getGameWord().length);
-        initMissList(getGameWord().length);
+    private final String drawingFilePath = "art.txt";
+    private final String wordFilePath = "words.txt";
+    private final String scoreCardPath = "score_card.txt";
+
+    WordPanel() {
+        init();
+    }
+    WordPanel(String[] gameWord) {
+        init(gameWord);
     }
 
-    WordPanel(String filePath, String[] gameWord) {
-        setWordList(readFromAFile(filePath));
-        setAGameWord(gameWord);
-        initGuessList(getGameWord().length);
-        initMissList(getGameWord().length);
-    }
 
     //== PUBLIC METHODS
+    public void displayGuessNarrative(boolean play) {
+        if (!play) {
+            out.printf(GameText.MISSED.missed(), Arrays.toString(getMissList()));
+            out.printf(GameText.GUESS.guess(), Arrays.toString(getGuessList()));
+        }
+    }
+    public void displayWinLoseNarrative() {
+        if (Arrays.equals(getGuessList(), getGameWord())) {
+            out.printf(GameText.WIN.win(), Arrays.toString(getGameWord()));
+            writeToFile(getScoreCardPath(), score("alice"));
+        } else {
+            out.printf(GameText.LOSE.lose(), Arrays.toString(getGameWord()));
+            writeToFile(getScoreCardPath(), score("alice"));
+        }
+        out.printf(GameText.PLAY_AGAIN.playAgain());
+    }
+    public String displayGameArt() {
+        int idx = indexOfLetterIn("_", getMissList());
+        return getDrawings()[idx < 0 ? getDrawings().length-1 : idx];
+    }
     public String[] getWordList() { return this.wordList; }
     public String[] getGuessList() {
-        return guessList;
+        return this.guessList;
     }
     public String[] getMissList() {
-        return missList;
+        return this.missList;
     }
+    public String[] getDrawings() { return this.drawings; }
     public boolean isCorrect(String letter) {
         if (isLetterIn(ListType.GAME_WORD, letter)) {
             addLetterTo(ListType.GUESS_LIST, letter);
@@ -49,27 +73,8 @@ public class WordPanel {
         }
         return Arrays.equals(getGameWord(), getGuessList());
     }
-    public void displayGuessNarrative(boolean play) {
-        if (!play) {
-            out.printf(GameText.MISSED.missed(), Arrays.toString(getMissList()));
-            out.printf(GameText.GUESS.guess(), Arrays.toString(getGuessList()));
-        }
-    }
-    private void displayDuplicateNarrative(String keyPress) {
-        if (isLetterIn(ListType.MISS_LIST, keyPress)) {
-            out.printf(GameText.DUPLICATE.duplicate(), keyPress);
-        }
-    }
-    public void displayWinLoseNarrative() {
-        if (Arrays.equals(getGuessList(), getGameWord())) {
-            out.printf(GameText.WIN.win(), Arrays.toString(getGameWord()));
-        } else {
-            out.printf(GameText.LOSE.lose(), Arrays.toString(getGameWord()));
-        }
-        out.printf(GameText.PLAY_AGAIN.playAgain());
-    }
     public boolean isPlayingAgain(String keyResponse) {
-        return keyResponse.equals("y") && init();
+        return keyResponse.equals("y") && reload();
     }
     public boolean isNotEqualToGameWord() {
         return !(Arrays.stream(getMissList())
@@ -88,69 +93,6 @@ public class WordPanel {
     }
 
     //== PRIVATE METHODS
-    private boolean init() {
-        setAGameWord();
-        initGuessList(getGameWord().length);
-        initMissList(getGameWord().length);
-        return true;
-    }
-
-    private void setAGameWord() {
-        String[] gameWord = (Arrays.asList(getWordList())
-                .get((int) (Math.random() * getWordList().length)))
-                .split("");
-        this.gameWord = gameWord;
-    }
-    private void setWordList(String[] wordList) {
-        this.wordList = wordList;
-    }
-    private void initGuessList(int length) {
-        this.guessList = fillTheList(length);
-    }
-    private void initMissList(int length) {
-        this.missList = fillTheList(length);
-    }
-    private String[] fillTheList(int length) {
-        return Stream.of(new String[length]).map(e -> "_").toArray(String[]::new);
-    }
-    private String[] getGameWord() { return gameWord;}
-    private String[] readFromAFile(String path) {
-        String words = "";
-        try {
-            words = new String(Files.readAllBytes(Paths.get(path)));
-        } catch (IOException io) {
-            logger.log(Level.ALL, io.getMessage());
-        }
-        return words.split("\r\n");
-    }
-    private boolean isLetterIn(ListType type, String letter) {
-        if (type.equals(ListType.GAME_WORD)) {
-            return Arrays.asList(getGameWord()).contains(letter);
-        } else if (type.equals(ListType.GUESS_LIST)) {
-            return Arrays.asList(getGuessList()).contains(letter);
-        }
-        return Arrays.asList(getMissList()).contains(letter);
-    }
-    private int indexOfLetterIn(String letter, String[] array) {
-        return Arrays.asList(array).indexOf(letter);
-    }
-    private String[] findAllIndexOf(String letter, String[] array) {
-        // this is for finding multiple letter occurrences and their positions in guess list
-        return IntStream
-                .range(0, array.length)
-                .mapToObj(index -> String.format("%d,%s", index, array[index]))
-                .filter(element -> element.split(",")[1].equals(letter))
-                .toArray(String[]::new);
-    }
-    private void insertAll(String[] letters) {
-        // check the guess list for each letter of
-        Arrays.asList(letters).forEach(arr -> {
-            String[] elements = arr.split(",");
-            int index = Integer.parseInt(elements[0]);
-            String letterToMatch = elements[1];
-            getGuessList()[index] = letterToMatch;
-        });
-    }
     private void addLetterTo(ListType type, String letter) {
         if (type.equals(ListType.GUESS_LIST)) {
             String[] foundIndexes = findAllIndexOf(letter, getGameWord());
@@ -161,6 +103,123 @@ public class WordPanel {
                 getMissList()[indexToInsert] = letter;
             }
         }
+    }
+    private void displayDuplicateNarrative(String keyPress) {
+        if (isLetterIn(ListType.MISS_LIST, keyPress)) {
+            out.printf(GameText.DUPLICATE.duplicate(), keyPress);
+        }
+    }
+    private void init() {
+        setWordList(readFromAFile(this.wordFilePath).split("\r\n"));
+        setAGameWord();
+        initGuessList(getGameWord().length);
+        initMissList(getGameWord().length);
+        setDrawings();
+    }
+    private void init(String[] gameWord) {
+        setWordList(readFromAFile(this.wordFilePath).split("\r\n"));
+        setAGameWord(gameWord);
+        initGuessList(getGameWord().length);
+        initMissList(getGameWord().length);
+        setDrawings();
+    }
+    private void initGuessList(int length) {
+        this.guessList = fillTheList(length, "_");
+    }
+    private void initMissList(int length) {
+        this.missList = fillTheList(length, "_");
+    }
+    private void insertAll(String[] letters) {
+        // check the guess list for each letter of
+        Arrays.stream(letters)
+                .map(arr -> arr.split(","))
+                .forEach(idxOfInsert -> getGuessList()[Integer.parseInt(idxOfInsert[0])] = idxOfInsert[1]);
+    }
+    private void setDrawings() {
+        // offset by 2 since first element does not count and need extra element for offsetting display of art
+        String[] drawings = readFromAFile(drawingFilePath).split(";");
+        int middle = getGameWord().length / 2;
+        int a=1, b = middle+1, c = drawings.length - (middle+2), d = drawings.length;
+        String[] drawingSet1 = Arrays.asList(drawings).subList(a, b).toArray(String[]::new);
+        String[] drawingSet2 = Arrays.asList(drawings).subList(c, d).toArray(String[]::new);
+        this.drawings = Stream.concat(Arrays.stream(drawingSet1), Arrays.stream(drawingSet2))
+                .toArray(size -> (String[]) Array.newInstance(drawingSet1.getClass().getComponentType(), size));
+
+    }
+    private void setWordList(String[] wordList) {
+        this.wordList = wordList;
+    }
+    private void writeToFile(String path, String gameData) {
+        File file = new File(path);
+        try {
+            FileOutputStream io = new FileOutputStream(file.getAbsolutePath(), true);
+            io.write(gameData.getBytes());
+            io.close();
+
+        } catch(IOException ioe) {
+            logger.log(Level.ALL, ioe.getMessage());
+        }
+
+    }
+    private String getScoreCardPath() {
+        return this.scoreCardPath;
+    }
+    private String score(String name) {
+        int misses = (int) Arrays.stream(getMissList()).filter(e-> !e.equals("_")).count();
+        int guesses = (int) Arrays.stream(getGuessList()).filter(e-> !e.equals("_")).count();
+        return "\nName: " + name + ",\n" +
+                "Word: " + Arrays.toString(getGameWord()) + ",\n" +
+                "Misses: " + misses + ", Missed letters: " + Arrays.toString(getMissList()) + ",\n" +
+                "Guesses: " + guesses + ", Guessed letters: " + Arrays.toString(getGuessList()) + ",\n" +
+                "Score: " + (guesses - misses) + ",\n;";
+    }
+    private String[] findAllIndexOf(String letter, String[] array) {
+        // this is for finding multiple letter occurrences and their positions in guess list
+        return IntStream
+                .range(0, array.length)
+                .mapToObj(index -> String.format("%d,%s", index, array[index]))
+                .filter(element -> element.split(",")[1].equals(letter))
+                .toArray(String[]::new);
+    }
+    private String[] fillTheList(int length, String fill) {
+        return Stream.of(new String[length]).map(e -> fill).toArray(String[]::new);
+    }
+    private String[] getGameWord() { return gameWord;}
+    private String readFromAFile(String fileName) {
+        String data = "";
+
+        try {
+            data = new String(Files.readAllBytes(Path.of(fileName)));
+        } catch (IOException io) {
+            logger.log(Level.ALL, io.getMessage());
+        }
+        return data;
+    }
+    private String[] setAGameWord() {
+
+        String[] gameWord = (Arrays.asList(getWordList())
+                .get((int) (Math.random() * getWordList().length)))
+                .split("");
+        this.gameWord = gameWord.length < 4 ? setAGameWord() : gameWord;
+        return gameWord;
+    }
+    private int indexOfLetterIn(String letter, String[] array) {
+        return Arrays.asList(array).indexOf(letter);
+    }
+    private boolean isLetterIn(ListType type, String letter) {
+        if (type.equals(ListType.GAME_WORD)) {
+            return Arrays.asList(getGameWord()).contains(letter);
+        } else if (type.equals(ListType.GUESS_LIST)) {
+            return Arrays.asList(getGuessList()).contains(letter);
+        }
+        return Arrays.asList(getMissList()).contains(letter);
+    }
+    private boolean reload() {
+        setAGameWord();
+        initGuessList(getGameWord().length);
+        initMissList(getGameWord().length);
+        setDrawings();
+        return true;
     }
 
 }

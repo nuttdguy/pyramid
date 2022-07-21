@@ -18,7 +18,7 @@ public class WordPanelTest {
     void beforeEach() {
         file = new File("words.txt");
         correctGameWord = new String[]{"a", "l", "i", "c", "e"};
-        wordPanel = new WordPanel(file.getAbsolutePath(), correctGameWord);
+        wordPanel = new WordPanel(correctGameWord);
     }
 
     @DisplayName("Should return contents of file into an array")
@@ -80,5 +80,11 @@ public class WordPanelTest {
                 "Missed List should contain the incorrect letters");
 
     }
+
+//    @DisplayName("Drawings should equal missed list length")
+//    @Test
+//    void setGameDrawingTest() {
+//        String[] lengthOfMissedList = wordPanel
+//    }
 
 }

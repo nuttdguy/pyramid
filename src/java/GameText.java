@@ -1,6 +1,6 @@
 public enum GameText {
 
-    HEADER, GUESS, DUPLICATE, MISSED, WIN, LOSE, PLAY_AGAIN;
+    HEADER, GUESS, DUPLICATE, MISSED, WIN, LOSE, PLAY_AGAIN, GREETING, COLLECT_NAME;
 
     String header() {
         return "H A N G M A N\n";
@@ -27,5 +27,10 @@ public enum GameText {
     String playAgain() {
         return "Do you want to play again? (yes or no) \n";
     }
-
+    String greeting() {
+        return "Welcome %s!\n";
+    }
+    String collectName() {
+        return "What is your name?\n";
+    }
 }
