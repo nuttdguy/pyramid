@@ -52,3 +52,21 @@ Misses:8, Missed letters: [r, y, u, o, p, s, f, d]
 Guesses:6, Guessed letters: [t, a, n, _, i, _, l, e]
 Score:-8
 ;
+Name:tom
+Word:[r, i, g, h, t, e, o, u, s]
+Misses:5, Missed letters: [n, f, j, k, a, _, _, _, _]
+Guesses:9, Guessed letters: [r, i, g, h, t, e, o, u, s]
+Score:14
+;
+Name:susan
+Word:[b, o, u, n, d, a, r, y]
+Misses:8, Missed letters: [e, t, c, v, m, h, l, p]
+Guesses:6, Guessed letters: [b, _, u, n, _, a, r, y]
+Score:-8
+;
+Name:susan
+Word:[t, h, o, u, g, h, t, l, e, s, s]
+Misses:2, Missed letters: [a, i, _, _, _, _, _, _, _, _, _]
+Guesses:11, Guessed letters: [t, h, o, u, g, h, t, l, e, s, s]
+Score:13
+;

@@ -21,17 +21,17 @@ public class Hangman {
     private void init(String wordFilePath ) {
         this.wordPanel = new WordPanel(wordFilePath);
     }
+    private void setName(String name) {
+        this.name = name;
+    }
+    private boolean isNameNotSet() {
+        return this.name == null;
+    }
     private String keyPress(InputStream inputStream) {
         return String.valueOf(new Scanner(inputStream).next().charAt(0));
     }
     private String keyPresses(InputStream inputStream) {
         return new Scanner((inputStream)).nextLine();
-    }
-    private boolean isNameNotSet() {
-        return this.name == null;
-    }
-    private void setName(String name) {
-        this.name = name;
     }
     private String getName() { return this.name; }
     public String upCase(String word) {
@@ -65,6 +65,8 @@ public class Hangman {
         out.println("----");
         wordPanel.displayWinLoseNarrative();
     }
+
+
 
     void run() {
 

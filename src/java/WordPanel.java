@@ -5,7 +5,6 @@ import java.lang.reflect.Array;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
-import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.IntStream;
@@ -139,7 +138,7 @@ public class WordPanel {
         return Arrays.equals(getGameWord(), getGuessList());
     }
     public boolean isPlayingAgain(String keyResponse, String name) {
-        writeToFile(getScoreCardPath(), score(name));
+        writeToFile(getScoreCardPath(), scoreTheGameFor(name));
         return keyResponse.equals("y") && reload();
     }
     public boolean isNotEqualToGameWord() {
@@ -153,6 +152,9 @@ public class WordPanel {
     protected void setAGameWord(String[] word) {
         if (word.length > 0) {
             this.gameWord = word;
+            // for testing purposes
+            initGuessList(this.gameWord.length);
+            initMissList(this.gameWord.length);
         } else {
             setAGameWord();
         }
@@ -242,7 +244,7 @@ public class WordPanel {
     private String getScoreCardPath() {
         return this.scoreCardPath;
     }
-    private String score(String name) {
+    private String scoreTheGameFor(String name) {
         int misses = (int) Arrays.stream(getMissList()).filter(e-> !e.equals("_")).count();
         int guesses = (int) Arrays.stream(getGuessList()).filter(e-> !e.equals("_")).count();
         int score = Arrays.equals(getGameWord(), getGuessList()) ? guesses + misses : -misses;

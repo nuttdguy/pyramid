@@ -54,7 +54,7 @@ public class WordPanelTest {
     @DisplayName("Guess list should equal game word")
     @Test
     void isGuessEqualToGameWordTest() {
-        String[] gameWord = correctGameWordForTest;
+        String[] gameWord = this.correctGameWordForTest;
         boolean doesGameWordMatchGuessList = false;
         for (String letter : gameWord) {
             doesGameWordMatchGuessList = wordPanel.isCorrect(letter);
@@ -69,7 +69,7 @@ public class WordPanelTest {
     @DisplayName("Missed list should include all missed letters")
     @Test
     void isMissedListFilledWithIncorrectGuesses() {
-        String[] incorrectWord = incorrectGameWord;
+        String[] incorrectWord = this.incorrectGameWord;
         boolean isTheLetterAMatchGameWord = true;
         for (String letter : incorrectWord) {
             isTheLetterAMatchGameWord = wordPanel.isCorrect(letter);
