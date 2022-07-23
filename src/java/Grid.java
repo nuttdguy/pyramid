@@ -1,12 +1,11 @@
 abstract class Grid {
     private char[][] grid;
-
     Grid() {
         init();
     }
     protected String headerTextForGame() {
         return "HUMANS VERSUS GOBLINS";
-    }
+    } // this should be in game class
     protected int dividerForStat() {
         return 3; }
     protected int colWidth() {

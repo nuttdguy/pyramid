@@ -1,6 +1,4 @@
-import java.text.DecimalFormat;
 import java.util.*;
-
 import static java.lang.System.*;
 
 public class Game {
@@ -108,13 +106,17 @@ public class Game {
         }
 
     }
-    private <T extends Player> ArrayList<T> initializePlayers(Enum playerType, int qty) {
+    private <T extends Player> ArrayList<T> initializePlayers(PlayerType playerType, int qty) {
         ArrayList<T> players = new ArrayList<>();
+
         while (qty > 0) {
-            if (PlayerType.GOBLIN.equals(playerType)) {
-                players.add((T) new Goblin());
-            } else if (PlayerType.HUMAN.equals(playerType)) {
-                players.add((T) new Human());
+            try {
+                switch (playerType) {
+                    case GOBLIN -> players.add((T) new Goblin());
+                    case HUMAN -> players.add((T) new Human());
+                }
+            } catch (ClassCastException e) {
+                out.println(e);
             }
             qty--;
         }
@@ -151,17 +153,8 @@ public class Game {
     }
     protected <T extends Player> T moveOnePlayer(Human player) {
         int movesLeft = player.getMovesPerTurn();
-//        char chosenAction;
-        do {
 
-//            out.println("Would you like to m (move)?");
-//            chosenAction = keyPress();
-//            if (chosenAction == 'd') {
-//                replenishHealthOf(player);
-//                displayGameBoard();
-//                movesLeft--;
-//            } else
-//            if (chosenAction == 'm') {
+        do {
 
             out.println("Do you want to move n, e, s or w?");
             char chosenDirection = keyPress();
@@ -196,11 +189,7 @@ public class Game {
                 out.println("Invalid option " + chosenDirection + ". Try again?");
             }
         } while (true);
-//            }
 
-//        } while (movesLeft > 0 || chosenAction != 'd' );
-
-//        return (T) player;
     }
     protected <T extends Player> T moveOnePlayer(char direction, int row, int col, T player) throws IndexOutOfBoundsException {
         map.setElementPosition(row, col, map.defaultMarker()); // set the default marker before updating move

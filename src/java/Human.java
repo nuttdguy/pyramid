@@ -21,6 +21,7 @@ public class Human extends Player {
     public double attack() {
         return (Math.random() * this.getStrength()) * factor();
     }
+
     @Override
     public String toString() {
         return "Human{" +

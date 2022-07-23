@@ -8,7 +8,7 @@ public interface Stat {
     void setHealth(double _health);
     void setStrength(double _strength);
     void setDefense(double _defense);
-    void setMovesPerTurn(int _moveDistance);
+    void setMovesPerTurn(int _movesPerTurn);
 
     double getMaxHealth();
     void setMaxHealth(double maxHealth);
