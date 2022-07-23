@@ -55,7 +55,7 @@ public class Hangman {
         return new Scanner((System.in)).nextLine();
     }
     private String getName() { return this.name; }
-    public String upCase(String word) {
+    private String upCase(String word) {
         return String.valueOf(word.charAt(0)).toUpperCase() + word.substring(1);
     }
     private void displayNameNotSetGreeting() {
@@ -125,7 +125,7 @@ public class Hangman {
         out.printf(GameText.PLAY_AGAIN.playAgain());
         writeToFile(getScoreCardPath(), scoreTheGameFor(name, word));
     }
-    public void displayTheHighScore(String playerName) {
+    private void displayTheHighScore(String playerName) {
         class Score {
             private String name;
             private String word;
@@ -250,14 +250,16 @@ public class Hangman {
                 "Guesses:" + guesses + ", Guessed letters: " + Arrays.toString(dictionary.getGuessList()) + "\n" +
                 "Score:" + score + "\n;\n";
     }
-    public String displayGameArt() {
+    private String displayGameArt() {
         int idx = Arrays.asList(dictionary.getMissList()).indexOf("_");
         return getDrawings()[idx < 0 ? getDrawings().length-1 : idx] +"\n";
     }
-    public String[] getDrawings() {
+    private String[] getDrawings() {
         return this.drawings;
     }
-
+    private boolean isPlayingAgain(String keyResponse) {
+        return keyResponse.equals("y");
+    }
     void run() {
 
         out.printf(GameText.HEADER.header());
@@ -271,7 +273,7 @@ public class Hangman {
             } else {
 
                 displayWinLoseNarrative();
-                if (!(dictionary.isPlayingAgain(keyPress(), getName()))) {
+                if (!(isPlayingAgain(keyPress()))) {
                     return;
                 }
                 displayPlayAgainNarrative();
