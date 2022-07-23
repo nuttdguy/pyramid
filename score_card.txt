@@ -232,3 +232,93 @@ Misses:7, Missed letters: [a, w, d, c, x, z, q]
 Guesses:3, Guessed letters: [_, _, _, _, e, s, s]
 Score:-7
 ;
+Name:alice
+Word:[a, n, c, i, e, n, t]
+Misses:7, Missed letters: [s, d, w, q, x, v, r]
+Guesses:3, Guessed letters: [a, _, c, _, e, _, _]
+Score:-7
+;
+Name:alice
+Word:[t, i, n, y]
+Misses:4, Missed letters: [a, s, w, d]
+Guesses:0, Guessed letters: [_, _, _, _]
+Score:-4
+;
+Name:bob
+Word:[h, a, t, e, f, u, l]
+Misses:7, Missed letters: [q, z, x, s, w, d, c]
+Guesses:2, Guessed letters: [_, a, _, e, _, _, _]
+Score:-7
+;
+Name:bob
+Word:[b, l, e, s, s]
+Misses:5, Missed letters: [a, u, p, c, r]
+Guesses:3, Guessed letters: [_, _, e, s, s]
+Score:-5
+;
+Name:bob
+Word:[a, w, f, u, l]
+Misses:5, Missed letters: [k, s, i, o, x]
+Guesses:2, Guessed letters: [a, _, _, u, _]
+Score:-5
+;
+Name:bob
+Word:[m, i, s, t]
+Misses:4, Missed letters: [a, w, p, u]
+Guesses:2, Guessed letters: [_, _, s, t]
+Score:-4
+;
+Name:bob
+Word:[s, p, a, d, e]
+Misses:5, Missed letters: [i, o, u, n, w]
+Guesses:3, Guessed letters: [s, _, a, _, e]
+Score:-5
+;
+Name:bob
+Word:[r, o, u, n, d]
+Misses:5, Missed letters: [a, s, w, e, i]
+Guesses:0, Guessed letters: [_, _, _, _, _]
+Score:-5
+;
+Name:bob
+Word:[c, l, o, t, h]
+Misses:5, Missed letters: [e, s, a, i, u]
+Guesses:1, Guessed letters: [_, _, o, _, _]
+Score:-5
+;
+Name:bob
+Word:[c, r, o, w, d]
+Misses:5, Missed letters: [l, t, a, s, n]
+Guesses:2, Guessed letters: [c, _, o, _, _]
+Score:-5
+;
+Name:bob
+Word:[s, p, a, d, e]
+Misses:1, Missed letters: [o, _, _, _, _]
+Guesses:5, Guessed letters: [s, p, a, d, e]
+Score:6
+;
+Name:john
+Word:[s, p, e, c, i, a, l]
+Misses:7, Missed letters: [q, w, x, d, r, t, v]
+Guesses:4, Guessed letters: [s, _, e, c, _, a, _]
+Score:-7
+;
+Name:john
+Word:[m, u, r, k, y]
+Misses:5, Missed letters: [d, f, g, v, c]
+Guesses:0, Guessed letters: [_, _, _, _, _]
+Score:-5
+;
+Name:henry
+Word:[c, r, a, c, k, e, r]
+Misses:7, Missed letters: [q, w, s, x, d, f, v]
+Guesses:6, Guessed letters: [c, r, a, c, _, e, r]
+Score:-7
+;
+Name:henry
+Word:[w, i, g, g, l, y]
+Misses:6, Missed letters: [a, s, c, d, e, r]
+Guesses:0, Guessed letters: [_, _, _, _, _, _]
+Score:-6
+;

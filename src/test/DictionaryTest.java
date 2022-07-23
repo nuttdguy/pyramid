@@ -17,9 +17,7 @@ public class DictionaryTest {
 
     private String[] getGameWord() {
         for (String l : alphabet) {
-            if (dictionary.isLetterIn(Dictionary.ListType.GAME_WORD, l)) {
-                dictionary.isCorrect(l);
-            };
+            dictionary.hasLetterThenAdd(l);
         }
         return dictionary.getGuessList();
     }
@@ -27,9 +25,7 @@ public class DictionaryTest {
     private String[] fillMissList() {
         for (String l : alphabet) {
             try {
-                if (!(dictionary.isLetterIn(Dictionary.ListType.GAME_WORD, l))) {
-                    dictionary.isCorrect(l);
-                }
+                dictionary.hasLetterThenAdd(l);
             } catch(IndexOutOfBoundsException iob) {
                 break;
             }
@@ -40,7 +36,7 @@ public class DictionaryTest {
     @BeforeEach
     void beforeEach() {
         file = new File("words.txt");
-        dictionary = new Dictionary(10, file.getPath());
+        dictionary = new Dictionary(8, file.getPath());
         gameWord = getGameWord();
     }
 
@@ -55,10 +51,8 @@ public class DictionaryTest {
     @DisplayName("Guess list should contain all letters of the game word")
     @Test
     void guessListShouldContainAllLetterOfGameWord() {
-        for (int i = 0; i < gameWord.length; i++) {
-            assertTrue(dictionary.isCorrect(dictionary.getGuessList()[i]),
+        assertEquals(gameWord, dictionary.getGuessList(),
                     "Guess list should contain all letters of game word");
-        }
     }
 
     @DisplayName("Length of missed list should not be greater than game word")
@@ -74,7 +68,7 @@ public class DictionaryTest {
     void shouldNotContainAnyLetterOfGameWord() {
         String[] actual = fillMissList();
         for (int i = 0; i < actual.length; i++) {
-            assertTrue( !(dictionary.isLetterIn(Dictionary.ListType.GAME_WORD, actual[i]) ),
+            assertTrue( !(dictionary.hasLetterThenAdd(actual[i]) ),
                     "no letters should be in the game word");
         }
     }
@@ -86,17 +80,18 @@ public class DictionaryTest {
         assertEquals(dictionary.getMissList().length, gameWord.length);
     }
 
-    @DisplayName("Drawings length should equal the missed list length of")
-    @Test
-    void drawingsShouldMatchMissedListPlusOne() {
-        int maxDrawings = 11;
-        int lengthOfMissList = dictionary.getMissList().length;
-        int lengthOfDrawings = dictionary.getDrawings().length;
-
-        if (lengthOfMissList+1 <= maxDrawings) {
-            assertEquals(lengthOfMissList + 1, lengthOfDrawings, "Should be equal");
-        }
-    }
+    // todo move test to new class file
+//    @DisplayName("Drawings length should equal the missed list length of")
+//    @Test
+//    void drawingsShouldMatchMissedListPlusOne() {
+//        int maxDrawings = 11;
+//        int lengthOfMissList = dictionary.getMissList().length;
+//        int lengthOfDrawings = getDrawings().length;
+//
+//        if (lengthOfMissList+2 <= maxDrawings) {
+//            assertEquals(lengthOfMissList + 2, lengthOfDrawings, "Should be equal");
+//        }
+//    }
 
 
 }

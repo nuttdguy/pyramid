@@ -1,19 +1,25 @@
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Stream;
 
 import static java.lang.System.*;
 
 public class Hangman {
 
+    static Logger logger = Logger.getLogger(String.valueOf(Hangman.class));
     Dictionary dictionary;
     private String name;
     private final String scoreCardPath = "score_card.txt";
+    private String[] drawings;
+    private final String drawingFilePath = "art.txt";
 
     Hangman(int level) {
         init(level);
@@ -24,9 +30,11 @@ public class Hangman {
 
     private void init(int level) {
         this.dictionary = new Dictionary(level);
+        setDrawings();
     }
     private void init(int level, String wordFilePath) {
         this.dictionary = new Dictionary(level, wordFilePath);
+        setDrawings();
     }
     public static int setLevel(int level) {
         if (level < 3 || level > 12) {
@@ -57,16 +65,24 @@ public class Hangman {
         out.printf(GameText.HEADER.header());
         out.printf(GameText.GREETING.greeting(), upCase(getName()));
         displayTheHighScore(upCase(getName()));
-        out.printf(dictionary.displayGameArt());
+        out.printf(displayGameArt());
         out.printf(GameText.GUESS.guess(), "");
     }
     private void displayGameLoopNarrative() {
-        String key = keyPress();
-        boolean play = dictionary.isCorrect(key);
+
+        String letter = keyPress();
+        if (dictionary.isDuplicateGuess(dictionary.getGuessList(), letter)
+                || dictionary.isDuplicateGuess(dictionary.getMissList(), letter)) {
+
+            out.printf(GameText.DUPLICATE.duplicate(), letter);
+        } else {
+           dictionary.hasLetterThenAdd(letter);
+        }
 
         out.printf(GameText.HEADER.header());
-        out.printf(dictionary.displayGameArt());
-        dictionary.displayGuessNarrative(play);
+        out.printf(displayGameArt());
+        out.printf(GameText.MISSED.missed(), Arrays.toString(dictionary.getMissList()));
+        out.printf(GameText.GUESS.guess(), Arrays.toString(dictionary.getGuessList()));
     }
     private void displayPlayAgainNarrative() {
         int level;
@@ -89,14 +105,24 @@ public class Hangman {
         } while ( level < 3 );
 
         dictionary.reload(level);
+        setDrawings();
+
         out.printf(GameText.HEADER.header());
         displayTheHighScore(upCase(getName()));
-        out.printf(dictionary.displayGameArt());
+        out.printf(displayGameArt());
         out.printf(GameText.GUESS.guess(), "");
     }
     private void displayWinLoseNarrative() {
         out.println("----");
-        String[] word = dictionary.displayWinLoseNarrative();
+        String[] word;
+        if (dictionary.isListEqual(dictionary.getGuessList())) {
+            word = dictionary.getWordOrEmpty();
+            out.printf(GameText.WIN.win(), Arrays.toString(word));
+        } else {
+            word = dictionary.getWordOrEmpty();
+            out.printf(GameText.LOSE.lose(), Arrays.toString(word));
+        }
+        out.printf(GameText.PLAY_AGAIN.playAgain());
         writeToFile(getScoreCardPath(), scoreTheGameFor(name, word));
     }
     public void displayTheHighScore(String playerName) {
@@ -107,7 +133,7 @@ public class Hangman {
             private String guesses;
             private String score;
 
-            Score() {};
+            Score() {}
             Score(String name, String word, String misses, String guesses, String score) {
                 this.name = name;
                 this.word = word;
@@ -164,6 +190,26 @@ public class Hangman {
         }
         // no records exist, do nothing
     }
+    private void setDrawings() {
+
+        String[] drawings = readFromAFile(drawingFilePath).split(";");
+        int middle = dictionary.getGuessList().length / 2;
+        int wordLength = dictionary.getGuessList().length;
+        int a = 0, b = middle + 1, c = drawings.length - (middle+1), d = drawings.length;
+
+        if(wordLength<= 3) {
+            this.drawings = new String[]{drawings[0], drawings[5], drawings[9], drawings[drawings.length-1]};
+        } else if (wordLength==4) {
+            this.drawings = new String[]{drawings[0], drawings[3], drawings[5], drawings[9], drawings[drawings.length-1]};
+        } else if (wordLength == drawings.length) {
+            this.drawings = drawings;
+        } else {
+            String[] drawingSet1 = Arrays.asList(drawings).subList(a, b).toArray(String[]::new);
+            String[] drawingSet2 = Arrays.asList(drawings).subList(c, d).toArray(String[]::new);
+            this.drawings = Stream.concat(Arrays.stream(drawingSet1), Arrays.stream(drawingSet2))
+                    .toArray(size -> (String[]) Array.newInstance(drawingSet1.getClass().getComponentType(), size));
+        }
+    }
     private void writeToFile(String path, String gameData) {
         File file = new File(path);
         boolean append = false;
@@ -176,8 +222,7 @@ public class Hangman {
             io.close();
 
         } catch(IOException ioe) {
-            out.println(ioe);
-//            logger.log(Level.ALL, ioe.getMessage());
+            logger.log(Level.ALL, ioe.getMessage());
         }
 
     }
@@ -204,6 +249,13 @@ public class Hangman {
                 "Misses:" + misses + ", Missed letters: " + Arrays.toString(dictionary.getMissList()) + "\n" +
                 "Guesses:" + guesses + ", Guessed letters: " + Arrays.toString(dictionary.getGuessList()) + "\n" +
                 "Score:" + score + "\n;\n";
+    }
+    public String displayGameArt() {
+        int idx = Arrays.asList(dictionary.getMissList()).indexOf("_");
+        return getDrawings()[idx < 0 ? getDrawings().length-1 : idx] +"\n";
+    }
+    public String[] getDrawings() {
+        return this.drawings;
     }
 
     void run() {
