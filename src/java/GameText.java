@@ -1,6 +1,6 @@
 public enum GameText {
 
-    HEADER, GUESS, DUPLICATE, MISSED, WIN, LOSE, PLAY_AGAIN, GREETING, COLLECT_NAME;
+    HEADER, GUESS, DUPLICATE, MISSED, WIN, LOSE, PLAY_AGAIN, GREETING, COLLECT_NAME, DIFFICULTY;
 
     String header() {
         return "H A N G M A N\n----\n";
@@ -15,7 +15,7 @@ public enum GameText {
     }
 
     String duplicate() {
-        return "You have already guessed %s. Choose again. \n";
+        return "You have already guessed %s. Choose again.\n";
     }
 
     String win() {
@@ -33,4 +33,5 @@ public enum GameText {
     String collectName() {
         return "What is your name?\n";
     }
+    String difficulty() {return "Choose the level of difficulty between 3 and 11.\n"; }
 }
