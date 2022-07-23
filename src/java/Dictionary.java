@@ -51,6 +51,7 @@ public class Dictionary {
     }
 
     //== PROTECTED
+
     protected String[] getWordOrEmpty() {
         boolean isMatch = (Arrays.stream(getMissList())
                 .filter(e -> !(e.equals("_"))).count() == getGameWord().length ||
