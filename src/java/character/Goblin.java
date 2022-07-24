@@ -4,6 +4,7 @@ public class Goblin extends Player {
 
     public Goblin() {
         super();
+        setMaxHealth(getHealth());
         this.setMovesPerTurn(2);
         this.setMarker('G');
     }

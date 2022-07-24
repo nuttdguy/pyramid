@@ -7,6 +7,7 @@ public class Human extends Player {
         super();
         setMovesPerTurn(2);
         setHealth(12);
+        setMaxHealth(getHealth());
         this.setMarker('H');
     }
 

@@ -1,6 +1,7 @@
 
 import character.*;
 import java.util.*;
+
 import static java.lang.System.*;
 
 public class Game {
@@ -72,6 +73,7 @@ public class Game {
         }
 
     }
+
     private <T extends Player> ArrayList<T> initPlayers(PlayerType playerType, int qty) {
         ArrayList<T> players = new ArrayList<>();
 
@@ -103,6 +105,7 @@ public class Game {
         }
         updateStatFields(col, row, stat);
     }
+
     private <T extends Player> String getStatValueToUpdate(StatType type, T player) {
         return  type.equals(StatType.HEALTH) ? String.valueOf(player.getHealth()) :
                 type.equals(StatType.STRENGTH) ? String.valueOf(player.getStrength()) :
@@ -111,11 +114,13 @@ public class Game {
                 type.equals(StatType.MOVES_LEFT) ? String.valueOf(player.getMovesRemaining()) :
                 String.valueOf(getGoblins().size());
     }
+
     private <T extends Player> void updateAllStat(T player) {
         for (StatType stat : StatType.values()) {
             updateOneStat(stat, player);
         }
     }
+
     private int rowToUpdate(StatType type) {
         return type.equals(StatType.HEALTH) ? 2 :
                 type.equals(StatType.STRENGTH) ? 4 :
@@ -124,6 +129,7 @@ public class Game {
                                         type.equals(StatType.MOVES_LEFT) ? 8 :
                                                 10;
     }
+
     private void updateStatFields(int col, int row, String stat) {
         int i = 0;
         for (char s : stat.toCharArray()) {
@@ -135,65 +141,90 @@ public class Game {
     // END - STAT UPDATES
 
     // MOVEMENT
-    private void directionOutOfBound() {
-        out.println("You cannot move in that direction");
-    }
-    private char[] directionToMove(int negOrPos) {
-        return negOrPos > 0 ? new char[]{'n', 'w'} : new char[]{'s', 'e'};
-    }
-    protected <T extends Player> T moveOnePlayer(Human player) {
-        int movesLeft = player.getMovesPerTurn();
+    private char requestDirection() {
 
         do {
-
             out.println("Do you want to move n, e, s or w?");
             char chosenDirection = keyPress();
             if (chosenDirection == 'n' || chosenDirection == 'e' || chosenDirection == 's' || chosenDirection == 'w') {
-
-                // todo catch multi characters entries
-                try {
-                    int row = player.getCoordinates()[0], col = player.getCoordinates()[1];
-                    char rowColElement = getMapElementAt(chosenDirection, row, col);
-
-                    switch (rowColElement) {
-                        case 'G' -> handleEncounterWithGoblin(chosenDirection, row, col, player);
-                        case ' ' -> moveOnePlayer(chosenDirection, row, col, player);
-                    }
-
-                    // handle out of bounds and don't decrement move counter
-                    if (rowColElement == '+') {
-                        directionOutOfBound();
-                    } else {
-                        movesLeft = updatePlayerMoves(movesLeft, player);
-                        if (movesLeft <= 0) {
-                            updateAllStat(player);
-                            return (T) player;
-                        } // end turn when no moves are left
-                    }
-
-                } catch (IndexOutOfBoundsException e) {
-                    out.println(e);
-                }
-
+                return chosenDirection;
             } else {
                 out.println("Invalid option " + chosenDirection + ". Try again?");
             }
         } while (true);
-
     }
 
-    // MAP UPDATES
+    private char[] directionToMove(int negOrPos) {
+        return negOrPos > 0 ? new char[]{'n', 'w'} : new char[]{'s', 'e'};
+    }
 
-    protected <T extends Player> T moveOnePlayer(char direction, int row, int col, T player) throws IndexOutOfBoundsException {
-        map.setElementPosition(row, col, map.defaultMarker()); // set the default marker before updating move
+    protected <T extends Player> T moveOne(char direction, int row, int col, T player) throws IndexOutOfBoundsException {
 
         // set the element values of the new position
-        int[] rowCol = rowColToMoveOnto(direction, row, col);
+        int[] rowCol = getTheRowColToMoveOnto(direction, row, col);
+        map.setElementPosition(row, col, map.defaultMarker()); // set the default marker before updating move
         map.setElementPosition(rowCol[0], rowCol[1], player.getMarker());
         player.setCoordinates(rowCol[0], rowCol[1]);
         return player;
     }
-    private int[] rowColToMoveOnto(char direction, int row, int col) {
+
+    protected <T extends Player> T moveOne(T player) {
+        int movesLeft = player.getMovesPerTurn();
+
+        while (movesLeft > 0) {
+
+            char chosenDirection = requestDirection();
+
+            try {
+                int row = player.getCoordinates()[0], col = player.getCoordinates()[1];
+                char rowColElement = getMapElementAt(chosenDirection, row, col);
+
+                if (rowColElement == '+') {
+                    out.println("You cannot move in that direction");
+                } else if (rowColElement == 'G') {
+
+                    engageCombatBetween(player, getPlayer(getGoblins(), chosenDirection, row, col));
+                    movesLeft = endCombat(player, chosenDirection);
+
+                } else {
+
+                    movesLeft = endCombat(player, chosenDirection);
+
+                }
+
+                if (movesLeft <= 0) {
+                    updateAllStat(player);
+                    return player;
+                } // end turn when no moves are left
+
+            } catch (IndexOutOfBoundsException e) {
+                out.println(e);
+            }
+        }
+        return player;
+    }
+
+
+    // END - MOVEMENT
+
+    // MAP UPDATES
+
+    private <T extends Player> T updateMapMarkerAfterMove(T player, char direction) {
+        int[] nextRowCol = getTheRowColToMoveOnto(direction, player.getCoordX(), player.getCoordY());
+
+        map.setElementPosition(nextRowCol[0], nextRowCol[1], player.getMarker());
+        map.setElementPosition(player.getCoordX(), player.getCoordY(), map.defaultMarker());
+        player.setCoordinates(nextRowCol[0], nextRowCol[1]);
+        return player;
+
+    }
+
+    private char getMapElementAt(char chosenDirection, int row, int col) {
+        int[] rowCol = getTheRowColToMoveOnto(chosenDirection, row, col);
+        return map.getElementAtPosition(rowCol[0], rowCol[1]);
+    }
+
+    private int[] getTheRowColToMoveOnto(char direction, int row, int col) {
         if (direction == 'n') {
             row -= 1;
         } else if (direction == 's') {
@@ -205,62 +236,22 @@ public class Game {
         }
         return new int[]{row, col};
     }
-    protected void replenishHealthOf(Human player) {
-        if (player.getHealth() < player.getMaxHealth() && player.getHealth() > 0) {
-
-            double health = player.defend();
-            double newHealth = Double.parseDouble(String.valueOf(health + player.getHealth()));
-            player.setHealth(health < player.getMaxHealth() ? newHealth : player.getMaxHealth());
-            out.printf("Your health regenerated by %.2f%n", health);
-            out.println();
-            updateOneStat(StatType.HEALTH, player);
-        }
-    }
-    private void updateMoveStats(Human player) {
-        updateOneStat(StatType.HEALTH, player);
-        updateOneStat(StatType.MOVES_LEFT, player);
-        displayGameBoard();
-        out.println("You have " + player.getMovesRemaining() + " moves left.");
-    }
-    private char getMapElementAt(char chosenDirection, int row, int col) {
-        int[] rowCol = rowColToMoveOnto(chosenDirection, row, col);
-        return map.getElementAtPosition(rowCol[0], rowCol[1]);
-    }
-    protected <T extends Player> T updateMapMarkerOf(T player, int nextRow, int nextCol, int oldRow, int oldCol) {
-        String tClass = player.getClass().getName();
-        if (tClass.equals("character.Human")) {
-            map.setElementPosition(nextRow, nextCol, player.getMarker());
-            map.setElementPosition(oldRow, oldCol, map.defaultMarker());
-            player.setCoordinates(nextRow, nextCol);
-            return player;
-        }
-
-        return player;
-    }
 
     // END - MAP UPDATES
 
     // COMBAT
 
-    protected Human handleEncounterWithGoblin(char chosenDirection, int row, int col, Human player) {
-        int[] rowCol = rowColToMoveOnto(chosenDirection, row, col);
-        Goblin goblin = retrievePlayer(this.getGoblins(), rowCol[0], rowCol[1]);
-        if (goblin != null) {
-            engageCombatBetween(player, goblin);
+    private <T extends Player> T getPlayer(ArrayList<T> playerList, char chosenDirection, int row, int col) {
+        int[] rowCol = getTheRowColToMoveOnto(chosenDirection, row, col);
+        for (T player : playerList) {
+            if (player.getCoordX() == rowCol[0] && player.getCoordY() == rowCol[1]) {
+                return player;
+            }
         }
-        this.goblins = removePlayer(this.getGoblins(), goblin);
-        if (this.goblins.size() == 0) {
-            return null; // end the game
-        }
-
-        // update player and stats
-        player = updateMapMarkerOf(player, rowCol[0], rowCol[1], row, col);
-        updateOneStat(StatType.HEALTH, player);
-        updateOneStat(StatType.GOBLINS, player);
-        return player;
+        return null;
     }
 
-    protected <T extends Player> T engageCombatBetween(T attacker, T defender) {
+    private <T extends Player> T engageCombatBetween(T attacker, T defender) {
 
         do {
             if (attack(attacker, defender) <= 0 || defend(defender, attacker) <= 0) {
@@ -268,6 +259,7 @@ public class Game {
             }
         } while (true);
 
+        // display combat winner
         if (attacker.getHealth() > 0 ) {
             displayCombatNarrative(4, attacker.getName(), defender.getName(), attacker.getHealth());
         } else {
@@ -275,6 +267,21 @@ public class Game {
         }
 
         return attacker.getHealth() >= 0 ? attacker : defender;
+    }
+
+    private <T extends Player> int endCombat(T player, char direction) {
+        removePlayer(getGoblins());
+        removePlayer(getHumans());
+        return endMove(player, direction);
+    }
+
+    private <T extends Player> int endMove(T player, char direction) {
+        player.setOrDecrementMovesRemaining();
+        updateMapMarkerAfterMove(player, direction);
+        updateAllStat(player);
+        displayGameBoard();
+        out.println("You have " + player.getMovesRemaining() + " moves left.");
+        return player.getMovesRemaining();
     }
 
     private <T extends Player> double attack(T attacker, T defender) {
@@ -321,34 +328,31 @@ public class Game {
     // END COMBAT
 
     // PLAYER UPDATES
-    protected <T extends Player> T retrievePlayer(ArrayList<T> t, int row, int col) {
-        try {
-            for (T g : t) {
-                if (g.getCoordX() == row && g.getCoordY() == col) {
-                    return g;
-                }
+
+    private <T extends Player> int removePlayer(ArrayList<T> playerList) {
+        for (int i = 0; i < playerList.size(); i++) {
+            if (playerList.get(i).getHealth() <= 0) {
+                playerList.remove(playerList.get(i));
             }
-        } catch (ClassCastException e ) {
-            out.println(e);
         }
-        return null;
-    }
-    protected <T extends Player> ArrayList<T> removePlayer(ArrayList <T> t, T player) {
-        if (player != null && player.getHealth() <= 0) {
-            t.remove(player);
-        }
-        return t;
+        return playerList.size();
     }
 
-    private int updatePlayerMoves(int movesLeft, Human player) {
-        movesLeft--;
-        player.setMovesRemaining();
-        updateMoveStats(player);
-        return movesLeft;
+    private <T extends Player> void replenishHealthOf(T player) {
+        if (player.getHealth() < player.getMaxHealth() && player.getHealth() > 0) {
+
+            double health = player.defend();
+            double newHealth = Double.parseDouble(String.valueOf(health + player.getHealth()));
+            player.setHealth(health < player.getMaxHealth() ? newHealth : player.getMaxHealth());
+            out.printf("Your health regenerated by %.2f%n", health);
+            out.println();
+            updateOneStat(StatType.HEALTH, player);
+        }
     }
 
     // END - PLAYER UPDATES
 
+    // todo refactor this method
     protected <T extends Player> T handleTurnOf(ArrayList<T> t, Human player) {
         int[] rowColOfDefender = player.getCoordinates();
         ArrayList<T> goblins = new ArrayList<>( t.subList(0, t.size())); // make a copy to iterate
@@ -365,10 +369,12 @@ public class Game {
 
                 // add collision detection of other goblins in path to take
                 if (Math.abs(rowDistanceToDefender) >= Math.abs(colDistanceToDefender)) {
-                    moveOnePlayer(rowDirection, rowColOfAttacker[0], rowColOfAttacker[1], goblin);
+                    moveOne(rowDirection, rowColOfAttacker[0], rowColOfAttacker[1], goblin);
+//                    moveOne(goblin, rowDirection);
                     movesLeft--;
                 } else if (Math.abs(rowDistanceToDefender) <= Math.abs(colDistanceToDefender)) {
-                    moveOnePlayer(colDirection, rowColOfAttacker[0], rowColOfAttacker[1], goblin);
+                    moveOne(colDirection, rowColOfAttacker[0], rowColOfAttacker[1], goblin);
+//                    moveOne(goblin, colDirection);
                     movesLeft--;
                 }
 
@@ -378,7 +384,7 @@ public class Game {
 
                     engageCombatBetween(goblin, player);
                     if (goblin.getHealth() <= 0) {
-                        removePlayer(t, goblin); // remove player from original
+                        removePlayer(getGoblins()); // remove player from original
                         this.getMap().setElementPosition(player.getCoordX(), player.getCoordY(), player.getMarker());
                         updateOneStat(StatType.HEALTH, player);
                         updateOneStat(StatType.GOBLINS, player);
@@ -407,14 +413,19 @@ public class Game {
         // improve starting stat mechanics
         while(true) {
             try {
-                Human player = this.humans.get(0);
+                Human player;
+                if (this.getHumans().isEmpty()) {
+                    return;
+                } else {
+                    player = this.getHumans().get(0); // todo has next method
+                }
 
                 if ( this.getGoblins().isEmpty() ) {
                     out.println("Victory - Human has defeated the Goblin's");
                     out.println("*** Game Over ***");
                     return;
                 } else {
-                    player = moveOnePlayer(player);
+                    player = moveOne(player);
                     out.println("----");
                     out.println("Human - end of turn ");
                     out.println("----");
@@ -425,6 +436,7 @@ public class Game {
                     handleTurnOf(this.getGoblins(), player);
                     out.println("Goblin's - end of turn ");
                     out.println("----");
+
                     if (player.getHealth() < 0) {
                         out.println("Defeat - Goblin's defeated the human!");
                         out.println("*** Game Over ***");

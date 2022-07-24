@@ -17,12 +17,11 @@ public abstract class Player {
         setId();
 
         setHealth(10);
-        setMaxHealth(getHealth());
         setStrength(10);
         setDefense(10);
 
         setMovesPerTurn(1);
-        setMovesRemaining();
+        setOrDecrementMovesRemaining();
         setCoordinates(0, 0);
     }
 
@@ -36,7 +35,7 @@ public abstract class Player {
         setDefense(defense);
 
         setMovesPerTurn(movesPerTurn);
-        setMovesRemaining();
+        setOrDecrementMovesRemaining();
         setCoordinates(coordX, coordY);
     }
 
@@ -124,7 +123,7 @@ public abstract class Player {
         this.movesPerTurn = _moveDistance;
     }
 
-    public void setMovesRemaining() {
+    public void setOrDecrementMovesRemaining() {
         this.movesRemaining = this.movesRemaining == 0 ? getMovesPerTurn() : this.movesRemaining - 1;
     }
 
