@@ -1,3 +1,5 @@
+package expandable;
+
 public interface Enhanced {
 
     double getFactor();

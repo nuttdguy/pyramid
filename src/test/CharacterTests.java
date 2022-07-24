@@ -1,3 +1,4 @@
+import character.*;
 import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -12,7 +13,7 @@ public class CharacterTests {
         goblin = new Goblin();
     }
 
-    @DisplayName("Should instantiate Human Class")
+    @DisplayName("Should instantiate character.Human Class")
     @Test
     void humanClassTest() {
 
@@ -21,12 +22,12 @@ public class CharacterTests {
         assertTrue(human.getDefense() >= 0);
         assertTrue(human.getStrength() >= 0);
         assertTrue(human.getMovesPerTurn() >= 0);
-        assertTrue(human.getCoordinateX() >= 0);
-        assertTrue(human.getCoordinateY() >= 0);
+        assertTrue(human.getCoordX() >= 0);
+        assertTrue(human.getCoordY() >= 0);
 
     }
 
-    @DisplayName("Should instantiate Goblin Class")
+    @DisplayName("Should instantiate character.Goblin Class")
     @Test
     void goblinClassTest() {
 
@@ -35,8 +36,8 @@ public class CharacterTests {
         assertTrue(goblin.getDefense() >= 0);
         assertTrue(goblin.getStrength() >= 0);
         assertTrue(goblin.getMovesPerTurn() >= 0);
-        assertTrue(goblin.getCoordinateX() >= 0);
-        assertTrue(goblin.getCoordinateY() >= 0);
+        assertTrue(goblin.getCoordX() >= 0);
+        assertTrue(goblin.getCoordY() >= 0);
 
     }
 

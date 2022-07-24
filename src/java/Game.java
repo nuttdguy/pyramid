@@ -1,3 +1,5 @@
+
+import character.*;
 import java.util.*;
 import static java.lang.System.*;
 
@@ -15,17 +17,19 @@ public class Game {
 
     Game() {
         setMap(new Map());
-        setGoblins(this.initializePlayers(PlayerType.GOBLIN, 8));
-        setHumans(this.initializePlayers(PlayerType.HUMAN, 1));
-        updateStatOf(StatType.HEALTH, this.getHumans().get(0));
-        updateStatOf(StatType.STRENGTH, this.getHumans().get(0));
-        updateStatOf(StatType.DEFENSE, this.getHumans().get(0));
-        updateStatOf(StatType.MOVE_DISTANCE, this.getHumans().get(0));
-        updateStatOf(StatType.GOBLINS, this.getHumans().get(0));
-        placePlayersOntoLand(this.getGoblins(), map);
-        placePlayersOntoLand(this.getHumans(), map);
+        setGoblins(this.initPlayers(PlayerType.GOBLIN, 8));
+        setHumans(this.initPlayers(PlayerType.HUMAN, 1));
+        updateOneStat(StatType.HEALTH, this.getHumans().get(0));
+        updateOneStat(StatType.STRENGTH, this.getHumans().get(0));
+        updateOneStat(StatType.DEFENSE, this.getHumans().get(0));
+        updateOneStat(StatType.MOVE_DISTANCE, this.getHumans().get(0));
+        updateOneStat(StatType.GOBLINS, this.getHumans().get(0));
+        setPlayerOnTheMap(this.getGoblins(), map);
+        setPlayerOnTheMap(this.getHumans(), map);
 
     }
+
+
 
     private char keyPress() {
         return new Scanner(in).next().charAt(0);
@@ -34,48 +38,10 @@ public class Game {
         out.println(map.displayTheHeader());
         out.println(map.displayTheGrid(map.getGrid()));
     }
-    private void updateStatOf(StatType type) {
-        this.updateStatOf(type, null);
-    }
-    private void updateStatAll(Human player) {
-        for (StatType stat : StatType.values()) {
-            updateStatOf(stat, player);
-        }
-    }
-    private void updateStatOf(StatType type, Human player) {
-        int col = this.map.colWidth() - this.map.colOffset() + 3;
-        int row = 10; // set default row to goblin count
-        String stat = null;
-        // determine the row and col to set the value on
-        if (player != null) {
-            row = type.equals(StatType.HEALTH) ? 2 :
-                    type.equals(StatType.STRENGTH) ? 4 :
-                            type.equals(StatType.DEFENSE) ? 6 :
-                                    type.equals(StatType.MOVE_DISTANCE) ? 8 :
-                                            type.equals(StatType.MOVES_LEFT) ? 8 : 10;
 
-            stat = type.equals(StatType.HEALTH) ? String.valueOf(player.getHealth()) :
-                    type.equals(StatType.STRENGTH) ? String.valueOf(player.getStrength()) :
-                            type.equals(StatType.DEFENSE) ? String.valueOf(player.getDefense()) :
-                                    type.equals(StatType.MOVE_DISTANCE) ? String.valueOf(player.getMovesPerTurn()) :
-                                            type.equals(StatType.MOVES_LEFT) ? String.valueOf(player.getMovesRemaining()) : null;
-        }
+    // SETUP
 
-        if (stat != null) {
-            updateStatOfHelper(col, row, stat);
-        } else {
-            // handle qty of goblins on the field
-            updateStatOfHelper(col, row, String.valueOf(this.getGoblins().size()));
-        }
-    }
-    private void updateStatOfHelper(int col, int row, String stat) {
-        int i = 0;
-        for (char s : stat.toCharArray()) {
-            this.map.setElementPosition(row,col + i, s);
-            i++;
-        }
-    }
-    private <T extends Player> void placePlayersOntoLand(ArrayList<T> T, Map map) {
+    private <T extends Player> void setPlayerOnTheMap(ArrayList<T> T, Map map) {
         int col, row, elementInRowCol,
                 rowBoundary = map.rowHeight(),
                 colBoundary = map.colWidth() - map.colOffset();
@@ -89,16 +55,16 @@ public class Game {
             elementInRowCol = map.getElementAtPosition(row, col); // get current element at pos
 
             // determine which class
-            String tClass = T.get(playerIndex).getClass().getName();
+            String tClass = T.get(playerIndex).getName();
 
             // try, set player at location if empty
             if (elementInRowCol == ' ') {
                 if (tClass.equals("Human")) {
                     map.setElementPosition(row, col, T.get(playerIndex).getMarker() );
-                    T.get(playerIndex).setCoordinate(row, col );
+                    T.get(playerIndex).setCoordinates(row, col );
                 } else if (tClass.equals("Goblin")) {
                     map.setElementPosition(row, col, T.get(playerIndex).getMarker() );
-                    T.get(playerIndex).setCoordinate(row, col);
+                    T.get(playerIndex).setCoordinates(row, col);
                 }
                 playerIndex++;
             }
@@ -106,7 +72,7 @@ public class Game {
         }
 
     }
-    private <T extends Player> ArrayList<T> initializePlayers(PlayerType playerType, int qty) {
+    private <T extends Player> ArrayList<T> initPlayers(PlayerType playerType, int qty) {
         ArrayList<T> players = new ArrayList<>();
 
         while (qty > 0) {
@@ -122,34 +88,58 @@ public class Game {
         }
         return players;
     }
-    protected <T extends Player> T retrievePlayer(ArrayList<T> t, int row, int col) {
-        try {
-            for (T g : t) {
-                if (g.getCoordinateX() == row && g.getCoordinateY() == col) {
-                    return g;
-                }
-            }
-        } catch (ClassCastException e ) {
-            out.println(e);
-        }
-        return null;
-    }
-    protected <T extends Player> ArrayList<T> removePlayer(ArrayList <T> t, T player) {
-        if (player != null && player.getHealth() <= 0) {
-            t.remove(player);
-        }
-        return t;
-    }
-    protected <T extends Player> T updateMapMarkerOf(T player, int nextRow, int nextCol, int oldRow, int oldCol) {
-        String tClass = player.getClass().getName();
-        if (tClass.equals("Human")) {
-            map.setElementPosition(nextRow, nextCol, player.getMarker());
-            map.setElementPosition(oldRow, oldCol, map.defaultMarker());
-            player.setCoordinate(nextRow, nextCol);
-            return player;
-        }
 
-        return player;
+    // STAT UPDATES
+
+    private <T extends Player> void updateOneStat(StatType type, T player) {
+        int col = this.map.colWidth() - this.map.colOffset() + 3;
+        int row = 10; // set default row to goblin count
+        String stat = "";
+
+        // determine the row and col to set the value
+        if (player != null) {
+            row = rowToUpdate(type);
+            stat = getStatValueToUpdate(type, player);
+        }
+        updateStatFields(col, row, stat);
+    }
+    private <T extends Player> String getStatValueToUpdate(StatType type, T player) {
+        return  type.equals(StatType.HEALTH) ? String.valueOf(player.getHealth()) :
+                type.equals(StatType.STRENGTH) ? String.valueOf(player.getStrength()) :
+                type.equals(StatType.DEFENSE) ? String.valueOf(player.getDefense()) :
+                type.equals(StatType.MOVE_DISTANCE) ? String.valueOf(player.getMovesPerTurn()) :
+                type.equals(StatType.MOVES_LEFT) ? String.valueOf(player.getMovesRemaining()) :
+                String.valueOf(getGoblins().size());
+    }
+    private <T extends Player> void updateAllStat(T player) {
+        for (StatType stat : StatType.values()) {
+            updateOneStat(stat, player);
+        }
+    }
+    private int rowToUpdate(StatType type) {
+        return type.equals(StatType.HEALTH) ? 2 :
+                type.equals(StatType.STRENGTH) ? 4 :
+                        type.equals(StatType.DEFENSE) ? 6 :
+                                type.equals(StatType.MOVE_DISTANCE) ? 8 :
+                                        type.equals(StatType.MOVES_LEFT) ? 8 :
+                                                10;
+    }
+    private void updateStatFields(int col, int row, String stat) {
+        int i = 0;
+        for (char s : stat.toCharArray()) {
+            this.map.setElementPosition(row,col + i, s);
+            i++;
+        }
+    }
+
+    // END - STAT UPDATES
+
+    // MOVEMENT
+    private void directionOutOfBound() {
+        out.println("You cannot move in that direction");
+    }
+    private char[] directionToMove(int negOrPos) {
+        return negOrPos > 0 ? new char[]{'n', 'w'} : new char[]{'s', 'e'};
     }
     protected <T extends Player> T moveOnePlayer(Human player) {
         int movesLeft = player.getMovesPerTurn();
@@ -172,11 +162,11 @@ public class Game {
 
                     // handle out of bounds and don't decrement move counter
                     if (rowColElement == '+') {
-                        handleMoveOutOfBound();
+                        directionOutOfBound();
                     } else {
-                        movesLeft = handleMovesLeft(movesLeft, player);
+                        movesLeft = updatePlayerMoves(movesLeft, player);
                         if (movesLeft <= 0) {
-                            updateStatAll(player);
+                            updateAllStat(player);
                             return (T) player;
                         } // end turn when no moves are left
                     }
@@ -191,13 +181,16 @@ public class Game {
         } while (true);
 
     }
+
+    // MAP UPDATES
+
     protected <T extends Player> T moveOnePlayer(char direction, int row, int col, T player) throws IndexOutOfBoundsException {
         map.setElementPosition(row, col, map.defaultMarker()); // set the default marker before updating move
 
         // set the element values of the new position
         int[] rowCol = rowColToMoveOnto(direction, row, col);
         map.setElementPosition(rowCol[0], rowCol[1], player.getMarker());
-        player.setCoordinate(rowCol[0], rowCol[1]);
+        player.setCoordinates(rowCol[0], rowCol[1]);
         return player;
     }
     private int[] rowColToMoveOnto(char direction, int row, int col) {
@@ -215,20 +208,40 @@ public class Game {
     protected void replenishHealthOf(Human player) {
         if (player.getHealth() < player.getMaxHealth() && player.getHealth() > 0) {
 
-            double health = player.regenerateHealth();
+            double health = player.defend();
             double newHealth = Double.parseDouble(String.valueOf(health + player.getHealth()));
             player.setHealth(health < player.getMaxHealth() ? newHealth : player.getMaxHealth());
             out.printf("Your health regenerated by %.2f%n", health);
             out.println();
-            updateStatOf(StatType.HEALTH, player);
+            updateOneStat(StatType.HEALTH, player);
         }
     }
     private void updateMoveStats(Human player) {
-        updateStatOf(StatType.HEALTH, player);
-        updateStatOf(StatType.MOVES_LEFT, player);
+        updateOneStat(StatType.HEALTH, player);
+        updateOneStat(StatType.MOVES_LEFT, player);
         displayGameBoard();
         out.println("You have " + player.getMovesRemaining() + " moves left.");
     }
+    private char getMapElementAt(char chosenDirection, int row, int col) {
+        int[] rowCol = rowColToMoveOnto(chosenDirection, row, col);
+        return map.getElementAtPosition(rowCol[0], rowCol[1]);
+    }
+    protected <T extends Player> T updateMapMarkerOf(T player, int nextRow, int nextCol, int oldRow, int oldCol) {
+        String tClass = player.getClass().getName();
+        if (tClass.equals("character.Human")) {
+            map.setElementPosition(nextRow, nextCol, player.getMarker());
+            map.setElementPosition(oldRow, oldCol, map.defaultMarker());
+            player.setCoordinates(nextRow, nextCol);
+            return player;
+        }
+
+        return player;
+    }
+
+    // END - MAP UPDATES
+
+    // COMBAT
+
     protected Human handleEncounterWithGoblin(char chosenDirection, int row, int col, Human player) {
         int[] rowCol = rowColToMoveOnto(chosenDirection, row, col);
         Goblin goblin = retrievePlayer(this.getGoblins(), rowCol[0], rowCol[1]);
@@ -242,79 +255,100 @@ public class Game {
 
         // update player and stats
         player = updateMapMarkerOf(player, rowCol[0], rowCol[1], row, col);
-        updateStatOf(StatType.HEALTH, player);
-        updateStatOf(StatType.GOBLINS, player);
+        updateOneStat(StatType.HEALTH, player);
+        updateOneStat(StatType.GOBLINS, player);
         return player;
     }
-    private char getMapElementAt(char chosenDirection, int row, int col) {
-        int[] rowCol = rowColToMoveOnto(chosenDirection, row, col);
-        return map.getElementAtPosition(rowCol[0], rowCol[1]);
-    }
-    private int handleMovesLeft(int movesLeft, Human player) {
-        movesLeft--;
-        player.setMovesRemaining(movesLeft);
-        updateMoveStats(player);
-        if (movesLeft == 0) {
-            player.setMovesRemaining(player.getMovesPerTurn()); // reset move to max move
+
+    protected <T extends Player> T engageCombatBetween(T attacker, T defender) {
+
+        do {
+            if (attack(attacker, defender) <= 0 || defend(defender, attacker) <= 0) {
+                break;
+            }
+        } while (true);
+
+        if (attacker.getHealth() > 0 ) {
+            displayCombatNarrative(4, attacker.getName(), defender.getName(), attacker.getHealth());
+        } else {
+            displayCombatNarrative(4, defender.getName(), attacker.getName(), defender.getHealth());
         }
-        return movesLeft;
+
+        return attacker.getHealth() >= 0 ? attacker : defender;
     }
-    private void handleMoveOutOfBound() {
-        out.println("You cannot move in that direction");
+
+    private <T extends Player> double attack(T attacker, T defender) {
+        double defenderHealth = defender.getHealth();
+        double damageByAttacker = attacker.attack();
+
+        out.println("----");
+        defenderHealth = defenderHealth - damageByAttacker;
+        defender.setHealth(Double.parseDouble(String.format("%.2f", defenderHealth)));
+        // combat narrative
+        displayCombatNarrative(1, attacker.getName(), defender.getName(), damageByAttacker);
+        displayCombatNarrative(2, attacker.getName(), defender.getName(), defender.getHealth());
+
+        out.println("----");
+        return defender.getHealth();
     }
+
+    private <T extends Player> double defend(T defender, T attacker) {
+        double attackerHealth = attacker.getHealth();
+        double damageByDefender = defender.attack();
+
+        out.println("----");
+        attackerHealth = attackerHealth - damageByDefender;
+        attacker.setHealth(Double.parseDouble(String.format("%.2f", attackerHealth)));
+        // combat narrative
+        displayCombatNarrative(1, defender.getName(), attacker.getName(), damageByDefender);
+        displayCombatNarrative(2, defender.getName(), attacker.getName(), attacker.getHealth());
+
+        out.println("----");
+        return attacker.getHealth();
+    }
+
     private void displayCombatNarrative(int option, String attacker, String defender, double stat) {
         stat = stat < 0 ? 0 : stat;
+
         switch (option) {
             case 1 -> out.printf("%s attack's %s for [ %.2f ]%n", attacker, defender, stat);
-            case 2 -> out.printf("%s [ health ] is now [ %.2f ]%n", defender, stat);
-            case 3 -> out.printf("%s [ health ] is now [ %.2f ]%n", attacker, stat);
-            case 4 -> out.printf("%s defeats %s. %s [ health ] is now [ %.2f ]%n", attacker, defender, attacker, stat);
+            case 2 -> out.printf("%s health is now [ %.2f ]%n", defender, stat);
+            case 3 -> out.printf("%s health is now [ %.2f ]%n", attacker, stat);
+            case 4 -> out.printf("%s defeats %s. %s [ health ] is now [ %.2f ]%n\n", attacker, defender, attacker, stat);
         }
     }
-    protected <T extends Player> void engageCombatBetween(T attacker, T defender) {
 
-        double defenderHealth = defender.getHealth();
-        double attackerHealth = attacker.getHealth();
+    // END COMBAT
 
-        while (true) {
-            double damageByAttacker = attacker.attack();
-            double damageByDefender = defender.attack();
-
-            defenderHealth = defenderHealth - damageByAttacker;
-            if (defenderHealth <= 0) {
-                defender.setHealth(Double.parseDouble(String.format("%.2f", defenderHealth)));
-                displayCombatNarrative(1, attacker.getClass().getName(), defender.getClass().getName(), damageByAttacker);
-                displayCombatNarrative(2, attacker.getClass().getName(), defender.getClass().getName(), defender.getHealth());
-                displayCombatNarrative(4, attacker.getClass().getName(), defender.getClass().getName(), attacker.getHealth());
-                out.println("----");
-                return;
-            } else {
-                defender.setHealth(Double.parseDouble(String.format("%.2f", defenderHealth)));
-                displayCombatNarrative(1, attacker.getClass().getName(), defender.getClass().getName(), damageByAttacker);
-                displayCombatNarrative(2, attacker.getClass().getName(), defender.getClass().getName(), defender.getHealth());
+    // PLAYER UPDATES
+    protected <T extends Player> T retrievePlayer(ArrayList<T> t, int row, int col) {
+        try {
+            for (T g : t) {
+                if (g.getCoordX() == row && g.getCoordY() == col) {
+                    return g;
+                }
             }
-
-            out.println("----");
-            attackerHealth = attackerHealth - damageByDefender;
-            if (attackerHealth <= 0) {
-                attacker.setHealth(Double.parseDouble(String.format("%.2f", attackerHealth)));
-                displayCombatNarrative(1, defender.getClass().getName(), attacker.getClass().getName(), damageByDefender);
-                displayCombatNarrative(2, defender.getClass().getName(), attacker.getClass().getName(), attacker.getHealth());
-                displayCombatNarrative(4, defender.getClass().getName(), attacker.getClass().getName(), defender.getHealth());
-                out.println("----");
-                return;
-            } else {
-                attacker.setHealth(Double.parseDouble(String.format("%.2f", attackerHealth)));
-                displayCombatNarrative(1, defender.getClass().getName(), attacker.getClass().getName(), damageByDefender);
-                displayCombatNarrative(3, attacker.getClass().getName(), defender.getClass().getName(), attacker.getHealth());
-                out.println("----");
-            }
+        } catch (ClassCastException e ) {
+            out.println(e);
         }
+        return null;
+    }
+    protected <T extends Player> ArrayList<T> removePlayer(ArrayList <T> t, T player) {
+        if (player != null && player.getHealth() <= 0) {
+            t.remove(player);
+        }
+        return t;
+    }
 
+    private int updatePlayerMoves(int movesLeft, Human player) {
+        movesLeft--;
+        player.setMovesRemaining();
+        updateMoveStats(player);
+        return movesLeft;
     }
-    private char[] directionToMove(int negOrPos) {
-        return negOrPos > 0 ? new char[]{'n', 'w'} : new char[]{'s', 'e'};
-    }
+
+    // END - PLAYER UPDATES
+
     protected <T extends Player> T handleTurnOf(ArrayList<T> t, Human player) {
         int[] rowColOfDefender = player.getCoordinates();
         ArrayList<T> goblins = new ArrayList<>( t.subList(0, t.size())); // make a copy to iterate
@@ -345,12 +379,12 @@ public class Game {
                     engageCombatBetween(goblin, player);
                     if (goblin.getHealth() <= 0) {
                         removePlayer(t, goblin); // remove player from original
-                        this.getMap().setElementPosition(player.getCoordinateX(), player.getCoordinateY(), player.getMarker());
-                        updateStatOf(StatType.HEALTH, player);
-                        updateStatOf(StatType.GOBLINS);
+                        this.getMap().setElementPosition(player.getCoordX(), player.getCoordY(), player.getMarker());
+                        updateOneStat(StatType.HEALTH, player);
+                        updateOneStat(StatType.GOBLINS, player);
                         movesLeft = 0;
                     } else if (player.getHealth() <= 0) {
-                        updateStatOf(StatType.HEALTH, player);
+                        updateOneStat(StatType.HEALTH, player);
                         return (T) player;
                     }
                 }
@@ -407,28 +441,31 @@ public class Game {
 
     }
 
+    // GETTERS
     public Map getMap() {
         return map;
     }
-
-    public void setMap(Map map) {
-        this.map = map;
-    }
-
     public ArrayList<Human> getHumans() {
         return humans;
     }
-
-    private void setHumans(ArrayList<Human> humans) {
-        this.humans = humans;
-    }
-
     public ArrayList<Goblin> getGoblins() {
         return goblins;
     }
 
+    // END - GETTERS
+
+
+    // SETTERS
+    public void setMap(Map map) {
+        this.map = map;
+    }
+    private void setHumans(ArrayList<Human> humans) {
+        this.humans = humans;
+    }
     private void setGoblins(ArrayList<Goblin> goblins) {
         this.goblins = goblins;
     }
+
+    // END - SETTERS
 
 }

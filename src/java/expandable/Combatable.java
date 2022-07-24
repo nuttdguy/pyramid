@@ -1,3 +1,5 @@
+package expandable;
+
 public interface Combatable {
 
     double attack();

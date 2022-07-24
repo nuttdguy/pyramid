@@ -1,9 +1,10 @@
+
+
+import character.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-
 import java.util.ArrayList;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 public class GameTests {
@@ -25,11 +26,11 @@ public class GameTests {
 
         assertTrue(goblinPlayers.size() > 0,  "Qty should match expected");
         assertTrue(goblin instanceof Goblin, "Should be an instance of expected");
-        assertEquals("Goblin", goblin.getClass().getName(), "Should be Goblin Instance");
+        assertEquals("character.Goblin", goblin.getClass().getName(), "Should be character.Goblin Instance");
 
         assertTrue(humanPlayers.size() > 0,  "Qty should match expected");
         assertTrue(human instanceof Human, "Should be an instance of expected");
-        assertEquals("Human", human.getClass().getName(), "Should be Human Instance");
+        assertEquals("character.Human", human.getClass().getName(), "Should be character.Human Instance");
 
     }
 
@@ -109,12 +110,12 @@ public class GameTests {
     void removePlayerTest() {
         ArrayList<Goblin> goblins = game.getGoblins();
         goblins.get(0).setHealth(0);
-        int id = goblins.get(0).getObjectId();
+        int id = goblins.get(0).getId();
 
         goblins = game.removePlayer(goblins, goblins.get(0));
         boolean isRemoved = true;
         for (Goblin g : goblins) {
-            if (g.getObjectId() == id) {
+            if (g.getId() == id) {
                 isRemoved = false;
             }
         }
@@ -127,12 +128,12 @@ public class GameTests {
     @Test
     void moveOnePlayerTest() {
         Human human = game.getHumans().get(0);
-        int startRow = human.getCoordinateX(), startCol = human.getCoordinateY();
+        int startRow = human.getCoordX(), startCol = human.getCoordY();
 
-        assertEquals(game.moveOnePlayer('n', startRow, startCol, human).getCoordinateX(), startRow - 1, "Should set position x -1");
-        assertEquals(game.moveOnePlayer( 's', startRow, startCol, human).getCoordinateX(), startRow + 1, "Should set position x +1");
-        assertEquals(game.moveOnePlayer( 'w', startRow, startCol, human).getCoordinateY(), startCol - 1, "Should set position y -1");
-        assertEquals(game.moveOnePlayer( 'e', startRow, startCol, human).getCoordinateY(), startCol + 1, "Should set position y +1");
+        assertEquals(game.moveOnePlayer('n', startRow, startCol, human).getCoordX(), startRow - 1, "Should set position x -1");
+        assertEquals(game.moveOnePlayer( 's', startRow, startCol, human).getCoordX(), startRow + 1, "Should set position x +1");
+        assertEquals(game.moveOnePlayer( 'w', startRow, startCol, human).getCoordY(), startCol - 1, "Should set position y -1");
+        assertEquals(game.moveOnePlayer( 'e', startRow, startCol, human).getCoordY(), startCol + 1, "Should set position y +1");
     }
 
     @DisplayName("Should engage in combat until health is zero or less")
@@ -163,8 +164,8 @@ public class GameTests {
     private <T extends Player> int[][] getMarkerPositionOfHelper(ArrayList<T> t) {
         char[][] land = game.getMap().getGrid();
         String tName = t.get(0).getClass().getName();
-        char markerToCheck = tName.equals("Goblin") ? 'G' : 'H';
-        int[][] playerPositions = tName.equals("Goblin") ?
+        char markerToCheck = tName.equals("character.Goblin") ? 'G' : 'H';
+        int[][] playerPositions = tName.equals("character.Goblin") ?
                 new int[1][ game.getGoblins().size() * 2] : new int[1][ game.getHumans().size() * 2];
         int positionSlot = 0;
 

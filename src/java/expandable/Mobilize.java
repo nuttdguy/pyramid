@@ -1,3 +1,5 @@
+package expandable;
+
 public interface Mobilize {
 
     void setCoordinate(int x);
