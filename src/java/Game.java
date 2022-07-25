@@ -169,6 +169,14 @@ public class Game {
         }
     }
 
+    private void updateStatFields(int col, int row, String stat) {
+        int i = 0;
+        for (char s : stat.toCharArray()) {
+            this.map.setElementPosition(row,col + i, s);
+            i++;
+        }
+    }
+
     private int rowToUpdate(StatType type) {
         return type.equals(StatType.HEALTH) ? 2 :
                 type.equals(StatType.STRENGTH) ? 4 :
@@ -176,14 +184,6 @@ public class Game {
                                 type.equals(StatType.MOVE_DISTANCE) ? 8 :
                                         type.equals(StatType.MOVES_LEFT) ? 8 :
                                                 10;
-    }
-
-    private void updateStatFields(int col, int row, String stat) {
-        int i = 0;
-        for (char s : stat.toCharArray()) {
-            this.map.setElementPosition(row,col + i, s);
-            i++;
-        }
     }
 
     // END - STAT UPDATES
@@ -205,8 +205,8 @@ public class Game {
         int colDistance = distanceToMarker(attacker, defender)[1];
         int shortestDistance = Math.min(Math.abs(rowDistance), Math.abs(colDistance));
         shortestDistance = shortestDistance == Math.abs(rowDistance) ? rowDistance : colDistance;
-        char rowDirection = rowDistance < 0 ? 'n' : 's';
-        char colDirection = colDistance < 0 ? 'w' : 'e';
+        char rowDirection = rowDistance <= 0 ? 'n' : 's';
+        char colDirection = colDistance <= 0 ? 'w' : 'e';
         if (shortestDistance == rowDistance) {
             return rowDirection;
         }
@@ -418,15 +418,6 @@ public class Game {
 
 
     // PLAYER UPDATES
-
-//    private <T extends Player> int removePlayer(ArrayList<T> playerList) {
-//        for (int i = 0; i < playerList.size(); i++) {
-//            if (playerList.get(i).getHealth() <= 0) {
-//                playerList.remove(playerList.get(i));
-//            }
-//        }
-//        return playerList.size();
-//    }
 
     private <T extends Player> void replenishHealthOf(T player) {
         if (player.getHealth() < player.getMaxHealth() && player.getHealth() > 0) {
