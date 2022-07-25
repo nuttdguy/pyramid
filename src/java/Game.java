@@ -58,13 +58,23 @@ public class Game {
 
     // END - SETTERS
 
+
     // INPUT / OUTPUT
     private char keyPress() {
         return new Scanner(in).next().charAt(0);
     }
-    protected void displayGameBoard() {
-        out.println(map.displayTheHeader());
-        out.println(map.displayTheGrid(map.getGrid()));
+
+    private char requestDirectionByKeyPress() {
+
+        do {
+            out.println("Do you want to move n, e, s or w?");
+            char chosenDirection = keyPress();
+            if (chosenDirection == 'n' || chosenDirection == 'e' || chosenDirection == 's' || chosenDirection == 'w') {
+                return chosenDirection;
+            } else {
+                out.println("Invalid option " + chosenDirection + ". Try again?");
+            }
+        } while (true);
     }
 
     // END - INPUT / OUTPUT
@@ -121,7 +131,15 @@ public class Game {
         return players;
     }
 
+    // END - SETUP
+
+
     // STAT UPDATES
+
+    public void displayGameBoard() {
+        out.println(map.displayTheHeader());
+        out.println(map.displayTheGrid(map.getGrid()));
+    }
 
     private <T extends Player> void updateOneStat(StatType type, T player) {
         int col = this.map.colWidth() - this.map.colOffset() + 3;
@@ -172,22 +190,6 @@ public class Game {
 
 
     // MOVEMENT
-    private char requestDirectionByKeyPress() {
-
-        do {
-            out.println("Do you want to move n, e, s or w?");
-            char chosenDirection = keyPress();
-            if (chosenDirection == 'n' || chosenDirection == 'e' || chosenDirection == 's' || chosenDirection == 'w') {
-                return chosenDirection;
-            } else {
-                out.println("Invalid option " + chosenDirection + ". Try again?");
-            }
-        } while (true);
-    }
-
-    private char[] directionToMove(int negOrPos) {
-        return negOrPos > 0 ? new char[]{'n', 'w'} : new char[]{'s', 'e'};
-    }
 
     private <T extends Player> int[] distanceToMarker(T attacker, T defender) {
         // get the directional pair which depends on whether the attacker is north west or south east of defender
@@ -198,10 +200,30 @@ public class Game {
         return new int[]{rowDistanceToDefender, colDistanceToDefender};
     }
 
-    protected <T extends Player> T moveOne(T attacker, T defender,  char chosenDirection) {
+    private <T extends Player> char directionToMove(T attacker, T defender) {
+        int rowDistance = distanceToMarker(attacker, defender)[0];
+        int colDistance = distanceToMarker(attacker, defender)[1];
+        int shortestDistance = Math.min(Math.abs(rowDistance), Math.abs(colDistance));
+        shortestDistance = shortestDistance == Math.abs(rowDistance) ? rowDistance : colDistance;
+        char rowDirection = rowDistance < 0 ? 'n' : 's';
+        char colDirection = colDistance < 0 ? 'w' : 'e';
+        if (shortestDistance == rowDistance) {
+            return rowDirection;
+        }
+        return colDirection;
+    }
+
+    protected <T extends Player> T moveOne(T attacker) {
         int movesLeft = attacker.getMovesPerTurn();
 
         while (movesLeft > 0) {
+
+            char chosenDirection = '+';
+            if (attacker.getName().equals("Human")) {
+                chosenDirection = requestDirectionByKeyPress();
+            } else if (attacker.getName().equals("Goblin")) {
+                chosenDirection = directionToMove(attacker, getHumans().get(0));
+            }
 
             try {
                 int row = attacker.getCoordinates()[0];
@@ -210,31 +232,41 @@ public class Game {
 
                 if (elementAtRowCol == '+') {
                     out.println("You cannot move in that direction");
-                } else if (elementAtRowCol == 'G' && attacker.getName().equals("Human")) {
-
-                    engageCombatBetween(attacker, getPlayer(getGoblins(), chosenDirection, row, col));
-                    movesLeft = endCombat(attacker, chosenDirection);
-//                    displayGameBoard();
-
-                } else if (elementAtRowCol == 'H' && attacker.getName().equals("Goblin")) {
-
-                    engageCombatBetween(attacker, defender);
-                    movesLeft = endCombat(attacker, chosenDirection);
+                    return attacker; // temp solution
 
                 } else {
+                    if (elementAtRowCol == 'G' && attacker.getName().equals("Human")) {
 
-                    movesLeft = endMove(attacker, chosenDirection);
+                        out.println("**** BATTLE *** Enter key to continue ...");
+                        keyPress();
+
+                        T loser = (T) engageCombatBetween(attacker, getPlayer(getGoblins(), chosenDirection, row, col));
+
+                        if (loser.getName().equals("Human")) {
+                            return attacker;
+                        }
+                        removeCombatLoser(loser);
+                        movesLeft = endMove(attacker, chosenDirection);
+
+                    } else if (elementAtRowCol == 'H' && attacker.getName().equals("Goblin")) {
+
+                        engageCombatBetween(attacker, getPlayer(getHumans(), chosenDirection, row, col));
+                        removeCombatLoser(attacker);
+                        movesLeft = endMove(attacker, chosenDirection);
+
+                    } else {
+
+                        if (attacker.getName().equals("Human")) {
+                            movesLeft = endMove(attacker, chosenDirection);
+                        } else {
+                            movesLeft--;
+                        }
+                    }
                 }
 
-                if (attacker.getName().equals("Human")) {
-                    chosenDirection = requestDirectionByKeyPress();
-                }
-
-                displayGameBoard();
                 if (movesLeft <= 0) {
                     updateAllStat(attacker);
-//                    displayGameBoard();
-                    out.println("You have " + attacker.getMovesRemaining() + " moves left.");
+                    out.println( attacker.getName() + ", " + "You have " +attacker.getMovesRemaining() + " moves left.");
                     return attacker;
                 } // end turn when no moves are left
 
@@ -245,17 +277,28 @@ public class Game {
         return attacker;
     }
 
+    private <T extends Player> int moveMany(ArrayList<T> attackers) {
+        ArrayList<T> attackersCopy = new ArrayList<>(attackers.subList(0, attackers.size())); // make a copy to iterate
+
+        for (T attacker : attackersCopy) {
+            moveOne(attacker);
+        }
+
+        return attackers.size();
+    }
+
 
     // END - MOVEMENT
+
 
     // MAP UPDATES
 
     private <T extends Player> T updateMapMarkerAfterMove(T player, char direction) throws IndexOutOfBoundsException {
         int[] nextRowCol = getTheRowColToMoveOnto(direction, player.getCoordX(), player.getCoordY());
 
-        map.setElementPosition(nextRowCol[0], nextRowCol[1], player.getMarker());
-        map.setElementPosition(player.getCoordX(), player.getCoordY(), map.defaultMarker());
-        player.setCoordinates(nextRowCol[0], nextRowCol[1]);
+        map.setElementPosition(player.getCoordX(), player.getCoordY(), map.defaultMarker()); // set old marker
+        map.setElementPosition(nextRowCol[0], nextRowCol[1], player.getMarker()); // set new marker
+        player.setCoordinates(nextRowCol[0], nextRowCol[1]); // set the new position fpr player
         return player;
 
     }
@@ -280,6 +323,7 @@ public class Game {
 
     // END - MAP UPDATES
 
+
     // COMBAT
 
     private <T extends Player> T getPlayer(ArrayList<T> playerList, char chosenDirection, int row, int col) {
@@ -294,6 +338,10 @@ public class Game {
 
     private <T extends Player> T engageCombatBetween(T attacker, T defender) {
 
+        if (attacker == null || defender == null) {
+            return attacker;
+        }
+
         do {
             if (attack(attacker, defender) <= 0 || defend(defender, attacker) <= 0) {
                 break;
@@ -307,19 +355,21 @@ public class Game {
             displayCombatNarrative(4, defender.getName(), attacker.getName(), defender.getHealth());
         }
 
-        return attacker.getHealth() >= 0 ? attacker : defender;
+        return defender.getHealth() <= 0 ?  defender : attacker;
     }
 
-    private <T extends Player> int endCombat(T player, char direction) {
-        removePlayer(getGoblins());
-        removePlayer(getHumans());
-        return endMove(player, direction);
+    private <T extends Player> void removeCombatLoser(T player) {
+        switch (player.getName()) {
+            case "Goblin" -> getGoblins().remove(player);
+            case "Human" -> getHumans().remove(player);
+        }
     }
 
     private <T extends Player> int endMove(T player, char direction) {
         player.setOrDecrementMovesRemaining();
         updateMapMarkerAfterMove(player, direction);
         updateAllStat(player);
+        displayGameBoard();
         return player.getMovesRemaining();
     }
 
@@ -366,16 +416,17 @@ public class Game {
 
     // END COMBAT
 
+
     // PLAYER UPDATES
 
-    private <T extends Player> int removePlayer(ArrayList<T> playerList) {
-        for (int i = 0; i < playerList.size(); i++) {
-            if (playerList.get(i).getHealth() <= 0) {
-                playerList.remove(playerList.get(i));
-            }
-        }
-        return playerList.size();
-    }
+//    private <T extends Player> int removePlayer(ArrayList<T> playerList) {
+//        for (int i = 0; i < playerList.size(); i++) {
+//            if (playerList.get(i).getHealth() <= 0) {
+//                playerList.remove(playerList.get(i));
+//            }
+//        }
+//        return playerList.size();
+//    }
 
     private <T extends Player> void replenishHealthOf(T player) {
         if (player.getHealth() < player.getMaxHealth() && player.getHealth() > 0) {
@@ -391,66 +442,10 @@ public class Game {
 
     // END - PLAYER UPDATES
 
-    // todo refactor this method
-    protected <T extends Player> int moveMany(ArrayList<T> attackers, Human defender) {
-        ArrayList<T> attackersCopy = new ArrayList<>(attackers.subList(0, attackers.size())); // make a copy to iterate
-
-        for (T attacker : attackersCopy) {
-            int[] rowColDistanceToMarker = distanceToMarker(attacker, defender);
-
-//            char direction = ' ';
-//            if (rowColDistanceToMarker[0] > 0 &&  rowColDistanceToMarker[1] > 0) {
-//                // s & e
-//                if (Math.abs(rowColDistanceToMarker[0]) <  Math.abs(rowColDistanceToMarker[1])) {
-//                    direction = 's';
-//                } else {
-//                    direction = 'e';
-//                }
-//            } else if (rowColDistanceToMarker[0] > 0 &&  rowColDistanceToMarker[1] < 0) {
-//                // s & w
-//                if (Math.abs(rowColDistanceToMarker[0]) <  Math.abs(rowColDistanceToMarker[1])) {
-//                    direction = 's';
-//                } else {
-//                    direction = 'e';
-//                }
-//            } else if (rowColDistanceToMarker[0] < 0 &&  rowColDistanceToMarker[1] > 0) {
-//                // n & e
-//                if (Math.abs(rowColDistanceToMarker[0]) <  Math.abs(rowColDistanceToMarker[1])) {
-//                    direction = 'n';
-//                } else {
-//                    direction = 'w';
-//                }
-//            } else if (rowColDistanceToMarker[0] < 0 &&  rowColDistanceToMarker[1] < 0) {
-//                // n & w
-//                if (Math.abs(rowColDistanceToMarker[0]) <  Math.abs(rowColDistanceToMarker[1])) {
-//                    direction = 'n';
-//                } else {
-//                    direction = 'w';
-//                }
-//            }
-
-            if (Math.abs(rowColDistanceToMarker[0]) >= Math.abs(rowColDistanceToMarker[1])) {
-
-                char[] rowDirectionOptions = directionToMove(rowColDistanceToMarker[0]);
-                moveOne(attacker, defender, rowDirectionOptions[0]);
-//                moveOne(attacker, defender, direction);
-
-            } else if (Math.abs(rowColDistanceToMarker[0]) <= Math.abs(rowColDistanceToMarker[1])) {
-
-                char[] colDirectionOptions = directionToMove(rowColDistanceToMarker[1]);
-                moveOne(attacker, defender, colDirectionOptions[1]);
-//                moveOne(attacker, defender, direction);
-
-            }
-        }
-
-        return attackers.size();
-    }
 
     public void start() {
 
         // refactor code by renaming methods, removing redundant code, modularizing / grouping methods by action
-        // reduce side effects caused by referencing, i.e. not creating new copies
         // implement defend option in order to replenish heath
         // add collision detection logic to detect when obstacles are in the path
         // add inventory system to enhance characters stat
@@ -463,37 +458,25 @@ public class Game {
                 if (this.getHumans().isEmpty()) {
                     return;
                 } else {
-                    player = this.getHumans().get(0); // todo has next method
+                    player = this.getHumans().get(0);
                 }
 
+                player = moveOne(player);
+                if (player.getHealth() < 0) {
+                    out.println("Defeat - Goblin's defeated the human!");
+                    out.println("*** Game Over ***");
+                    return;
+                } else {
+                    displayEndOfTurn("Human", "Goblin");
+                }
+
+                moveMany(getGoblins());
                 if ( this.getGoblins().isEmpty() ) {
                     out.println("Victory - Human has defeated the Goblin's");
                     out.println("*** Game Over ***");
                     return;
                 } else {
-                    player = moveOne(player, null, ' ');
-
-                    out.println("----");
-                    out.println("Human - end of turn ");
-                    out.println("----");
-                    out.println("Goblin's turn - press and enter any letter to continue");
-
-                    keyPress();
-
-                    out.println("----");
-                    // handle goblin moves
-
-                    moveMany(getGoblins(), player);
-
-                    out.println("Goblin's - end of turn ");
-                    out.println("----");
-
-                    if (player.getHealth() < 0) {
-                        out.println("Defeat - Goblin's defeated the human!");
-                        out.println("*** Game Over ***");
-                        return;
-                    }
-                    out.println("Human - its now your turn");
+                    displayEndOfTurn("Goblin", "Human");
                 }
 
             } catch (IndexOutOfBoundsException e) {
@@ -501,6 +484,14 @@ public class Game {
                 break;
             }
         }
+
+    }
+
+    private void displayEndOfTurn(String endingPlayer, String startingPlayer) {
+        out.println("----");
+        out.printf("%s - end of turn \n", endingPlayer);
+        out.printf("%s's turn - press and enter any letter to continue.", startingPlayer);
+        out.println("----");
 
     }
 
