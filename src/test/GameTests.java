@@ -124,17 +124,17 @@ public class GameTests {
 //
 //    }
 
-    @DisplayName("Should move one players position according to the chosen direction ")
-    @Test
-    void moveOnePlayerTest() {
-        Human human = game.getHumans().get(0);
-        int startRow = human.getCoordX(), startCol = human.getCoordY();
-
-        assertEquals(game.moveOne('n', startRow, startCol, human).getCoordX(), startRow - 1, "Should set position x -1");
-        assertEquals(game.moveOne( 's', startRow, startCol, human).getCoordX(), startRow + 1, "Should set position x +1");
-        assertEquals(game.moveOne( 'w', startRow, startCol, human).getCoordY(), startCol - 1, "Should set position y -1");
-        assertEquals(game.moveOne( 'e', startRow, startCol, human).getCoordY(), startCol + 1, "Should set position y +1");
-    }
+//    @DisplayName("Should move one players position according to the chosen direction ")
+//    @Test
+//    void moveOnePlayerTest() {
+//        Human human = game.getHumans().get(0);
+//        int startRow = human.getCoordX(), startCol = human.getCoordY();
+//
+//        assertEquals(game.moveOne('n', startRow, startCol, human).getCoordX(), startRow - 1, "Should set position x -1");
+//        assertEquals(game.moveOne( 's', startRow, startCol, human).getCoordX(), startRow + 1, "Should set position x +1");
+//        assertEquals(game.moveOne( 'w', startRow, startCol, human).getCoordY(), startCol - 1, "Should set position y -1");
+//        assertEquals(game.moveOne( 'e', startRow, startCol, human).getCoordY(), startCol + 1, "Should set position y +1");
+//    }
 
 //    @DisplayName("Should engage in combat until health is zero or less")
 //    @Test

@@ -21,7 +21,6 @@ public abstract class Player {
         setDefense(10);
 
         setMovesPerTurn(1);
-        setOrDecrementMovesRemaining();
         setCoordinates(0, 0);
     }
 
@@ -35,7 +34,6 @@ public abstract class Player {
         setDefense(defense);
 
         setMovesPerTurn(movesPerTurn);
-        setOrDecrementMovesRemaining();
         setCoordinates(coordX, coordY);
     }
 
@@ -124,7 +122,11 @@ public abstract class Player {
     }
 
     public void setOrDecrementMovesRemaining() {
-        this.movesRemaining = this.movesRemaining == 0 ? getMovesPerTurn() : this.movesRemaining - 1;
+        if (this.getMovesRemaining() == 0 ) {
+            this.movesRemaining = this.getMovesPerTurn();
+        } else {
+            this.movesRemaining--;
+        }
     }
 
     public void setCoordinates(int x, int y) {

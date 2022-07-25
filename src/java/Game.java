@@ -31,7 +31,34 @@ public class Game {
     }
 
 
+    // GETTERS
+    public Map getMap() {
+        return map;
+    }
+    public ArrayList<Human> getHumans() {
+        return humans;
+    }
+    public ArrayList<Goblin> getGoblins() {
+        return goblins;
+    }
 
+    // END - GETTERS
+
+
+    // SETTERS
+    public void setMap(Map map) {
+        this.map = map;
+    }
+    private void setHumans(ArrayList<Human> humans) {
+        this.humans = humans;
+    }
+    private void setGoblins(ArrayList<Goblin> goblins) {
+        this.goblins = goblins;
+    }
+
+    // END - SETTERS
+
+    // INPUT / OUTPUT
     private char keyPress() {
         return new Scanner(in).next().charAt(0);
     }
@@ -39,6 +66,9 @@ public class Game {
         out.println(map.displayTheHeader());
         out.println(map.displayTheGrid(map.getGrid()));
     }
+
+    // END - INPUT / OUTPUT
+
 
     // SETUP
 
@@ -140,8 +170,9 @@ public class Game {
 
     // END - STAT UPDATES
 
+
     // MOVEMENT
-    private char requestDirection() {
+    private char requestDirectionByKeyPress() {
 
         do {
             out.println("Do you want to move n, e, s or w?");
@@ -158,50 +189,60 @@ public class Game {
         return negOrPos > 0 ? new char[]{'n', 'w'} : new char[]{'s', 'e'};
     }
 
-    protected <T extends Player> T moveOne(char direction, int row, int col, T player) throws IndexOutOfBoundsException {
-
-        // set the element values of the new position
-        int[] rowCol = getTheRowColToMoveOnto(direction, row, col);
-        map.setElementPosition(row, col, map.defaultMarker()); // set the default marker before updating move
-        map.setElementPosition(rowCol[0], rowCol[1], player.getMarker());
-        player.setCoordinates(rowCol[0], rowCol[1]);
-        return player;
+    private <T extends Player> int[] distanceToMarker(T attacker, T defender) {
+        // get the directional pair which depends on whether the attacker is north west or south east of defender
+        int[] rowColOfAttacker = attacker.getCoordinates();
+        int[] rowColOfDefender = defender.getCoordinates();
+        int rowDistanceToDefender =  rowColOfDefender[0] - rowColOfAttacker[0];
+        int colDistanceToDefender = rowColOfDefender[1] - rowColOfAttacker[1];
+        return new int[]{rowDistanceToDefender, colDistanceToDefender};
     }
 
-    protected <T extends Player> T moveOne(T player) {
-        int movesLeft = player.getMovesPerTurn();
+    protected <T extends Player> T moveOne(T attacker, T defender,  char chosenDirection) {
+        int movesLeft = attacker.getMovesPerTurn();
 
         while (movesLeft > 0) {
 
-            char chosenDirection = requestDirection();
-
             try {
-                int row = player.getCoordinates()[0], col = player.getCoordinates()[1];
-                char rowColElement = getMapElementAt(chosenDirection, row, col);
+                int row = attacker.getCoordinates()[0];
+                int col = attacker.getCoordinates()[1];
+                char elementAtRowCol = getMapElementAt(chosenDirection, row, col);
 
-                if (rowColElement == '+') {
+                if (elementAtRowCol == '+') {
                     out.println("You cannot move in that direction");
-                } else if (rowColElement == 'G') {
+                } else if (elementAtRowCol == 'G' && attacker.getName().equals("Human")) {
 
-                    engageCombatBetween(player, getPlayer(getGoblins(), chosenDirection, row, col));
-                    movesLeft = endCombat(player, chosenDirection);
+                    engageCombatBetween(attacker, getPlayer(getGoblins(), chosenDirection, row, col));
+                    movesLeft = endCombat(attacker, chosenDirection);
+//                    displayGameBoard();
+
+                } else if (elementAtRowCol == 'H' && attacker.getName().equals("Goblin")) {
+
+                    engageCombatBetween(attacker, defender);
+                    movesLeft = endCombat(attacker, chosenDirection);
 
                 } else {
 
-                    movesLeft = endCombat(player, chosenDirection);
-
+                    movesLeft = endMove(attacker, chosenDirection);
                 }
 
+                if (attacker.getName().equals("Human")) {
+                    chosenDirection = requestDirectionByKeyPress();
+                }
+
+                displayGameBoard();
                 if (movesLeft <= 0) {
-                    updateAllStat(player);
-                    return player;
+                    updateAllStat(attacker);
+//                    displayGameBoard();
+                    out.println("You have " + attacker.getMovesRemaining() + " moves left.");
+                    return attacker;
                 } // end turn when no moves are left
 
             } catch (IndexOutOfBoundsException e) {
                 out.println(e);
             }
         }
-        return player;
+        return attacker;
     }
 
 
@@ -209,7 +250,7 @@ public class Game {
 
     // MAP UPDATES
 
-    private <T extends Player> T updateMapMarkerAfterMove(T player, char direction) {
+    private <T extends Player> T updateMapMarkerAfterMove(T player, char direction) throws IndexOutOfBoundsException {
         int[] nextRowCol = getTheRowColToMoveOnto(direction, player.getCoordX(), player.getCoordY());
 
         map.setElementPosition(nextRowCol[0], nextRowCol[1], player.getMarker());
@@ -279,8 +320,6 @@ public class Game {
         player.setOrDecrementMovesRemaining();
         updateMapMarkerAfterMove(player, direction);
         updateAllStat(player);
-        displayGameBoard();
-        out.println("You have " + player.getMovesRemaining() + " moves left.");
         return player.getMovesRemaining();
     }
 
@@ -353,52 +392,59 @@ public class Game {
     // END - PLAYER UPDATES
 
     // todo refactor this method
-    protected <T extends Player> T handleTurnOf(ArrayList<T> t, Human player) {
-        int[] rowColOfDefender = player.getCoordinates();
-        ArrayList<T> goblins = new ArrayList<>( t.subList(0, t.size())); // make a copy to iterate
+    protected <T extends Player> int moveMany(ArrayList<T> attackers, Human defender) {
+        ArrayList<T> attackersCopy = new ArrayList<>(attackers.subList(0, attackers.size())); // make a copy to iterate
 
-        for (T goblin : goblins) {
-            int movesLeft = goblin.getMovesPerTurn();
-            while (movesLeft > 0) {
-                int[] rowColOfAttacker = goblin.getCoordinates();
-                int rowDistanceToDefender = rowColOfAttacker[0] - rowColOfDefender[0];
-                int colDistanceToDefender = rowColOfAttacker[1] - rowColOfDefender[1];
+        for (T attacker : attackersCopy) {
+            int[] rowColDistanceToMarker = distanceToMarker(attacker, defender);
 
-                char rowDirection = directionToMove(rowDistanceToDefender)[0];
-                char colDirection = directionToMove(colDistanceToDefender)[1];
+//            char direction = ' ';
+//            if (rowColDistanceToMarker[0] > 0 &&  rowColDistanceToMarker[1] > 0) {
+//                // s & e
+//                if (Math.abs(rowColDistanceToMarker[0]) <  Math.abs(rowColDistanceToMarker[1])) {
+//                    direction = 's';
+//                } else {
+//                    direction = 'e';
+//                }
+//            } else if (rowColDistanceToMarker[0] > 0 &&  rowColDistanceToMarker[1] < 0) {
+//                // s & w
+//                if (Math.abs(rowColDistanceToMarker[0]) <  Math.abs(rowColDistanceToMarker[1])) {
+//                    direction = 's';
+//                } else {
+//                    direction = 'e';
+//                }
+//            } else if (rowColDistanceToMarker[0] < 0 &&  rowColDistanceToMarker[1] > 0) {
+//                // n & e
+//                if (Math.abs(rowColDistanceToMarker[0]) <  Math.abs(rowColDistanceToMarker[1])) {
+//                    direction = 'n';
+//                } else {
+//                    direction = 'w';
+//                }
+//            } else if (rowColDistanceToMarker[0] < 0 &&  rowColDistanceToMarker[1] < 0) {
+//                // n & w
+//                if (Math.abs(rowColDistanceToMarker[0]) <  Math.abs(rowColDistanceToMarker[1])) {
+//                    direction = 'n';
+//                } else {
+//                    direction = 'w';
+//                }
+//            }
 
-                // add collision detection of other goblins in path to take
-                if (Math.abs(rowDistanceToDefender) >= Math.abs(colDistanceToDefender)) {
-                    moveOne(rowDirection, rowColOfAttacker[0], rowColOfAttacker[1], goblin);
-//                    moveOne(goblin, rowDirection);
-                    movesLeft--;
-                } else if (Math.abs(rowDistanceToDefender) <= Math.abs(colDistanceToDefender)) {
-                    moveOne(colDirection, rowColOfAttacker[0], rowColOfAttacker[1], goblin);
-//                    moveOne(goblin, colDirection);
-                    movesLeft--;
-                }
+            if (Math.abs(rowColDistanceToMarker[0]) >= Math.abs(rowColDistanceToMarker[1])) {
 
-                // if coordinates equal after move, engage combat
-                rowColOfAttacker = goblin.getCoordinates();
-                if ( Arrays.equals(rowColOfAttacker, rowColOfDefender))  {
+                char[] rowDirectionOptions = directionToMove(rowColDistanceToMarker[0]);
+                moveOne(attacker, defender, rowDirectionOptions[0]);
+//                moveOne(attacker, defender, direction);
 
-                    engageCombatBetween(goblin, player);
-                    if (goblin.getHealth() <= 0) {
-                        removePlayer(getGoblins()); // remove player from original
-                        this.getMap().setElementPosition(player.getCoordX(), player.getCoordY(), player.getMarker());
-                        updateOneStat(StatType.HEALTH, player);
-                        updateOneStat(StatType.GOBLINS, player);
-                        movesLeft = 0;
-                    } else if (player.getHealth() <= 0) {
-                        updateOneStat(StatType.HEALTH, player);
-                        return (T) player;
-                    }
-                }
+            } else if (Math.abs(rowColDistanceToMarker[0]) <= Math.abs(rowColDistanceToMarker[1])) {
+
+                char[] colDirectionOptions = directionToMove(rowColDistanceToMarker[1]);
+                moveOne(attacker, defender, colDirectionOptions[1]);
+//                moveOne(attacker, defender, direction);
+
             }
-//            out.println(goblin.toString());
         }
-        displayGameBoard();
-        return null;
+
+        return attackers.size();
     }
 
     public void start() {
@@ -425,15 +471,20 @@ public class Game {
                     out.println("*** Game Over ***");
                     return;
                 } else {
-                    player = moveOne(player);
+                    player = moveOne(player, null, ' ');
+
                     out.println("----");
                     out.println("Human - end of turn ");
                     out.println("----");
                     out.println("Goblin's turn - press and enter any letter to continue");
+
                     keyPress();
+
                     out.println("----");
                     // handle goblin moves
-                    handleTurnOf(this.getGoblins(), player);
+
+                    moveMany(getGoblins(), player);
+
                     out.println("Goblin's - end of turn ");
                     out.println("----");
 
@@ -453,31 +504,5 @@ public class Game {
 
     }
 
-    // GETTERS
-    public Map getMap() {
-        return map;
-    }
-    public ArrayList<Human> getHumans() {
-        return humans;
-    }
-    public ArrayList<Goblin> getGoblins() {
-        return goblins;
-    }
-
-    // END - GETTERS
-
-
-    // SETTERS
-    public void setMap(Map map) {
-        this.map = map;
-    }
-    private void setHumans(ArrayList<Human> humans) {
-        this.humans = humans;
-    }
-    private void setGoblins(ArrayList<Goblin> goblins) {
-        this.goblins = goblins;
-    }
-
-    // END - SETTERS
 
 }

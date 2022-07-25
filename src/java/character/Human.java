@@ -6,9 +6,10 @@ public class Human extends Player {
     public Human() {
         super();
         setMovesPerTurn(2);
+        setOrDecrementMovesRemaining();
         setHealth(12);
         setMaxHealth(getHealth());
-        this.setMarker('H');
+        setMarker('H');
     }
 
     public Human(char marker, double health, double strength, double defense, int movesPerTurn, int coordX, int coordY) {
