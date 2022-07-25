@@ -65,7 +65,7 @@
     &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;
   }
 }</component>
-  <component name="RunManager" selected="Application.Main">
+  <component name="RunManager" selected="JUnit.GridTests">
     <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="Main" />
       <module name="humans_vs_goblins" />
@@ -113,10 +113,10 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="JUnit.GridTests" />
         <item itemvalue="Application.Main" />
         <item itemvalue="JUnit.GameTests.engageCombatBetweenTest" />
         <item itemvalue="JUnit.GameTests" />
-        <item itemvalue="JUnit.GridTests" />
         <item itemvalue="JUnit.GameTests.initPlayersTest" />
       </list>
     </recent_temporary>

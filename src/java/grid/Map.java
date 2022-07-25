@@ -1,5 +1,9 @@
+package grid;
+
+import grid.Grid;
+
 public class Map extends Grid {
-    Map() {
+    public Map() {
         super();
     }
 

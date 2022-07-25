@@ -1,5 +1,7 @@
 
 import character.*;
+import grid.Map;
+
 import java.util.*;
 
 import static java.lang.System.*;
@@ -12,7 +14,7 @@ public class Game {
     enum StatType {
         HEALTH, STRENGTH, DEFENSE, MOVE_DISTANCE, GOBLINS, MOVES_LEFT
     }
-    private Map map;
+    private grid.Map map;
     private ArrayList<Human> humans;
     private ArrayList<Goblin> goblins;
 
@@ -32,7 +34,7 @@ public class Game {
 
 
     // GETTERS
-    public Map getMap() {
+    public grid.Map getMap() {
         return map;
     }
     public ArrayList<Human> getHumans() {
@@ -46,7 +48,7 @@ public class Game {
 
 
     // SETTERS
-    public void setMap(Map map) {
+    public void setMap(grid.Map map) {
         this.map = map;
     }
     private void setHumans(ArrayList<Human> humans) {
@@ -82,7 +84,7 @@ public class Game {
 
     // SETUP
 
-    private <T extends Player> void setPlayerOnTheMap(ArrayList<T> T, Map map) {
+    private <T extends Player> void setPlayerOnTheMap(ArrayList<T> T, grid.Map map) {
         int col, row, elementInRowCol,
                 rowBoundary = map.rowHeight(),
                 colBoundary = map.colWidth() - map.colOffset();
@@ -91,7 +93,7 @@ public class Game {
         int playerIndex = 0;
         while(playerIndex < T.size()) {
 
-            col = Map.getRandomWithin(colBoundary); // get the current player
+            col = grid.Map.getRandomWithin(colBoundary); // get the current player
             row = Map.getRandomWithin(rowBoundary); // get random x and y
             elementInRowCol = map.getElementAtPosition(row, col); // get current element at pos
 
