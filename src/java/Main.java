@@ -1,11 +1,28 @@
+
+import javax.swing.*;
+
 public class Main {
+
     public static void main(String[] args) {
 
-        Game game = new Game();
-        System.out.println(game.getMap().displayTheHeader());
-        System.out.println(game.getMap().displayTheGrid(game.getMap().getGrid()));
-        game.start();
+        // Set up JPanel Frame
+        JFrame window = new JFrame();
+        window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        window.setResizable(false);
+        window.setTitle("Humans vs Goblins");
 
+        // Add a game panel
+        GamePanel gamePanel = new GamePanel();
+
+        // add the game panel and place into the JFrame window
+        window.add(gamePanel);
+        // pack the window into the configured / set screen size
+        window.pack();
+        window.setLocationRelativeTo(null);
+        window.setVisible(true);
+
+        // run the game loop
+        gamePanel.startGameThread();
 
     }
 
