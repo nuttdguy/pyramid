@@ -1,3 +1,5 @@
+package main;
+
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
@@ -16,9 +18,9 @@ public class KeyHandler implements KeyListener {
 
         switch (code) {
             case KeyEvent.VK_W, KeyEvent.VK_UP -> upPress = true;
-            case KeyEvent.VK_S, KeyEvent.VK_DOWN -> rightPress = true;
+            case KeyEvent.VK_S, KeyEvent.VK_DOWN -> downPress = true;
             case KeyEvent.VK_A, KeyEvent.VK_LEFT -> leftPress = true;
-            case KeyEvent.VK_D, KeyEvent.VK_RIGHT -> downPress = true;
+            case KeyEvent.VK_D, KeyEvent.VK_RIGHT -> rightPress = true;
             default -> invalidPress = true;
         }
 
@@ -30,9 +32,9 @@ public class KeyHandler implements KeyListener {
 
         switch (code) {
             case KeyEvent.VK_W, KeyEvent.VK_UP -> upPress = false;
-            case KeyEvent.VK_S, KeyEvent.VK_DOWN -> rightPress = false;
+            case KeyEvent.VK_S, KeyEvent.VK_DOWN -> downPress = false;
             case KeyEvent.VK_A, KeyEvent.VK_LEFT -> leftPress = false;
-            case KeyEvent.VK_D, KeyEvent.VK_RIGHT -> downPress = false;
+            case KeyEvent.VK_D, KeyEvent.VK_RIGHT -> rightPress = false;
             default -> invalidPress = false;
         }
 

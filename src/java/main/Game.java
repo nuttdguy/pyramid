@@ -1,3 +1,4 @@
+package main;
 
 import character.*;
 import grid.Map;
@@ -18,7 +19,7 @@ public class Game {
     private ArrayList<Human> humans;
     private ArrayList<Goblin> goblins;
 
-    Game() {
+    public Game() {
         setMap(new Map());
         setGoblins(this.initPlayers(PlayerType.GOBLIN, 8));
         setHumans(this.initPlayers(PlayerType.HUMAN, 1));
@@ -457,7 +458,7 @@ public class Game {
                 player = moveOne(player);
                 if (player.getHealth() < 0) {
                     out.println("Defeat - Goblin's defeated the human!");
-                    out.println("*** Game Over ***");
+                    out.println("*** main.Game Over ***");
                     return;
                 } else {
                     displayEndOfTurn("Human", "Goblin");
@@ -466,7 +467,7 @@ public class Game {
                 moveMany(getGoblins());
                 if ( this.getGoblins().isEmpty() ) {
                     out.println("Victory - Human has defeated the Goblin's");
-                    out.println("*** Game Over ***");
+                    out.println("*** main.Game Over ***");
                     return;
                 } else {
                     displayEndOfTurn("Goblin", "Human");

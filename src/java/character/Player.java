@@ -1,5 +1,7 @@
 package character;
 
+import java.awt.image.BufferedImage;
+
 public abstract class Player {
 
     private double health;
@@ -10,18 +12,18 @@ public abstract class Player {
     private int movesRemaining;
     private int coordX;
     private int coordY;
+    private int pixelSpeed = 4;
     private char marker;
     private int id = 0;
 
+    public BufferedImage up1, up2 , down1, down2, left1, left2, right1, right2;
+    public String direction;
+
+    public int spriteCounter = 0;
+    public int spriteNum = 1;
+
     Player() {
-        setId();
-
-        setHealth(10);
-        setStrength(10);
-        setDefense(10);
-
-        setMovesPerTurn(1);
-        setCoordinates(0, 0);
+        setDefaults();;
     }
 
     Player(char marker, double health, double strength, double defense, int movesPerTurn, int coordX, int coordY) {
@@ -37,12 +39,22 @@ public abstract class Player {
         setCoordinates(coordX, coordY);
     }
 
+    public void setDefaults() {
+        setId();
+
+        setHealth(10);
+        setStrength(10);
+        setDefense(10);
+
+        setMovesPerTurn(1);
+        setCoordinates(10, 10);
+    }
+
 
     // METHODS
 
     public abstract double attack();
     public abstract double defend();
-
 
     // GETTERS //
 
@@ -90,6 +102,45 @@ public abstract class Player {
         return this.coordY;
     }
 
+    public int getPixelSpeed() {
+        return pixelSpeed;
+    }
+
+    public BufferedImage getUp1() {
+        return up1;
+    }
+
+    public BufferedImage getUp2() {
+        return up2;
+    }
+
+    public BufferedImage getDown1() {
+        return down1;
+    }
+
+    public BufferedImage getDown2() {
+        return down2;
+    }
+
+    public BufferedImage getLeft1() {
+        return left1;
+    }
+
+    public BufferedImage getLeft2() {
+        return left2;
+    }
+
+    public BufferedImage getRight1() {
+        return right1;
+    }
+
+    public BufferedImage getRight2() {
+        return right2;
+    }
+
+    public String getDirection() {
+        return direction;
+    }
 
     // SETTERS //
 
@@ -134,4 +185,47 @@ public abstract class Player {
         this.coordY = y;
     }
 
+    public void setCoordX(int coordX) {
+        this.coordX = coordX;
+    }
+
+    public void setCoordY(int coordY) {
+        this.coordY = coordY;
+    }
+
+    public void setUp1(BufferedImage up1) {
+        this.up1 = up1;
+    }
+
+    public void setUp2(BufferedImage up2) {
+        this.up2 = up2;
+    }
+
+    public void setDown1(BufferedImage down1) {
+        this.down1 = down1;
+    }
+
+    public void setDown2(BufferedImage down2) {
+        this.down2 = down2;
+    }
+
+    public void setLeft1(BufferedImage left1) {
+        this.left1 = left1;
+    }
+
+    public void setLeft2(BufferedImage left2) {
+        this.left2 = left2;
+    }
+
+    public void setRight1(BufferedImage right1) {
+        this.right1 = right1;
+    }
+
+    public void setRight2(BufferedImage right2) {
+        this.right2 = right2;
+    }
+
+    public void setDirection(String direction) {
+        this.direction = direction;
+    }
 }

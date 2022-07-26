@@ -1,6 +1,7 @@
 
 
 import character.*;
+import main.Game;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

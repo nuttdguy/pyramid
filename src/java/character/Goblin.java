@@ -1,5 +1,8 @@
 package character;
 
+import main.GamePanel;
+import main.KeyHandler;
+
 public class Goblin extends Player {
 
     public Goblin() {
