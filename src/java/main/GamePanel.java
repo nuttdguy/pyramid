@@ -1,15 +1,18 @@
 package main;
 
+import character.Entity;
+import character.Goblin;
 import character.Human;
 import tile.TileManager;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
 
 public class GamePanel extends JPanel implements Runnable {
 
-    // set and configure the game panel dimensions
+    // set and configure the game panel screen dimensions
     final int originalTileSize = 16;
     final int scale = 3;
     public final int tileSize  = originalTileSize * scale;
@@ -18,13 +21,25 @@ public class GamePanel extends JPanel implements Runnable {
     public final int screenWidth = tileSize * maxScreenCol;
     public final int screenHeight = tileSize * maxScreenRow;
 
+    // world settings for larger map
+    public final int maxWorldCol = 50;
+    public final int maxWorldRow = 50;
+    public final int worldWidth = tileSize * maxWorldCol;
+    public final int worldHeight = tileSize * maxWorldRow;
+
+    // fps
     double FPS = 60;
 
     Thread gameThread;
     KeyHandler keyHandler = new KeyHandler();
-    Human player = new Human(this, keyHandler);
-    TileManager tileM = new TileManager(this);
+    public TileManager tileM = new TileManager(this);
     public CollisionChecker checker = new CollisionChecker(this);
+
+    // entity classes
+    public Human player = new Human(this, keyHandler);
+    public Goblin[] goblins = new Goblin[10];
+//    ArrayList<Entity> entityList = new ArrayList<>();
+//    Goblin goblin = new Goblin(this, keyHandler);
 
 
     public GamePanel() {
@@ -38,6 +53,9 @@ public class GamePanel extends JPanel implements Runnable {
         // sets whether the events should be focused, must be true, otherwise key events won't respond
         this.setFocusable(true);
 
+        for (int i = 0; i < goblins.length; i++) {
+            goblins[i] = new Goblin(this, keyHandler);
+        }
     }
 
     public void startGameThread() {
@@ -118,7 +136,9 @@ public class GamePanel extends JPanel implements Runnable {
 
 
     public void update() {
+
         player.update();
+
     }
 
     public void paintComponent(Graphics g) {
@@ -128,7 +148,11 @@ public class GamePanel extends JPanel implements Runnable {
         // use the graphics2D to get more functions
         Graphics2D g2 = (Graphics2D) g;
 
+        // draw the map tiles on layer 1
         tileM.draw(g2);
+
+        // draws other tiles to place on to of layer 1
+
         player.draw(g2);
 
         // after paint, dispose the graphics2D instance

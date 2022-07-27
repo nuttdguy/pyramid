@@ -85,7 +85,7 @@ public class Game {
 
     // SETUP
 
-    private <T extends Player> void setPlayerOnTheMap(ArrayList<T> T, grid.Map map) {
+    private <T extends Entity> void setPlayerOnTheMap(ArrayList<T> T, grid.Map map) {
         int col, row, elementInRowCol,
                 rowBoundary = map.rowHeight(),
                 colBoundary = map.colWidth() - map.colOffset();
@@ -117,7 +117,7 @@ public class Game {
 
     }
 
-    private <T extends Player> ArrayList<T> initPlayers(PlayerType playerType, int qty) {
+    private <T extends Entity> ArrayList<T> initPlayers(PlayerType playerType, int qty) {
         ArrayList<T> players = new ArrayList<>();
 
         while (qty > 0) {
@@ -144,7 +144,7 @@ public class Game {
         out.println(map.displayTheGrid(map.getGrid()));
     }
 
-    private <T extends Player> void updateOneStat(StatType type, T player) {
+    private <T extends Entity> void updateOneStat(StatType type, T player) {
         int col = this.map.colWidth() - this.map.colOffset() + 3;
         int row = 10; // set default row to goblin count
         String stat = "";
@@ -157,7 +157,7 @@ public class Game {
         updateStatFields(col, row, stat);
     }
 
-    private <T extends Player> String getStatValueToUpdate(StatType type, T player) {
+    private <T extends Entity> String getStatValueToUpdate(StatType type, T player) {
         return  type.equals(StatType.HEALTH) ? String.valueOf(player.getHealth()) :
                 type.equals(StatType.STRENGTH) ? String.valueOf(player.getStrength()) :
                 type.equals(StatType.DEFENSE) ? String.valueOf(player.getDefense()) :
@@ -166,7 +166,7 @@ public class Game {
                 String.valueOf(getGoblins().size());
     }
 
-    private <T extends Player> void updateAllStat(T player) {
+    private <T extends Entity> void updateAllStat(T player) {
         for (StatType stat : StatType.values()) {
             updateOneStat(stat, player);
         }
@@ -194,7 +194,7 @@ public class Game {
 
     // MOVEMENT
 
-    private <T extends Player> int[] distanceToMarker(T attacker, T defender) {
+    private <T extends Entity> int[] distanceToMarker(T attacker, T defender) {
         // get the directional pair which depends on whether the attacker is north west or south east of defender
         int[] rowColOfAttacker = attacker.getCoordinates();
         int[] rowColOfDefender = defender.getCoordinates();
@@ -203,7 +203,7 @@ public class Game {
         return new int[]{rowDistanceToDefender, colDistanceToDefender};
     }
 
-    private <T extends Player> char directionToMove(T attacker, T defender) {
+    private <T extends Entity> char directionToMove(T attacker, T defender) {
         int rowDistance = distanceToMarker(attacker, defender)[0];
         int colDistance = distanceToMarker(attacker, defender)[1];
         int shortestDistance = Math.min(Math.abs(rowDistance), Math.abs(colDistance));
@@ -216,7 +216,7 @@ public class Game {
         return colDirection;
     }
 
-    protected <T extends Player> T moveOne(T attacker) {
+    protected <T extends Entity> T moveOne(T attacker) {
         int movesLeft = attacker.getMovesPerTurn();
 
         while (movesLeft > 0) {
@@ -280,7 +280,7 @@ public class Game {
         return attacker;
     }
 
-    private <T extends Player> int moveMany(ArrayList<T> attackers) {
+    private <T extends Entity> int moveMany(ArrayList<T> attackers) {
         ArrayList<T> attackersCopy = new ArrayList<>(attackers.subList(0, attackers.size())); // make a copy to iterate
 
         for (T attacker : attackersCopy) {
@@ -296,10 +296,10 @@ public class Game {
 
     // MAP UPDATES
 
-    private <T extends Player> T updateMapMarkerAfterMove(T player, char direction) throws IndexOutOfBoundsException {
-        int[] nextRowCol = getTheRowColToMoveOnto(direction, player.getCoordX(), player.getCoordY());
+    private <T extends Entity> T updateMapMarkerAfterMove(T player, char direction) throws IndexOutOfBoundsException {
+        int[] nextRowCol = getTheRowColToMoveOnto(direction, player.getWorldX(), player.getWorldY());
 
-        map.setElementPosition(player.getCoordX(), player.getCoordY(), map.defaultMarker()); // set old marker
+        map.setElementPosition(player.getWorldX(), player.getWorldY(), map.defaultMarker()); // set old marker
         map.setElementPosition(nextRowCol[0], nextRowCol[1], player.getMarker()); // set new marker
         player.setCoordinates(nextRowCol[0], nextRowCol[1]); // set the new position fpr player
         return player;
@@ -329,17 +329,17 @@ public class Game {
 
     // COMBAT
 
-    private <T extends Player> T getPlayer(ArrayList<T> playerList, char chosenDirection, int row, int col) {
+    private <T extends Entity> T getPlayer(ArrayList<T> playerList, char chosenDirection, int row, int col) {
         int[] rowCol = getTheRowColToMoveOnto(chosenDirection, row, col);
         for (T player : playerList) {
-            if (player.getCoordX() == rowCol[0] && player.getCoordY() == rowCol[1]) {
+            if (player.getWorldX() == rowCol[0] && player.getWorldY() == rowCol[1]) {
                 return player;
             }
         }
         return null;
     }
 
-    private <T extends Player> T engageCombatBetween(T attacker, T defender) {
+    private <T extends Entity> T engageCombatBetween(T attacker, T defender) {
 
         if (attacker == null || defender == null) {
             return attacker;
@@ -361,14 +361,14 @@ public class Game {
         return defender.getHealth() <= 0 ?  defender : attacker;
     }
 
-    private <T extends Player> void removeCombatLoser(T player) {
+    private <T extends Entity> void removeCombatLoser(T player) {
         switch (player.getName()) {
             case "Goblin" -> getGoblins().remove(player);
             case "Human" -> getHumans().remove(player);
         }
     }
 
-    private <T extends Player> int endMove(T player, char direction) {
+    private <T extends Entity> int endMove(T player, char direction) {
         player.setOrDecrementMovesRemaining();
         updateMapMarkerAfterMove(player, direction);
         updateAllStat(player);
@@ -376,7 +376,7 @@ public class Game {
         return player.getMovesRemaining();
     }
 
-    private <T extends Player> double attack(T attacker, T defender) {
+    private <T extends Entity> double attack(T attacker, T defender) {
         double defenderHealth = defender.getHealth();
         double damageByAttacker = attacker.attack();
 
@@ -391,7 +391,7 @@ public class Game {
         return defender.getHealth();
     }
 
-    private <T extends Player> double defend(T defender, T attacker) {
+    private <T extends Entity> double defend(T defender, T attacker) {
         double attackerHealth = attacker.getHealth();
         double damageByDefender = defender.attack();
 
@@ -422,7 +422,7 @@ public class Game {
 
     // PLAYER UPDATES
 
-    private <T extends Player> void replenishHealthOf(T player) {
+    private <T extends Entity> void replenishHealthOf(T player) {
         if (player.getHealth() < player.getMaxHealth() && player.getHealth() > 0) {
 
             double health = player.defend();

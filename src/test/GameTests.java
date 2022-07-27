@@ -93,7 +93,7 @@ public class GameTests {
 
     }
 
-    private <T extends Player> int[][] getMarkerPositionOfHelper(ArrayList<T> t) {
+    private <T extends Entity> int[][] getMarkerPositionOfHelper(ArrayList<T> t) {
         char[][] land = game.getMap().getGrid();
         String tName = t.get(0).getClass().getName();
         char markerToCheck = tName.equals("character.Goblin") ? 'G' : 'H';

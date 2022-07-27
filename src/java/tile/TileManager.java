@@ -20,11 +20,16 @@ public class TileManager {
         this.gp = gp;
 
         tile = new Tile[10];
-        mapTile = new int[gp.maxScreenCol][gp.maxScreenRow];
+        // set the size of the map
+        mapTile = new int[gp.maxWorldCol][gp.maxWorldRow];
 
         loadTileImage("/res/tile/tile_1.png", 0, false);
         loadTileImage("/res/tile/tile_2.png", 1, true);
-        loadMap("/res/map/map_1.txt");
+        loadTileImage("/res/tile/tile_3.png", 2, false);
+        loadTileImage("/res/tile/tile_4.png", 3, true);
+
+        // load the map
+        loadMap("/res/map/map_2.txt");
     }
 
     // load the tile images from resource package
@@ -39,7 +44,7 @@ public class TileManager {
         }
     }
 
-    // loads the map from the resource package
+    // loads the map tiles from a map file
     private void loadMap(String filePath) {
         try {
             InputStream is = getClass().getResourceAsStream(filePath);
@@ -49,12 +54,12 @@ public class TileManager {
             int row = 0;
 
             // iterate through the map file of max row and columns
-            while (col < gp.maxScreenCol && row < gp.maxScreenRow) {
+            while (col < gp.maxWorldCol && row < gp.maxWorldRow) {
 
                 // read the current line of the file
                 String line = br.readLine();
 
-                while (col < gp.maxScreenCol) {
+                while (col < gp.maxWorldCol) {
                     // split the current line and add each to an array
                     String[] numbers = line.split("");
                     int num = Integer.parseInt(numbers[col]);
@@ -63,7 +68,7 @@ public class TileManager {
                     col++;
                 }
                 // when max columns is reached, reset col counter and increment row
-                if (col == gp.maxScreenCol) {
+                if (col == gp.maxWorldCol) {
                     col = 0;
                     row++;
                 }
@@ -76,31 +81,42 @@ public class TileManager {
     }
 
 
+    // draws the viewable map screen
     public void draw(Graphics2D g2) {
 
-        int row = 0;
-        int col = 0;
-        int x = 0;
-        int y = 0;
+        int worldCol = 0;
+        int worldRow = 0;
 
-        // draw the map of max column width and row height
-        while (col < gp.maxScreenCol && row < gp.maxScreenRow) {
-            // get the number value of the col and row
-            int mapTileNum = mapTile[col][row];
+        // draw the map of max column width and worldCol height
+        while (worldCol < gp.maxWorldCol && worldRow < gp.maxWorldRow) {
+            // get the number value of the worldRow and worldCol
+            int mapTileNum = mapTile[worldCol][worldRow];
 
-            // draw the image that is corresponds to the tile position, i.e. 0 == tile at position 0
-            g2.drawImage(tile[mapTileNum].image, x, y, gp.tileSize, gp.tileSize, null);
-            // increment the col
-            col++;
-            // gets the tiles next column starting position
-            x += gp.tileSize;
+            // Start at the corner of the world map
+            int worldX = worldCol * gp.tileSize;
+            int worldY = worldRow * gp.tileSize;
+            // locate the position of the player from the starting world map xy and then subtract players xy location
+            // to determine where to begin drawing the viewable area of the map
+            int screenX = worldX - gp.player.getWorldX() + gp.player.screenX;
+            int screenY = worldY - gp.player.getWorldY() + gp.player.screenY;
 
-            // when max cols, then result col and x and increment row and y
-            if (col == gp.maxScreenCol) {
-                col = 0;
-                x = 0;
-                row++;
-                y += gp.tileSize;
+            // condition checks whether tile to be drawn is within the bounds of the players viewable screen size
+            if (worldX + gp.tileSize > gp.player.worldX - gp.player.screenX &&
+                worldX - gp.tileSize < gp.player.worldX + gp.player.screenX &&
+                worldY + gp.tileSize > gp.player.worldY - gp.player.screenY &&
+                worldY - gp.tileSize < gp.player.worldY + gp.player.screenY ) {
+                // draw the image that is corresponds to the tile position, i.e. 0 == tile at position 0
+                g2.drawImage(tile[mapTileNum].image, screenX, screenY, gp.tileSize, gp.tileSize, null);
+            }
+
+            // increment the worldRow
+            worldCol++;
+
+
+            // when max cols, then result worldRow and x and increment worldCol and y
+            if (worldCol == gp.maxWorldCol) {
+                worldCol = 0;
+                worldRow++;
             }
 
         }

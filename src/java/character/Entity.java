@@ -3,7 +3,7 @@ package character;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-public abstract class Player {
+public abstract class Entity {
 
     private double health;
     private double maxHealth;
@@ -11,13 +11,12 @@ public abstract class Player {
     private double defense;
     private int movesPerTurn;
     private int movesRemaining;
-    private int coordX;
-    private int coordY;
-    private int speed = 4;
     private char marker;
     private int id = 0;
 
-
+    public int worldX;
+    public int worldY;
+    public int speed;
     public BufferedImage up1, up2 , down1, down2, left1, left2, right1, right2;
     public String direction;
 
@@ -27,11 +26,11 @@ public abstract class Player {
     public boolean collisionOn;
 
 
-    Player() {
+    Entity() {
         setDefaults();;
     }
 
-    Player(char marker, double health, double strength, double defense, int movesPerTurn, int coordX, int coordY) {
+    Entity(char marker, double health, double strength, double defense, int movesPerTurn, int worldX, int worldY) {
         setId();
         setMarker(marker);
 
@@ -41,18 +40,21 @@ public abstract class Player {
         setDefense(defense);
 
         setMovesPerTurn(movesPerTurn);
-        setCoordinates(coordX, coordY);
+        setCoordinates(worldX, worldY);
     }
 
     public void setDefaults() {
         setId();
+        setMarker(marker);
 
-        setHealth(10);
-        setStrength(10);
-        setDefense(10);
+        setHealth(health);
+        setMaxHealth(getHealth());
+        setStrength(strength);
+        setDefense(defense);
 
-        setMovesPerTurn(1);
-        setCoordinates(10, 10);
+        setMovesPerTurn(movesPerTurn);
+        setCoordinates(worldX, worldY);
+
     }
 
 
@@ -96,15 +98,15 @@ public abstract class Player {
     }
 
     public int[] getCoordinates() {
-        return new int[] {this.getCoordX(), this.getCoordY()};
+        return new int[] {this.getWorldX(), this.getWorldY()};
     }
 
-    public int getCoordX() {
-        return this.coordX;
+    public int getWorldX() {
+        return this.worldX;
     }
 
-    public int getCoordY() {
-        return this.coordY;
+    public int getWorldY() {
+        return this.worldY;
     }
 
     public int getSpeed() {
@@ -186,16 +188,16 @@ public abstract class Player {
     }
 
     public void setCoordinates(int x, int y) {
-        this.coordX = x;
-        this.coordY = y;
+        this.worldX = x;
+        this.worldY = y;
     }
 
-    public void setCoordX(int coordX) {
-        this.coordX = coordX;
+    public void setWorldX(int worldX) {
+        this.worldX = worldX;
     }
 
-    public void setCoordY(int coordY) {
-        this.coordY = coordY;
+    public void setWorldY(int worldY) {
+        this.worldY = worldY;
     }
 
     public void setUp1(BufferedImage up1) {

@@ -9,14 +9,18 @@ import java.io.IOException;
 import java.text.DecimalFormat;
 
 
-public class Human extends Player {
+public class Human extends Entity {
 
     KeyHandler keyH;
     GamePanel gp;
 
-    // todo correct the use of set methods in the constructor
+    public int screenX;
+    public int screenY;
+
     public Human() {
         super();
+        setDefaults();
+
         setMovesPerTurn(2);
         setOrDecrementMovesRemaining();
         setHealth(12);
@@ -25,27 +29,36 @@ public class Human extends Player {
     }
 
     public Human(GamePanel gp, KeyHandler keyH) {
-        this.gp = gp;
-        this.keyH = keyH;
-        loadPlayerImages();
-        setDirection("down");
-        setCoordinates(50, 50);
-        solidArea = new Rectangle(8, 16, 32, 32); // rectangle used for collision detection
+        super();
+        setDefaults(gp, keyH);
 
-        setMovesPerTurn(2);
-        setOrDecrementMovesRemaining();
-        setHealth(12);
-        setMaxHealth(getHealth());
-        setMarker('H');
     }
-
 
     public Human(char marker, double health, double strength, double defense, int movesPerTurn, int coordX, int coordY) {
         super(marker, health, strength, defense, movesPerTurn, coordX, coordY);
+        setDefaults(gp, keyH);
     }
 
+    public void setDefaults(GamePanel gp, KeyHandler keyH) {
+        this.gp = gp;
+        this.keyH = keyH;
 
-    public void loadPlayerImages() {
+        // sets the character at the center of the screen and offsets by half the tile size
+        screenX = gp.screenWidth/2 - (gp.tileSize/2);
+        screenY = gp.screenHeight/2 - (gp.tileSize/2);
+        // positions the entity at the center of the world map
+        worldX = gp.tileSize * 21;
+        worldY = gp.tileSize * 23;
+        speed = 4;
+        setDirection("down");
+        solidArea = new Rectangle(8, 16, 32, 32); // rectangle used for collision detection
+
+        // load images from file
+        loadHumanImages();
+    }
+
+    // SETUP
+    public void loadHumanImages() {
         try {
 
             setUp1(ImageIO.read(getClass().getResourceAsStream("/res/character/h1_up_1.png")));
@@ -86,10 +99,10 @@ public class Human extends Player {
             // when the collision is false, then player can move in the selected direction
             if (!collisionOn) {
                 switch (direction) {
-                    case "up" -> setCoordY(getCoordY() - getSpeed());
-                    case "down" -> setCoordY(getCoordY() + getSpeed());
-                    case "left" -> setCoordX(getCoordX() - getSpeed());
-                    case "right" -> setCoordX(getCoordX() + getSpeed());
+                    case "up" -> setWorldY(getWorldY() - getSpeed());
+                    case "down" -> setWorldY(getWorldY() + getSpeed());
+                    case "left" -> setWorldX(getWorldX() - getSpeed());
+                    case "right" -> setWorldX(getWorldX() + getSpeed());
                 }
             }
 
@@ -149,7 +162,7 @@ public class Human extends Player {
         }
 
         // draws the image at xy location of height and width
-        g2.drawImage(image, getCoordX(), getCoordY(), gp.tileSize, gp.tileSize, null);
+        g2.drawImage(image, screenX, screenY, gp.tileSize, gp.tileSize, null);
     }
 
 
@@ -183,8 +196,8 @@ public class Human extends Player {
                 ", defense=" + this.getHealth() +
                 ", movesRemaining=" + this.getMovesRemaining() +
                 ", maxHealth=" + this.getMaxHealth() +
-                ", row position=" + this.getCoordX() +
-                ", col position=" + this.getCoordY() + '}';
+                ", row position=" + this.getWorldX() +
+                ", col position=" + this.getWorldY() + '}';
     }
 
 }
