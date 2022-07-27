@@ -12,8 +12,8 @@ import java.io.InputStreamReader;
 public class TileManager {
 
     GamePanel gp;
-    Tile[] tile;
-    int[][] mapTile;
+    public Tile[] tile;
+    public int[][] mapTile;
 
 
     public TileManager(GamePanel gp) {

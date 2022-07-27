@@ -1,5 +1,6 @@
 package character;
 
+import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public abstract class Player {
@@ -12,15 +13,19 @@ public abstract class Player {
     private int movesRemaining;
     private int coordX;
     private int coordY;
-    private int pixelSpeed = 4;
+    private int speed = 4;
     private char marker;
     private int id = 0;
+
 
     public BufferedImage up1, up2 , down1, down2, left1, left2, right1, right2;
     public String direction;
 
     public int spriteCounter = 0;
     public int spriteNum = 1;
+    public Rectangle solidArea;
+    public boolean collisionOn;
+
 
     Player() {
         setDefaults();;
@@ -102,8 +107,8 @@ public abstract class Player {
         return this.coordY;
     }
 
-    public int getPixelSpeed() {
-        return pixelSpeed;
+    public int getSpeed() {
+        return speed;
     }
 
     public BufferedImage getUp1() {

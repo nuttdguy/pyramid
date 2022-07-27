@@ -27,9 +27,10 @@ public class Human extends Player {
     public Human(GamePanel gp, KeyHandler keyH) {
         this.gp = gp;
         this.keyH = keyH;
-        getPlayerImage();
+        loadPlayerImages();
         setDirection("down");
         setCoordinates(50, 50);
+        solidArea = new Rectangle(8, 16, 32, 32); // rectangle used for collision detection
 
         setMovesPerTurn(2);
         setOrDecrementMovesRemaining();
@@ -44,17 +45,17 @@ public class Human extends Player {
     }
 
 
-    public void getPlayerImage() {
+    public void loadPlayerImages() {
         try {
 
-            setUp1(ImageIO.read(getClass().getResourceAsStream("/res/character/human_1.png")));
-            setUp2(ImageIO.read(getClass().getResourceAsStream("/res/character/human_1.png")));
-            setDown1(ImageIO.read(getClass().getResourceAsStream("/res/character/human_1.png")));
-            setDown2(ImageIO.read(getClass().getResourceAsStream("/res/character/human_1.png")));
-            setLeft1(ImageIO.read(getClass().getResourceAsStream("/res/character/human_1.png")));
-            setLeft2(ImageIO.read(getClass().getResourceAsStream("/res/character/human_1.png")));
-            setRight1(ImageIO.read(getClass().getResourceAsStream("/res/character/human_1.png")));
-            setRight2(ImageIO.read(getClass().getResourceAsStream("/res/character/human_1.png")));
+            setUp1(ImageIO.read(getClass().getResourceAsStream("/res/character/h1_up_1.png")));
+            setUp2(ImageIO.read(getClass().getResourceAsStream("/res/character/h1_up_2.png")));
+            setDown1(ImageIO.read(getClass().getResourceAsStream("/res/character/h1_down_1.png")));
+            setDown2(ImageIO.read(getClass().getResourceAsStream("/res/character/h1_down_2.png")));
+            setLeft1(ImageIO.read(getClass().getResourceAsStream("/res/character/h1_left_1.png")));
+            setLeft2(ImageIO.read(getClass().getResourceAsStream("/res/character/h1_left_2.png")));
+            setRight1(ImageIO.read(getClass().getResourceAsStream("/res/character/h1_right_1.png")));
+            setRight2(ImageIO.read(getClass().getResourceAsStream("/res/character/h1_right_2.png")));
 
         } catch (IOException ioe) {
             ioe.printStackTrace();
@@ -69,19 +70,30 @@ public class Human extends Player {
 
             // wrap logic inside when animation at all times is not the desired behavior
             if (keyH.upPress) {
+                setDirection("up");
+            } else if (keyH.downPress) {
                 setDirection("down");
-                setCoordY(getCoordY() - getPixelSpeed());
-            } else if (keyH.rightPress) {
-                setDirection("right");
-                setCoordX(getCoordX() + getPixelSpeed());
             } else if (keyH.leftPress) {
                 setDirection("left");
-                setCoordX(getCoordX() - getPixelSpeed());
-            } else {
-                setDirection("up");
-                setCoordY(getCoordY() + getPixelSpeed());
+            } else if (keyH.rightPress) {
+                setDirection("right");
             }
 
+            // always want to the turn the collision off before checking
+            collisionOn = false;
+            gp.checker.checkTile(this);
+
+            // when the collision is false, then player can move in the selected direction
+            if (!collisionOn) {
+                switch (direction) {
+                    case "up" -> setCoordY(getCoordY() - getSpeed());
+                    case "down" -> setCoordY(getCoordY() + getSpeed());
+                    case "left" -> setCoordX(getCoordX() - getSpeed());
+                    case "right" -> setCoordX(getCoordX() + getSpeed());
+                }
+            }
+
+            // sprite animation
             // changes the sprite every 10 frames, or six times since FPS is set to 60
             spriteCounter++;
             if (spriteCounter > 10) {
@@ -140,6 +152,8 @@ public class Human extends Player {
         g2.drawImage(image, getCoordX(), getCoordY(), gp.tileSize, gp.tileSize, null);
     }
 
+
+    // OTHER METHODS
     private double characterFactor() { return (Math.random() * 2);}
 
     private double regenerateHealth() {
