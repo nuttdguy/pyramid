@@ -24,6 +24,8 @@ public class Main {
         window.setLocationRelativeTo(null);
         window.setVisible(true);
 
+        // set up game objects and assets before the game starts
+        gamePanel.setupGame();
         // run the game loop
         gamePanel.startGameThread();
 

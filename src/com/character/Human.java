@@ -16,6 +16,7 @@ public class Human extends Entity {
 
     public int screenX;
     public int screenY;
+    public int log;
 
     public Human() {
         super();
@@ -44,14 +45,17 @@ public class Human extends Entity {
         this.keyH = keyH;
 
         // sets the character at the center of the screen and offsets by half the tile size
-        screenX = gp.screenWidth/2 - (gp.tileSize/2);
-        screenY = gp.screenHeight/2 - (gp.tileSize/2);
+        this.screenX = gp.screenWidth/2 - (gp.tileSize/2);
+        this.screenY = gp.screenHeight/2 - (gp.tileSize/2);
         // positions the entity at the center of the world map
         worldX = gp.tileSize * 21;
         worldY = gp.tileSize * 23;
+
         speed = 4;
-        setDirection("down");
+        direction = "down";
         solidArea = new Rectangle(8, 16, 32, 32); // rectangle used for collision detection
+        solidAreaDefaultX = solidArea.x; // requires the default values to revert to after changes
+        solidAreaDefaultY = solidArea.y;
 
         // load images from file
         loadHumanImages();
@@ -94,7 +98,12 @@ public class Human extends Entity {
 
             // always want to the turn the collision off before checking
             collisionOn = false;
+            // check for tile collision
             gp.checker.checkTile(this);
+
+            // check for object collision
+            int objIndex = gp.checker.checkObject(this, true);
+            pickUpObject(objIndex);
 
             // when the collision is false, then player can move in the selected direction
             if (!collisionOn) {
@@ -119,7 +128,19 @@ public class Human extends Entity {
             }
         }
 
+    }
 
+    public void pickUpObject(int i) {
+        if (i != 1000) {
+            String objectName = gp.obj[i].name;
+
+            switch(objectName) {
+                case "Log" -> {
+                    gp.obj[i] = null;
+                    log++;
+                }
+            }
+        }
     }
 
     // select and draw the image based on the selected direction

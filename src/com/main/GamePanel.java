@@ -1,14 +1,11 @@
 package main;
 
-import character.Entity;
-import character.Goblin;
 import character.Human;
+import object.SuperObject;
 import tile.TileManager;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.KeyEvent;
-import java.util.ArrayList;
 
 public class GamePanel extends JPanel implements Runnable {
 
@@ -34,10 +31,14 @@ public class GamePanel extends JPanel implements Runnable {
     KeyHandler keyHandler = new KeyHandler();
     public TileManager tileM = new TileManager(this);
     public CollisionChecker checker = new CollisionChecker(this);
+    public AssetSetter aSetter = new AssetSetter(this);
 
     // entity classes
     public Human player = new Human(this, keyHandler);
-    public Goblin[] goblins = new Goblin[10];
+    public SuperObject[] obj = new SuperObject[10];
+
+
+//    public Goblin[] goblins = new Goblin[10];
 //    ArrayList<Entity> entityList = new ArrayList<>();
 //    Goblin goblin = new Goblin(this, keyHandler);
 
@@ -52,11 +53,12 @@ public class GamePanel extends JPanel implements Runnable {
         this.addKeyListener(keyHandler);
         // sets whether the events should be focused, must be true, otherwise key events won't respond
         this.setFocusable(true);
-
-        for (int i = 0; i < goblins.length; i++) {
-            goblins[i] = new Goblin(this, keyHandler);
-        }
     }
+
+    public void setupGame() {
+        aSetter.setObjects();
+    }
+
 
     public void startGameThread() {
         // applies the current instance of game panel into the thread and starts/runs.
@@ -151,7 +153,12 @@ public class GamePanel extends JPanel implements Runnable {
         // draw the map tiles on layer 1
         tileM.draw(g2);
 
-        // draws other tiles to place on to of layer 1
+        // draw other tile assets to place on top of layer 1
+        for (int i = 0; i < obj.length; i++) {
+            if (obj[i] != null) {
+                obj[i].draw(g2, this);
+            }
+        }
 
         player.draw(g2);
 

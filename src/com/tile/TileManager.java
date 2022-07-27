@@ -26,7 +26,6 @@ public class TileManager {
         loadTileImage("/res/tile/tile_1.png", 0, false);
         loadTileImage("/res/tile/tile_2.png", 1, true);
         loadTileImage("/res/tile/tile_3.png", 2, false);
-        loadTileImage("/res/tile/tile_4.png", 3, true);
 
         // load the map
         loadMap("/res/map/map_2.txt");
@@ -90,7 +89,7 @@ public class TileManager {
         // draw the map of max column width and worldCol height
         while (worldCol < gp.maxWorldCol && worldRow < gp.maxWorldRow) {
             // get the number value of the worldRow and worldCol
-            int mapTileNum = mapTile[worldCol][worldRow];
+            int mapTile = this.mapTile[worldCol][worldRow];
 
             // Start at the corner of the world map
             int worldX = worldCol * gp.tileSize;
@@ -100,13 +99,13 @@ public class TileManager {
             int screenX = worldX - gp.player.getWorldX() + gp.player.screenX;
             int screenY = worldY - gp.player.getWorldY() + gp.player.screenY;
 
-            // condition checks whether tile to be drawn is within the bounds of the players viewable screen size
+            // condition checks whether tile to be drawn is within the bounds of the players viewable screen area
             if (worldX + gp.tileSize > gp.player.worldX - gp.player.screenX &&
                 worldX - gp.tileSize < gp.player.worldX + gp.player.screenX &&
                 worldY + gp.tileSize > gp.player.worldY - gp.player.screenY &&
                 worldY - gp.tileSize < gp.player.worldY + gp.player.screenY ) {
                 // draw the image that is corresponds to the tile position, i.e. 0 == tile at position 0
-                g2.drawImage(tile[mapTileNum].image, screenX, screenY, gp.tileSize, gp.tileSize, null);
+                g2.drawImage(tile[mapTile].image, screenX, screenY, gp.tileSize, gp.tileSize, null);
             }
 
             // increment the worldRow
