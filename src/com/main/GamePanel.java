@@ -1,5 +1,6 @@
 package main;
 
+import character.Goblin;
 import character.Human;
 import object.SuperObject;
 import tile.TileManager;
@@ -32,15 +33,13 @@ public class GamePanel extends JPanel implements Runnable {
     public TileManager tileM = new TileManager(this);
     public CollisionChecker checker = new CollisionChecker(this);
     public AssetSetter aSetter = new AssetSetter(this);
+    public UI ui = new UI(this);
 
     // entity classes
     public Human player = new Human(this, keyHandler);
     public SuperObject[] obj = new SuperObject[10];
+    public Goblin[] npc = new Goblin[8];
 
-
-//    public Goblin[] goblins = new Goblin[10];
-//    ArrayList<Entity> entityList = new ArrayList<>();
-//    Goblin goblin = new Goblin(this, keyHandler);
 
 
     public GamePanel() {
@@ -55,18 +54,16 @@ public class GamePanel extends JPanel implements Runnable {
         this.setFocusable(true);
     }
 
+
+    // SETUP GAME ASSETS
     public void setupGame() {
-        aSetter.setObjects();
+//        aSetter.setObjects();
+        aSetter.setNPC(npc.length);
+
     }
 
 
-    public void startGameThread() {
-        // applies the current instance of game panel into the thread and starts/runs.
-        gameThread = new Thread(this);
-        gameThread.start();
-    }
-
-
+    // THREAD
     @Override
     public void run() {
         // use delta game loop
@@ -136,10 +133,25 @@ public class GamePanel extends JPanel implements Runnable {
 
     }
 
+    public void startGameThread() {
+        // applies the current instance of game panel into the thread and starts/runs.
+        gameThread = new Thread(this);
+        gameThread.start();
+    }
 
+
+    // UPDATES
     public void update() {
 
+        // update the player
         player.update();
+
+        // update the npc
+        for (int i = 0; i < npc.length; i++) {
+            if (npc[i] != null) {
+                npc[i].update();
+            }
+        }
 
     }
 
@@ -153,14 +165,15 @@ public class GamePanel extends JPanel implements Runnable {
         // draw the map tiles on layer 1
         tileM.draw(g2);
 
-        // draw other tile assets to place on top of layer 1
-        for (int i = 0; i < obj.length; i++) {
-            if (obj[i] != null) {
-                obj[i].draw(g2, this);
+        // draw npc assets to place on top of layer 1
+        for (int i = 0; i < npc.length; i++) {
+            if (npc[i] != null) {
+                npc[i].draw(g2);
             }
         }
 
         player.draw(g2);
+        ui.draw(g2);
 
         // after paint, dispose the graphics2D instance
         g2.dispose();

@@ -1,61 +1,183 @@
 package character;
 
+import main.GamePanel;
+import main.UtilityTool;
+
+import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
 
 public abstract class Entity {
 
+    // general stats for an entity
     private double health;
     private double maxHealth;
     private double strength;
     private double defense;
     private int movesPerTurn;
     private int movesRemaining;
+
+    // identity markers for the entity
     private char marker;
     private int id = 0;
 
+    // position of entity on world map
     public int worldX;
     public int worldY;
-    public int speed;
+    public int speed;  // number of pixels the entity will move per turn
+
+    // the direction entity can move and the images for sprite animation
+    public String direction = "down";
     public BufferedImage up1, up2 , down1, down2, left1, left2, right1, right2;
-    public String direction;
 
-    public int spriteCounter = 0;
-    public int spriteNum = 1;
-    public Rectangle solidArea;
-    public int solidAreaDefaultX;
-    public int solidAreaDefaultY;
-    public boolean collisionOn;
+    // setting for the animation of sprites
+    public int spriteAnimationCounter = 0;
+    public int spriteAnimationNum = 1;
+    public int spriteFPSLock = 0;
 
+    // default rectangle setting for collision detection
+    public Rectangle solidArea = new Rectangle(0, 0, 48, 48);
+    public int solidAreaDefaultX = solidArea.x;
+    public int solidAreaDefaultY = solidArea.y;
+    public boolean collisionOn = false;
+
+    // other class objects
+    GamePanel gp;
+
+    // constructors
 
     Entity() {
         setDefaults();;
     }
 
-    Entity(char marker, double health, double strength, double defense, int movesPerTurn, int worldX, int worldY) {
-        setId();
-        setMarker(marker);
-
-        setHealth(health);
-        setMaxHealth(getHealth());
-        setStrength(strength);
-        setDefense(defense);
-
-        setMovesPerTurn(movesPerTurn);
-        setCoordinates(worldX, worldY);
+    Entity(GamePanel gp) {
+        this.gp = gp;
+        setDefaults();
     }
+
+    // setup
 
     public void setDefaults() {
         setId();
-        setMarker(marker);
+        setMarker(' ');
 
-        setHealth(health);
+        setHealth(10);
         setMaxHealth(getHealth());
-        setStrength(strength);
-        setDefense(defense);
+        setStrength(10);
+        setDefense(10);
 
-        setMovesPerTurn(movesPerTurn);
-        setCoordinates(worldX, worldY);
+        setMovesPerTurn(2);
+//        setCoordinates(100 , 100);
+
+    }
+
+    public BufferedImage loadImage(String imagePath) {
+
+        UtilityTool uTool = new UtilityTool();
+        BufferedImage image = null;
+
+        try {
+            image = ImageIO.read(getClass().getResourceAsStream(imagePath));
+            image = uTool.scaleImage(image, gp.tileSize, gp.tileSize);  // scale the image
+
+        } catch (IOException ioe) {
+            ioe.printStackTrace();
+        }
+        return image;
+    }
+
+    // actions
+
+    public abstract void setAction();
+
+    // updates the entity direction and xy
+    public void update() {
+
+        // set characters action
+        setAction();
+        // always want to the turn the collision off before checking
+        collisionOn = false;
+        // check for tile collision
+        gp.checker.checkTile(this);
+        gp.checker.checkPlayer(this);
+
+        // when the collision is false, then player can move in the selected direction
+        if (!collisionOn) {
+            switch (direction) {
+                case "up" -> worldY -= speed;
+                case "down" -> worldY += speed;
+                case "left" ->  worldX -= speed;
+                case "right" ->  worldX += speed;
+            }
+        }
+
+        // sprite animation
+        // changes the sprite every 10 frames, or six times since FPS is set to 60
+        spriteAnimationCounter++;
+        if (spriteAnimationCounter > 10) {
+            if (spriteAnimationNum == 1) {
+                spriteAnimationNum = 2;
+            } else if (spriteAnimationNum == 2) {
+                spriteAnimationNum = 1;
+            }
+            spriteAnimationCounter = 0;
+        }
+
+    }
+
+    // draws the entity image onto the screen
+    public void draw(Graphics2D g2) {
+
+        BufferedImage image = null;
+        // player position on the map
+        int screenX = worldX - gp.player.worldX + gp.player.screenX;
+        int screenY = worldY - gp.player.worldY + gp.player.screenY;
+
+        // condition checks whether tile to be drawn is within the bounds of the players viewable screen area
+        if (worldX + gp.tileSize > gp.player.worldX - gp.player.screenX &&
+                worldX - gp.tileSize < gp.player.worldX + gp.player.screenX &&
+                worldY + gp.tileSize > gp.player.worldY - gp.player.screenY &&
+                worldY - gp.tileSize < gp.player.worldY + gp.player.screenY ) {
+
+            switch (direction) {
+                case "up" -> {
+                    if (spriteAnimationNum == 1) {
+                        image = getUp1();
+                    }
+                    if (spriteAnimationNum == 2) {
+                        image = getUp2();
+                    }
+                }
+                case "down" -> {
+                    if (spriteAnimationNum == 1) {
+                        image = getDown1();
+                    }
+                    if (spriteAnimationNum == 2) {
+                        image = getDown2();
+                    }
+                }
+                case "left" -> {
+                    if (spriteAnimationNum == 1) {
+                        image = getLeft1();
+                    }
+                    if (spriteAnimationNum == 2) {
+                        image = getLeft2();
+                    }
+                }
+                case "right" -> {
+                    if (spriteAnimationNum == 1) {
+                        image = getRight1();
+                    }
+                    if (spriteAnimationNum == 2) {
+                        image = getRight2();
+                    }
+                }
+            }
+
+            // draw the image that is corresponds to the tile position, i.e. 0 == tile at position 0
+            g2.drawImage(image, screenX, screenY,null);
+        }
 
     }
 
@@ -63,6 +185,7 @@ public abstract class Entity {
     // METHODS
 
     public abstract double attack();
+
     public abstract double defend();
 
     // GETTERS //
@@ -234,7 +357,7 @@ public abstract class Entity {
         this.right2 = right2;
     }
 
-    public void setDirection(String direction) {
+    public void setAction(String direction) {
         this.direction = direction;
     }
 }

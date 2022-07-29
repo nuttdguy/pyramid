@@ -15,6 +15,8 @@ public class Game {
     enum StatType {
         HEALTH, STRENGTH, DEFENSE, MOVE_DISTANCE, GOBLINS, MOVES_LEFT
     }
+
+    KeyHandler keyH = new KeyHandler();
     private grid.Map map;
     private ArrayList<Human> humans;
     private ArrayList<Goblin> goblins;
@@ -60,27 +62,6 @@ public class Game {
     }
 
     // END - SETTERS
-
-
-    // INPUT / OUTPUT
-    private char keyPress() {
-        return new Scanner(in).next().charAt(0);
-    }
-
-    private char requestDirectionByKeyPress() {
-
-        do {
-            out.println("Do you want to move n, e, s or w?");
-            char chosenDirection = keyPress();
-            if (chosenDirection == 'n' || chosenDirection == 'e' || chosenDirection == 's' || chosenDirection == 'w') {
-                return chosenDirection;
-            } else {
-                out.println("Invalid option " + chosenDirection + ". Try again?");
-            }
-        } while (true);
-    }
-
-    // END - INPUT / OUTPUT
 
 
     // SETUP
@@ -223,7 +204,7 @@ public class Game {
 
             char chosenDirection = '+';
             if (attacker.getName().equals("Human")) {
-                chosenDirection = requestDirectionByKeyPress();
+                chosenDirection = keyH.keyPressCompassDirection();
             } else if (attacker.getName().equals("Goblin")) {
                 chosenDirection = directionToMove(attacker, getHumans().get(0));
             }
@@ -241,7 +222,7 @@ public class Game {
                     if (elementAtRowCol == 'G' && attacker.getName().equals("Human")) {
 
                         out.println("**** BATTLE *** Enter key to continue ...");
-                        keyPress();
+                        keyH.keyPressNext();
 
                         T loser = (T) engageCombatBetween(attacker, getPlayer(getGoblins(), chosenDirection, row, col));
 

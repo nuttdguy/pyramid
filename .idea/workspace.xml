@@ -3,24 +3,17 @@
   <component name="ChangeListManager">
     <list default="true" id="5a7bbe8d-c466-47cf-a156-6713a5a89d2d" name="Changes" comment="# // TEMPLATE&#10;# Subject line (try to keep under 50 characters)&#10;&#10;# Multi-line description of commit,&#10;# feel free to be detailed.&#10;&#10;# [Ticket: X]">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/humans_vs_goblins.iml" beforeDir="false" afterPath="$PROJECT_DIR$/humans_vs_goblins.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/java/character/Entity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/character/Entity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/java/character/Goblin.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/character/Goblin.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/java/character/Human.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/character/Human.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/java/expandable/Combatable.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/java/expandable/Enhanced.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/java/expandable/Mobilize.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/java/expandable/Stat.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/java/grid/Grid.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/grid/Grid.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/java/grid/Map.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/grid/Map.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/java/main/CollisionChecker.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/main/CollisionChecker.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/java/main/Game.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/main/Game.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/java/main/GamePanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/main/GamePanel.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/java/main/KeyHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/main/KeyHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/java/main/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/main/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/java/tile/Tile.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/tile/Tile.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/java/tile/TileManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/tile/TileManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/res/tile/tile_4.png" beforeDir="false" afterPath="$PROJECT_DIR$/src/res/object/log_1.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/character/Entity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/character/Entity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/character/Goblin.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/character/Goblin.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/character/Human.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/character/Human.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/main/AssetSetter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/main/AssetSetter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/main/CollisionChecker.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/main/CollisionChecker.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/main/Game.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/main/Game.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/main/GamePanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/main/GamePanel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/main/KeyHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/main/KeyHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/object/OBJ_Log.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/object/OBJ_Log.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/object/SuperObject.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/object/SuperObject.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/tile/TileManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/tile/TileManager.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -66,7 +59,7 @@
     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/pygna/.jdks/javafx-sdk-18.0.2/lib&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/GenSpark/pyramid/hvs_c&quot;,
     &quot;project.structure.last.edited&quot;: &quot;Libraries&quot;,
     &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
     &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,

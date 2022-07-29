@@ -1,6 +1,7 @@
 package tile;
 
 import main.GamePanel;
+import main.UtilityTool;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -23,21 +24,24 @@ public class TileManager {
         // set the size of the map
         mapTile = new int[gp.maxWorldCol][gp.maxWorldRow];
 
-        loadTileImage("/res/tile/tile_1.png", 0, false);
-        loadTileImage("/res/tile/tile_2.png", 1, true);
-        loadTileImage("/res/tile/tile_3.png", 2, false);
+        loadTileImage("tile_1", 0, false);
+        loadTileImage("tile_2", 1, true);
+        loadTileImage("tile_3", 2, false);
 
         // load the map
         loadMap("/res/map/map_2.txt");
     }
 
     // load the tile images from resource package
-    private void loadTileImage(String filePath, int index, boolean isCollision) {
+    private void loadTileImage(String imageName, int index, boolean isCollision) {
 
+        UtilityTool uTool = new UtilityTool();
         try {
             tile[index] = new Tile();
-            tile[index].image = ImageIO.read(getClass().getResourceAsStream(filePath));
+            tile[index].image = ImageIO.read(getClass().getResourceAsStream("/res/tile/"+imageName+".png"));
+            tile[index].image = uTool.scaleImage(tile[index].image, gp.tileSize, gp.tileSize);
             tile[index].collision = isCollision;
+
         } catch (IOException ioe) {
             ioe.printStackTrace();
         }
@@ -105,7 +109,7 @@ public class TileManager {
                 worldY + gp.tileSize > gp.player.worldY - gp.player.screenY &&
                 worldY - gp.tileSize < gp.player.worldY + gp.player.screenY ) {
                 // draw the image that is corresponds to the tile position, i.e. 0 == tile at position 0
-                g2.drawImage(tile[mapTile].image, screenX, screenY, gp.tileSize, gp.tileSize, null);
+                g2.drawImage(tile[mapTile].image, screenX, screenY, null);
             }
 
             // increment the worldRow
