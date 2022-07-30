@@ -1,5 +1,6 @@
 package main;
 
+import character.Goblin;
 import object.OBJ_Log;
 
 import java.awt.*;
@@ -26,8 +27,8 @@ public class UI {
         arial = new Font("Arial", Font.PLAIN, 24);
 
         // replace with goblins
-        OBJ_Log log = new OBJ_Log(gp);
-        goblins = log.image;
+        Goblin goblin = new Goblin(gp);
+        goblins = goblin.down1;
 
     }
 
@@ -62,7 +63,7 @@ public class UI {
 
             // displays the icon at top left corner
             g2.drawImage(goblins, gp.tileSize/2, gp.tileSize/2, gp.tileSize/2, gp.tileSize/2, null);
-            g2.drawString("="+gp.player.hasLog, 48, 42);
+            g2.drawString("="+gp.npc.length, 48, 42);
 
             // display the event message when true
             if (messageOn) {

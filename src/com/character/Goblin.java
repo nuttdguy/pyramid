@@ -15,6 +15,7 @@ public class Goblin extends Entity {
 
     public Goblin(GamePanel gp) {
         super(gp);
+        name = "Goblin";
         speed = 2;  // set the entity pixel speed per frame
         loadImages();
     }

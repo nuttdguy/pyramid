@@ -13,7 +13,6 @@ public class Human extends Entity {
 
     public int screenX;
     public int screenY;
-    public int hasLog;
 
     // constructors
 
@@ -184,18 +183,18 @@ public class Human extends Entity {
 
         if (i != gp.checker.collisionCheckIndex) {
 
-            String objectName = gp.obj[i].name;
-            int goblins = 0; //todo remove temp with implementation
+            String objectName = gp.npc[i].name;
+            int goblins = gp.npc.length;
 
             switch(objectName) {
-                case "Log" -> {
-                    gp.obj[i] = null;
-                    hasLog++;
-                    gp.ui.showMessage("You got a log!");
-                }
+//                case "Log" -> {
+//                    gp.obj[i] = null;
+//                    gp.ui.showMessage("You got a log!");
+//                }
                 case "Goblin" -> {
                     gp.obj[i] = null;
                     goblins--;
+                    gp.ui.showMessage("You defeated the goblin!");
                     gp.ui.gameFinished = true;
                 }
             }

@@ -21,6 +21,7 @@ public abstract class Entity {
     // identity markers for the entity
     private char marker;
     private int id = 0;
+    public String name;
 
     // position of entity on world map
     public int worldX;
