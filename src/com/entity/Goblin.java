@@ -21,9 +21,14 @@ public class Goblin extends Entity {
         setDefaults();
     }
 
+    @Override
     public void setDefaults() {
         this.mapX = randomPosition(gp.maxMapCol);
         this.mapY = randomPosition(gp.maxMapRow);
+        setHealth(10);
+        setMaxHealth(getHealth());
+        setStrength(10);
+        setDefense(10);
         this.speed = 2;
         this.name = "Goblin";
         loadImages();
@@ -35,7 +40,7 @@ public class Goblin extends Entity {
 
     // SETUP
     public void loadImages() {
-        String prefix = "/res/character/";
+        String prefix = "/res/entity/";
         String ext = ".png";
         // load images from file
         up1 = loadImage(prefix+"g1_up_1"+ext);
@@ -47,6 +52,7 @@ public class Goblin extends Entity {
         right1 = loadImage(prefix+"g1_right_1"+ext);
         right2 = loadImage(prefix+"g1_right_2"+ext);
     }
+
 
     public void setAction() {
 
@@ -74,6 +80,7 @@ public class Goblin extends Entity {
         }
         drawCycles++;
     }
+
 
     // draws the entity image onto the screen
     public void draw(Graphics2D g2, Human player) {

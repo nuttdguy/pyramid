@@ -28,10 +28,13 @@ public class Human extends Entity {
 
     // setup
 
+    @Override
     public void setDefaults() {
 
-        setHealth(12);
+        setHealth(20);
         setMaxHealth(getHealth());
+        setStrength(10);
+        setDefense(10);
 
         // sets the character at the center of the screen and offsets by half the tile size
         this.screenX = gp.screenWidth/2 - (gp.maxTileSize/2);  // 768 / 2 - 48 = 360
@@ -48,7 +51,7 @@ public class Human extends Entity {
 
     public void loadImages() {
 
-        String prefix = "/res/character/";
+        String prefix = "/res/entity/";
         String ext = ".png";
         // load images from file
         up1 = loadImage(prefix+"h1_up_1"+ext);
