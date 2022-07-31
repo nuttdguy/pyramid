@@ -1,182 +1,180 @@
 package main;
 
-import character.Goblin;
-import character.Human;
-import object.SuperObject;
-import tile.TileManager;
+import entity.Entity;
+import entity.Goblin;
+import entity.Human;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyEvent;
+import java.util.ArrayList;
 
-public class GamePanel extends JPanel implements Runnable {
-
-    // set and configure the game panel screen dimensions
-    final int originalTileSize = 16;
-    final int scale = 3;
-    public final int tileSize  = originalTileSize * scale;
-    public final int maxScreenCol = 16;
-    public final int maxScreenRow = 12;
-    public final int screenWidth = tileSize * maxScreenCol;
-    public final int screenHeight = tileSize * maxScreenRow;
-
-    // world settings for larger map
-    public final int maxWorldCol = 50;
-    public final int maxWorldRow = 50;
-    public final int worldWidth = tileSize * maxWorldCol;
-    public final int worldHeight = tileSize * maxWorldRow;
-
-    // fps
-    double FPS = 60;
-
-    Thread gameThread;
-    KeyHandler keyHandler = new KeyHandler();
-    public TileManager tileM = new TileManager(this);
-    public CollisionChecker checker = new CollisionChecker(this);
-    public AssetSetter aSetter = new AssetSetter(this);
-    public UI ui = new UI(this);
-
-    // entity classes
-    public Human player = new Human(this, keyHandler);
-    public SuperObject[] obj = new SuperObject[10];
-    public Goblin[] npc = new Goblin[8];
+import static java.lang.System.out;
 
 
+//public class GamePanel extends JPanel {
+public class GamePanel extends JFrame {
+
+    // setup tile size and screen dimensions
+    private int tileSize = 16;
+    private int scale = 3;
+    public int maxTileSize = tileSize * scale;
+
+    // must conform to the map txt file height and width
+    public int mapCol = 50;
+    public int mapRow = 50;
+    public int maxMapCol = mapCol * maxTileSize;
+    public int maxMapRow = mapRow * maxTileSize;
+
+    // window dimensions
+    int screenCol = 24;
+    int screenRow = 12;
+    public int screenWidth = screenCol * maxTileSize;
+    public int screenHeight = screenRow * maxTileSize;
+
+
+    enum PlayerType {
+        GOBLIN, HUMAN
+    }
+
+
+    // setup players
+    private ArrayList<Human> humans;
+    public int humanCount;
+    private ArrayList<Goblin> goblins;
+    public int goblinCount;
+
+    // managers
+    public Graphics2D g2;
 
     public GamePanel() {
+        setUp();
 
-        // set the game panel properties in the constructor
-        this.setPreferredSize(new Dimension(screenWidth, screenHeight));
-        this.setBackground(Color.black);
-        this.setDoubleBuffered(true);
-        // listen for key presses
-        this.addKeyListener(keyHandler);
-        // sets whether the events should be focused, must be true, otherwise key events won't respond
-        this.setFocusable(true);
-    }
+        this.setTitle("Humans vs Goblins");
+        this.setSize(screenWidth, screenHeight);
+        this.setResizable(true);
+        this.getContentPane().setBackground(Color.BLACK);
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.addKeyListener(new KeyManager());
 
-
-    // SETUP GAME ASSETS
-    public void setupGame() {
-//        aSetter.setObjects();
-        aSetter.setNPC(npc.length);
+        this.setVisible(true);
 
     }
 
-
-    // THREAD
-    @Override
-    public void run() {
-        // use delta game loop
-        deltaGameLoop();
+    public void setUp() {
+        this.goblins = initPlayers(PlayerType.GOBLIN, 8);
+        this.humans = initPlayers(PlayerType.HUMAN, 1);
+        this.humanCount = humans.size();
+        this.goblinCount = goblins.size();
     }
 
-    public void sleepGameLoop() {
-        // set the interval of time to draw
-        double drawInterval = 1000000000 / FPS; //
-        double nextDrawTime = System.nanoTime() + drawInterval;
+    public void paint(Graphics g) {
 
-        // continue running the tread while its instance exists
-        while(gameThread != null) {
+        super.paintComponents(g);
+        g2 = (Graphics2D) g;
 
-            // on every iteration, update the game panel
-            update();
-            // then paint the changes to display
-            repaint();
+        for (Goblin goblin : this.goblins) {
+            goblin.draw(g2, humans.get(0));
+        }
 
-            try {
-                double remainingTime = nextDrawTime - System.nanoTime();
-                remainingTime = remainingTime/1000000;
+        this.humans.get(0).draw(g2);
 
-                if (remainingTime < 0) {
-                    remainingTime = 0;
+    }
+
+
+    public void checkCollision(Entity entity) {
+        Human human = humans.get(0);
+
+        if (human != null) {
+
+            // entity solid area position, i.e. player, npc, other
+            entity.solidArea.x = entity.mapX + entity.solidArea.x;
+            entity.solidArea.y = entity.mapY + entity.solidArea.y;
+
+            // objects solid area position on map
+            human.solidArea.x = human.mapX + human.solidArea.x;
+            human.solidArea.y = human.mapY + human.solidArea.y;
+
+            // when direction of the entity is
+            switch(entity.direction) {
+                case "up" -> entity.solidArea.y -= entity.speed;
+                case "down" -> entity.solidArea.y += entity.speed;
+                case "left" -> entity.solidArea.x -= entity.speed;
+                case "right" -> entity.solidArea.x += entity.speed;
+            }
+
+            if (entity.solidArea.intersects(human.solidArea)) {
+                human.attack(human, entity);
+
+            }
+
+            // reset solidArea xy changes to default values for next frame
+            entity.solidArea.x = entity.solidAreaDefaultX;
+            entity.solidArea.y = entity.solidAreaDefaultY;
+            human.solidArea.x = human.solidAreaDefaultX;
+            human.solidArea.y = human.solidAreaDefaultY;
+
+        }
+
+        // remove losing player
+        if (human.getHealth() < 0 ) {
+            System.exit(1);
+        }
+    }
+
+    public <T extends Entity> void removeCombatLoser(T player) {
+        switch (player.getName()) {
+            case "Goblin" -> goblins.remove(player);
+            case "Human" -> humans.remove(player);
+        }
+    }
+
+
+    public class KeyManager extends KeyHandler {
+        @Override
+        public void keyPressed(KeyEvent e) {
+            humans.get(0).keyPressed(e);
+
+            ArrayList<Goblin> goblinCopy = new ArrayList<>(goblins);
+
+            for (Goblin goblin : goblinCopy) {
+
+                // set direction and engage combat when collision
+                goblin.setAction();
+                checkCollision(goblin);
+
+                if (goblin.getHealth() < 0) {
+                    removeCombatLoser(goblin);
                 }
-
-                Thread.sleep((long) remainingTime);
-                nextDrawTime += drawInterval;
-
-            } catch (InterruptedException ie) {
-                ie.printStackTrace();
             }
 
+            if (goblins.size() == 0) {
+                System.exit(1);
+            }
+
+            repaint();
         }
     }
 
-    public void deltaGameLoop() {
-        double drawInterval = 1000000000/FPS;
-        double delta = 0;
-        long lastTime = System.nanoTime();
-        long currentTime;
-        // for FPS
-        long timer = 0;
-        int drawCount = 0;
+    private <T extends Entity> ArrayList<T> initPlayers(PlayerType playerType, int qty) {
+        ArrayList<T> players = new ArrayList<>();
 
-        while (gameThread != null) {
-             currentTime = System.nanoTime();
-             delta += (currentTime - lastTime) / drawInterval;
-             timer += (currentTime - lastTime);
-             lastTime = currentTime;
-
-             if (delta >=1) {
-                update();
-                repaint();
-                delta--;
-                drawCount++;
-             }
-
-             // for displaying FPS
-            if (timer >= 1000000000) {
-//                System.out.println("FPS: " + drawCount);
-                drawCount = 0;
-                timer = 0;
+        while (qty > 0) {
+            try {
+                switch (playerType) {
+                    case GOBLIN -> players.add((T) new Goblin(this));
+                    case HUMAN -> players.add((T) new Human(this));
+                }
+            } catch (ClassCastException e) {
+                out.println(e);
             }
+            qty--;
         }
-
-    }
-
-    public void startGameThread() {
-        // applies the current instance of game panel into the thread and starts/runs.
-        gameThread = new Thread(this);
-        gameThread.start();
+        return players;
     }
 
 
-    // UPDATES
-    public void update() {
 
-        // update the player
-        player.update();
 
-        // update the npc
-        for (int i = 0; i < npc.length; i++) {
-            if (npc[i] != null) {
-                npc[i].update();
-            }
-        }
 
-    }
-
-    public void paintComponent(Graphics g) {
-
-        super.paintComponent(g);
-
-        // use the graphics2D to get more functions
-        Graphics2D g2 = (Graphics2D) g;
-
-        // draw the map tiles on layer 1
-        tileM.draw(g2);
-
-        // draw npc assets to place on top of layer 1
-        for (int i = 0; i < npc.length; i++) {
-            if (npc[i] != null) {
-                npc[i].draw(g2);
-            }
-        }
-
-        player.draw(g2);
-        ui.draw(g2);
-
-        // after paint, dispose the graphics2D instance
-        g2.dispose();
-
-    }
 }

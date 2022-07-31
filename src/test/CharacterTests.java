@@ -1,4 +1,4 @@
-import character.*;
+import entity.*;
 import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -21,9 +21,8 @@ public class CharacterTests {
         assertTrue(human.getHealth() >= 0);
         assertTrue(human.getDefense() >= 0);
         assertTrue(human.getStrength() >= 0);
-        assertTrue(human.getMovesPerTurn() >= 0);
-        assertTrue(human.getWorldX() >= 0);
-        assertTrue(human.getWorldY() >= 0);
+        assertTrue(human.getMapX() >= 0);
+        assertTrue(human.getMapY() >= 0);
 
     }
 
@@ -35,9 +34,8 @@ public class CharacterTests {
         assertTrue(goblin.getHealth() >= 0);
         assertTrue(goblin.getDefense() >= 0);
         assertTrue(goblin.getStrength() >= 0);
-        assertTrue(goblin.getMovesPerTurn() >= 0);
-        assertTrue(goblin.getWorldX() >= 0);
-        assertTrue(goblin.getWorldY() >= 0);
+        assertTrue(goblin.getMapX() >= 0);
+        assertTrue(goblin.getMapY() >= 0);
 
     }
 

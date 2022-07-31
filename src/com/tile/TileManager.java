@@ -1,5 +1,6 @@
 package tile;
 
+import entity.Entity;
 import main.GamePanel;
 import main.UtilityTool;
 
@@ -16,14 +17,15 @@ public class TileManager {
     public Tile[] tile;
     public int[][] mapTile;
 
-
     public TileManager(GamePanel gp) {
         this.gp = gp;
 
-        tile = new Tile[10];
-        // set the size of the map
-        mapTile = new int[gp.maxWorldCol][gp.maxWorldRow];
+        // set the size of the array
+        tile = new Tile[5];
+        // sets the 2D array size based on maps max row and column
+        mapTile = new int[gp.maxMapCol][gp.maxMapRow];
 
+        // load image files
         loadTileImage("tile_1", 0, false);
         loadTileImage("tile_2", 1, true);
         loadTileImage("tile_3", 2, false);
@@ -39,7 +41,7 @@ public class TileManager {
         try {
             tile[index] = new Tile();
             tile[index].image = ImageIO.read(getClass().getResourceAsStream("/res/tile/"+imageName+".png"));
-            tile[index].image = uTool.scaleImage(tile[index].image, gp.tileSize, gp.tileSize);
+            tile[index].image = uTool.scaleImage(tile[index].image, gp.maxTileSize, gp.maxTileSize);
             tile[index].collision = isCollision;
 
         } catch (IOException ioe) {
@@ -47,7 +49,7 @@ public class TileManager {
         }
     }
 
-    // loads the map tiles from a map file
+    // loads the map from a map txt file
     private void loadMap(String filePath) {
         try {
             InputStream is = getClass().getResourceAsStream(filePath);
@@ -57,12 +59,12 @@ public class TileManager {
             int row = 0;
 
             // iterate through the map file of max row and columns
-            while (col < gp.maxWorldCol && row < gp.maxWorldRow) {
+            while (col < gp.mapCol && row < gp.mapRow) {
 
                 // read the current line of the file
                 String line = br.readLine();
 
-                while (col < gp.maxWorldCol) {
+                while (col < gp.mapCol) {
                     // split the current line and add each to an array
                     String[] numbers = line.split("");
                     int num = Integer.parseInt(numbers[col]);
@@ -71,7 +73,7 @@ public class TileManager {
                     col++;
                 }
                 // when max columns is reached, reset col counter and increment row
-                if (col == gp.maxWorldCol) {
+                if (col == gp.mapCol) {
                     col = 0;
                     row++;
                 }
@@ -83,48 +85,48 @@ public class TileManager {
         }
     }
 
+    // draws the viewable area of map onto the screen
+    public void draw(Graphics2D g2, Entity entity) {
 
-    // draws the viewable map screen
-    public void draw(Graphics2D g2) {
+        int mapCol = 0;
+        int mapRow = 0;
 
-        int worldCol = 0;
-        int worldRow = 0;
+        // draw the map of max column width and mapCol height
+        while (mapCol < gp.maxMapCol && mapRow < gp.maxMapRow) {
+            // get the number value of the mapRow and mapCol
+            int mapTile = this.mapTile[mapCol][mapRow];
 
-        // draw the map of max column width and worldCol height
-        while (worldCol < gp.maxWorldCol && worldRow < gp.maxWorldRow) {
-            // get the number value of the worldRow and worldCol
-            int mapTile = this.mapTile[worldCol][worldRow];
+            // start at the corner of the map
+            int mapX = mapCol * gp.maxTileSize;
+            int mapY = mapRow * gp.maxTileSize;
 
-            // Start at the corner of the world map
-            int worldX = worldCol * gp.tileSize;
-            int worldY = worldRow * gp.tileSize;
-            // locate the position of the player from the starting world map xy and then subtract players xy location
+            // locate the position of the player from the starting map xy and then subtract players xy location
             // to determine where to begin drawing the viewable area of the map
-            int screenX = worldX - gp.player.getWorldX() + gp.player.screenX;
-            int screenY = worldY - gp.player.getWorldY() + gp.player.screenY;
+            int screenX = mapX - entity.mapX + entity.screenX;
+            int screenY = mapY - entity.mapY + entity.screenY;
 
             // condition checks whether tile to be drawn is within the bounds of the players viewable screen area
-            if (worldX + gp.tileSize > gp.player.worldX - gp.player.screenX &&
-                worldX - gp.tileSize < gp.player.worldX + gp.player.screenX &&
-                worldY + gp.tileSize > gp.player.worldY - gp.player.screenY &&
-                worldY - gp.tileSize < gp.player.worldY + gp.player.screenY ) {
-                // draw the image that is corresponds to the tile position, i.e. 0 == tile at position 0
+            if (mapX + gp.maxTileSize > entity.mapX - entity.screenX &&
+                mapX - gp.maxTileSize < entity.mapX + entity.screenX &&
+                mapY + gp.maxTileSize > entity.mapY - entity.screenY &&
+                mapY - gp.maxTileSize < entity.mapY + entity.screenY ) {
+
+                // draw the image that corresponds to the tile position, i.e. 0 == draw tile image at index 0
                 g2.drawImage(tile[mapTile].image, screenX, screenY, null);
             }
 
-            // increment the worldRow
-            worldCol++;
+            // increment the mapCol
+            mapCol++;
 
 
-            // when max cols, then result worldRow and x and increment worldCol and y
-            if (worldCol == gp.maxWorldCol) {
-                worldCol = 0;
-                worldRow++;
+            // when max cols, then reset map col and increment to next row
+            if (mapCol == gp.maxMapCol) {
+                mapCol = 0;
+                mapRow++;
             }
 
         }
 
     }
-
 
 }

@@ -1,13 +1,14 @@
 package main;
 
+import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.util.Scanner;
 
 import static java.lang.System.in;
 import static java.lang.System.out;
 
-public class KeyHandler implements KeyListener {
+
+public class KeyHandler extends KeyAdapter {
 
     public boolean upPress, downPress, leftPress, rightPress, invalidPress;
 
