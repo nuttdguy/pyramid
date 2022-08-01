@@ -8,13 +8,14 @@ import java.awt.image.BufferedImage;
 
 public class Human extends Entity {
 
+    // FIELDS
     String message1 = "";
     String message2 = "";
     boolean messageOn = false;
     int messageTimer = 0;
 
 
-    // constructors
+    // CONSTRUCTORS
 
     public Human() {
         super();
@@ -25,8 +26,9 @@ public class Human extends Entity {
         super(gp);
         setDefaults();
     }
+    // END - CONSTRUCTORS
 
-    // setup
+    // SETUP
 
     @Override
     public void setDefaults() {
@@ -63,8 +65,10 @@ public class Human extends Entity {
         right1 = loadImage(prefix+"h1_right_1"+ext);
         right2 = loadImage(prefix+"h1_right_2"+ext);
     }
+    // END - SETUP
 
-    // draws the entity image onto the screen
+
+    // RENDER
     public void draw(Graphics2D g2) {
 
         BufferedImage image = null;
@@ -105,8 +109,10 @@ public class Human extends Entity {
         g2.drawImage(image, screenX, screenY,null);
 
     }
+    // END RENDERING
 
-    // update the selected direction and coordinates
+
+    // KEY LISTENER
     public void keyPressed(KeyEvent e) {
 
         if (e.getKeyCode() == KeyEvent.VK_UP) {
@@ -124,13 +130,12 @@ public class Human extends Entity {
         }
 
     }
-
-    // actions
+    // END - KEY LISTENER
 
 
     // OTHER METHODS
-
-    private double characterFactor() { return (Math.random() * 2);}
+    @Override
+    public double attack() { return (Math.random() * this.getStrength()) * characterFactor(); }
 
     public <T extends Entity> double attack(T attacker, T defender) {
         double defenderHealth = defender.getHealth();
@@ -159,10 +164,8 @@ public class Human extends Entity {
 
     }
 
-    @Override
-    public double attack() {
-        return (Math.random() * this.getStrength()) * characterFactor();
-    }
+    private double characterFactor() { return (Math.random() * 2);}
+
 
     @Override
     public String toString() {

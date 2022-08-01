@@ -9,8 +9,10 @@ import java.util.Random;
 
 public class Goblin extends Entity {
 
+    // FIELDS
     private int drawCycles = 0;
 
+    // CONSTRUCTORS
     public Goblin() {
         super();
         setDefaults();
@@ -20,7 +22,10 @@ public class Goblin extends Entity {
         super(gp);
         setDefaults();
     }
+    // END CONSTRUCTORS
 
+
+    // SETUP
     @Override
     public void setDefaults() {
         this.mapX = randomPosition(gp.maxMapCol);
@@ -34,11 +39,6 @@ public class Goblin extends Entity {
         loadImages();
     }
 
-    private int randomPosition(int max) {
-        return (int) (Math.random() * max);
-    }
-
-    // SETUP
     public void loadImages() {
         String prefix = "/res/entity/";
         String ext = ".png";
@@ -53,7 +53,13 @@ public class Goblin extends Entity {
         right2 = loadImage(prefix+"g1_right_2"+ext);
     }
 
+    private int randomPosition(int max) {
+        return (int) (Math.random() * max);
+    }
+    // END - SETUP
 
+
+    // ACTIONS
     public void setAction() {
 
         Random random = new Random();
@@ -80,9 +86,9 @@ public class Goblin extends Entity {
         }
         drawCycles++;
     }
+    // END - ACTIONS
 
-
-    // draws the entity image onto the screen
+    // RENDER
     public void draw(Graphics2D g2, Human player) {
 
         BufferedImage image = null;
@@ -100,17 +106,19 @@ public class Goblin extends Entity {
         g2.drawImage(image, screenX, screenY,null);
 
     }
+    // END - RENDER
 
 
-    // OTHER METHODS
-    private double characterFactor() {
-        return Math.random() * 1;
-    }
-
+    // METHODS
     @Override
     public double attack() {
         return (Math.random() * this.getStrength()) * characterFactor();
     }
+
+    private double characterFactor() {
+        return Math.random() * 1;
+    }
+
 
     @Override
     public String toString() {

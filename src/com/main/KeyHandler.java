@@ -45,23 +45,4 @@ public class KeyHandler extends KeyAdapter {
 
     }
 
-    // key press handler for console gui
-    public char keyPressNext() {
-        return new Scanner(in).next().charAt(0);
-    }
-
-    // key press handler for getting direction of console gui
-    public char keyPressCompassDirection() {
-
-        do {
-            out.println("Do you want to move n, e, s or w?");
-            char chosenDirection = keyPressNext();
-            if (chosenDirection == 'n' || chosenDirection == 'e' || chosenDirection == 's' || chosenDirection == 'w') {
-                return chosenDirection;
-            } else {
-                out.println("Invalid option " + chosenDirection + ". Try again?");
-            }
-        } while (true);
-    }
-
 }

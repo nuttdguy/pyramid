@@ -10,38 +10,38 @@ import java.io.IOException;
 
 public abstract class Entity {
 
-    // general stats for an entity
+    // STATS
     private double health;
     private double maxHealth;
     private double strength;
     private double defense;
 
-    // identity markers for the entity
+    // IDENTITY
     public String name;
 
-    // position of entity on world map
+    // ENTITY XY ON MAP
     public int mapX;
     public int mapY;
     public int speed;  // number of pixels the entity will move per turn
 
-    // viewable screen dimension
+    // ENTITY VIEWABLE SCREEN AREA
     public int screenX;
     public int screenY;
 
-    // the direction entity can move and the images for sprite animation
+    // SPRITE / DIRECTION
     public String direction = "down";
     public BufferedImage up1, up2 , down1, down2, left1, left2, right1, right2;
 
-    // default rectangle setting for collision detection
+    // RECTANGLE FOR COLLISION
     public Rectangle solidArea = new Rectangle(0, 0, 48, 48);
     public int solidAreaDefaultX = solidArea.x;
     public int solidAreaDefaultY = solidArea.y;
 
 
-    // other class objects
+    // OTHER CLASS OBJECTS
     GamePanel gp;
 
-    // constructors
+    // CONSTRUCTORS
     Entity() {
         setDefaults();
     }
@@ -50,7 +50,10 @@ public abstract class Entity {
         this.gp = gp;
         setDefaults();
     }
+    // END - CONSTRUCTORS
 
+
+    // SETUP
     public void setDefaults() {
         setHealth(10);
         setMaxHealth(getHealth());
@@ -72,6 +75,8 @@ public abstract class Entity {
         }
         return image;
     }
+    // END - SETUP
+
 
     // METHODS
 

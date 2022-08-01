@@ -12,41 +12,38 @@ import java.util.ArrayList;
 import static java.lang.System.out;
 
 
-//public class GamePanel extends JPanel {
 public class GamePanel extends JFrame {
 
-    // setup tile size and screen dimensions
+    // STANDARD TILE SIZE
     private int tileSize = 16;
     private int scale = 3;
     public int maxTileSize = tileSize * scale;
 
-    // must conform to the map txt file height and width
+    // MAP SIZE
     public int mapCol = 50;
     public int mapRow = 50;
     public int maxMapCol = mapCol * maxTileSize;
     public int maxMapRow = mapRow * maxTileSize;
 
-    // window dimensions
+    // VIEWABLE SCREEN DIMENSIONS
     int screenCol = 24;
     int screenRow = 12;
     public int screenWidth = screenCol * maxTileSize;
     public int screenHeight = screenRow * maxTileSize;
 
 
-    enum PlayerType {
-        GOBLIN, HUMAN
-    }
-
-
-    // setup players
+    // ENTITY
+    enum EntityType { GOBLIN, HUMAN }
     private ArrayList<Human> humans;
     public int humanCount;
     private ArrayList<Goblin> goblins;
     public int goblinCount;
 
-    // managers
+    // CLASS OBJECTS
     public Graphics2D g2;
 
+
+    // CONSTRUCTOR
     public GamePanel() {
         setUp();
 
@@ -60,14 +57,65 @@ public class GamePanel extends JFrame {
         this.setVisible(true);
 
     }
+    // END - CONSTRUCTOR
 
+    // SETUP
     public void setUp() {
-        this.goblins = initPlayers(PlayerType.GOBLIN, 8);
-        this.humans = initPlayers(PlayerType.HUMAN, 1);
+        this.goblins = initPlayers(EntityType.GOBLIN, 8);
+        this.humans = initPlayers(EntityType.HUMAN, 1);
         this.humanCount = humans.size();
         this.goblinCount = goblins.size();
     }
 
+    private <T extends Entity> ArrayList<T> initPlayers(EntityType entityType, int qty) {
+        ArrayList<T> players = new ArrayList<>();
+
+        while (qty > 0) {
+            try {
+                switch (entityType) {
+                    case GOBLIN -> players.add((T) new Goblin(this));
+                    case HUMAN -> players.add((T) new Human(this));
+                }
+            } catch (ClassCastException e) {
+                out.println(e);
+            }
+            qty--;
+        }
+        return players;
+    }
+    // END - SETUP
+
+
+    // KEY HANDLER / LISTENER
+    public class KeyManager extends KeyHandler {
+        @Override
+        public void keyPressed(KeyEvent e) {
+            humans.get(0).keyPressed(e);
+
+            ArrayList<Goblin> goblinCopy = new ArrayList<>(goblins);
+
+            for (Goblin goblin : goblinCopy) {
+
+                // set direction and engage combat when collision
+                goblin.setAction();
+                checkCollision(goblin);
+
+                if (goblin.getHealth() < 0) {
+                    removeCombatLoser(goblin);
+                }
+            }
+
+            if (goblins.size() == 0) {
+                System.exit(1);
+            }
+
+            repaint();
+        }
+    }
+    // END - KEY LISTENER
+
+
+    // RENDERING
     public void paint(Graphics g) {
 
         super.paintComponents(g);
@@ -80,8 +128,10 @@ public class GamePanel extends JFrame {
         this.humans.get(0).draw(g2);
 
     }
+    // END - RENDERING
 
 
+    // OTHER
     public void checkCollision(Entity entity) {
         Human human = humans.get(0);
 
@@ -129,52 +179,7 @@ public class GamePanel extends JFrame {
         }
     }
 
-
-    public class KeyManager extends KeyHandler {
-        @Override
-        public void keyPressed(KeyEvent e) {
-            humans.get(0).keyPressed(e);
-
-            ArrayList<Goblin> goblinCopy = new ArrayList<>(goblins);
-
-            for (Goblin goblin : goblinCopy) {
-
-                // set direction and engage combat when collision
-                goblin.setAction();
-                checkCollision(goblin);
-
-                if (goblin.getHealth() < 0) {
-                    removeCombatLoser(goblin);
-                }
-            }
-
-            if (goblins.size() == 0) {
-                System.exit(1);
-            }
-
-            repaint();
-        }
-    }
-
-    private <T extends Entity> ArrayList<T> initPlayers(PlayerType playerType, int qty) {
-        ArrayList<T> players = new ArrayList<>();
-
-        while (qty > 0) {
-            try {
-                switch (playerType) {
-                    case GOBLIN -> players.add((T) new Goblin(this));
-                    case HUMAN -> players.add((T) new Human(this));
-                }
-            } catch (ClassCastException e) {
-                out.println(e);
-            }
-            qty--;
-        }
-        return players;
-    }
-
-
-
+    // END - OTHER
 
 
 }
