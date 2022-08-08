@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context" xsi:schemaLocation="
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd"> <!-- bean definitions here -->
+
+    <!--  SETTER INJECTION  -->
+    <bean id="student" class="org.pygn.Student" >
+        <property name="id" value="1" />
+        <property name="address" ref="address" />
+        <property name="phone" >
+            <list>
+                <value>555.0000</value>
+                <value>555.1111</value>
+                <value>555.2222</value>
+                <value>555.3333</value>
+            </list>
+        </property>
+    </bean>
+
+    <!--  SETTER INJECTION  -->
+    <bean id="phone" class="org.pygn.Phone" >
+        <property name="number" value="555-5555" />
+    </bean>
+
+    <!--  CONSTRUCTOR INJECTION -->
+    <bean id="address" class="org.pygn.Address" >
+        <constructor-arg index="0"  name="city" value="free city" />
+        <constructor-arg index="1"  name="state" value="free state" />
+        <constructor-arg index="2"  name="country" value="USA" />
+        <constructor-arg index="3"  name="zipcode" value="99999" />
+
+    </bean>
+
+</beans>
