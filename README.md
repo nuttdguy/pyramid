@@ -8,3 +8,4 @@ pyramid-consulting
 4. humans_goblins
 5. hangman_func (functional) 
 6. humans_goblins_swing_gui
+8. spring_di (dependency injection)
