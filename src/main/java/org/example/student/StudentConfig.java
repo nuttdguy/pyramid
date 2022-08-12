@@ -5,13 +5,12 @@ import org.example.course.Course;
 import org.example.course.Instructor;
 import org.example.identity.Address;
 import org.example.identity.Phone;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
 
-import java.util.ArrayList;
+
 import java.util.Arrays;
 import java.util.List;
 
@@ -21,7 +20,6 @@ import static org.springframework.beans.factory.config.ConfigurableBeanFactory.S
 @ComponentScan("com.example.student")
 public class StudentConfig {
 
-
     @Bean
     @DefaultInitDestroy
     @Scope(SCOPE_PROTOTYPE)
@@ -29,8 +27,21 @@ public class StudentConfig {
 
     @Bean
     @Scope(SCOPE_PROTOTYPE)
+    public Student student(int id, String name, Instructor instructor, Course course, List<Phone> phone, Address address) {
+        return new Student(id, name, instructor, course, phone, address);
+    }
+
+    @Bean
+    @Scope(SCOPE_PROTOTYPE)
     public StudentDTO studentDTO() {
         return new StudentDTO();
+    }
+
+    @Bean
+    @Scope(SCOPE_PROTOTYPE)
+    public StudentDTO studentDTO(Instructor instructor, Course course, Student student, Address address,
+                                 List<List<Phone>> phoneListA, List<Phone> phoneListB, List<String> stringList) {
+        return new StudentDTO(instructor, course, student, address, phoneListA, phoneListB, stringList);
     }
 
     // Phone List A:
@@ -44,8 +55,8 @@ public class StudentConfig {
 
     // Phone List B:
     // [Phone{number='888-8888'}, Phone{number='000-0000'}, Phone{number='null'}]
-    @Bean Phone setPhoneB1() { return new Phone("888-8888"); }
-    @Bean Phone setPhoneB2() { return new Phone("000-0000"); }
+//    @Bean Phone setPhoneB1() { return new Phone("888-8888"); }
+//    @Bean Phone setPhoneB2() { return new Phone("000-0000"); }
 
     // String List C:
     // [333-3333, 444-4444]

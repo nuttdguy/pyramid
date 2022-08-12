@@ -13,9 +13,8 @@ public class CourseConfig {
 
     @Bean
     @Scope(SCOPE_PROTOTYPE)
-    public Course course() {
-        return new Course();
+    Course course() {
+        return new Course("000", "default");
     }
-
 
 }

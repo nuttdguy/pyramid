@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class Phone {
 
-//    @Value("999-9999")
+    @Value("000-0000")
     private String number;
 
     public Phone() {}

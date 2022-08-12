@@ -15,18 +15,30 @@ import java.util.List;
 @Component
 public class Student {
 
-    @Value("2") private int id;
-    @Value("Bob") private String name;
+    private Instructor instructor;
+    private Course course;
 
-    @Autowired @Qualifier("course") private Instructor instructor;
+    @Value("2")
+    private int id;
+    @Value("Bob")
+    private String name;
 
-    @Autowired private Course course;
+    @Autowired
+    private List<Phone> phone;
+    @Autowired
+    private Address address;
 
-    @Autowired private List<Phone> phone;
-
-    @Autowired private Address address;
 
     public Student() { }
+
+    public Student(int id, String name, Instructor instructor, Course course, List<Phone> phone, Address address) {
+        this.id = id;
+        this.name = name;
+        this.instructor = instructor;
+        this.course = course;
+        this.phone = phone;
+        this.address = address;
+    }
 
 
     public int getId() {
@@ -73,6 +85,8 @@ public class Student {
         return instructor;
     }
 
+    @Autowired
+    @Qualifier("course")
     public void setInstructor(Instructor instructor) {
         this.instructor = instructor;
     }
@@ -81,19 +95,20 @@ public class Student {
         return course;
     }
 
+    @Autowired
     public void setCourse(Course course) {
         this.course = course;
     }
 
     @Override
     public String toString() {
-        return "Student{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", instructor=" + instructor +
-                ", course=" + course +
-                ", phone=" + phone +
-                ", address=" + address +
-                '}';
+        return "\n Student{" +
+                "\n id=" + id +
+                ",\n name='" + name + '\'' +
+                ",\n phone=" + phone +
+                ",\n address=" + address +
+                ",\n instructor=" + instructor +
+                ",\n course=" + course +
+                "}";
     }
 }
