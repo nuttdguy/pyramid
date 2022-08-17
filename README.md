@@ -10,3 +10,4 @@ pyramid-consulting
 6. humans_goblins_swing_gui
 8. spring_xml (configuration)
 9. spring_annotation (configuration)
+10. spring_rest_jpa
