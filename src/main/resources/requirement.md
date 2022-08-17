@@ -1,9 +1,7 @@
 # Requirements:
 Create an API card module for displaying 
-1. an image
+1. an image url
 2. an item description
-3. an add button 
-4. an options menu 
 
 ## Component
 1. Image: displays the image of the item
@@ -12,10 +10,10 @@ Create an API card module for displaying
 4. Option menu: selects an option from an item list 
 
 ## View
-1. itemCard: displays the item card
+1. item: displays the item as a card
 
 ## API Schema
-1. getTheItemCard() :: ItemCard
-2. addTheItemCard(itemCard theItemCard) :: reqBody :: int
-3. delTheItemCard(int theItemId) :: int :: int
-4. updateTheItemCard(itemCard theItemCard) :: reqBody :: int
+1. getItems() :: item
+2. addAnItem(Item item) :: reqBody :: item
+3. deleteAnItem(int theItemId) :: int :: int
+4. updateAnItem(Item item) :: reqBody :: item

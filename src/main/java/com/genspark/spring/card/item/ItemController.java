@@ -17,7 +17,7 @@ public class ItemController {
     }
 
     @GetMapping(value={"/"})
-    List<Item> getItemCards() {
+    List<Item> getItems() {
         return itemService.getItems();
     }
 
