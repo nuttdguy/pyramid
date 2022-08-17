@@ -2,6 +2,7 @@ package com.genspark.spring.card.item;
 
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
@@ -11,14 +12,14 @@ import java.util.List;
 @Service
 public class ItemService {
 
-    @Autowired
-    ItemRepository itemRepository;
+    private final ItemRepository itemRepository;
+    private final BeanFactory beanFactory;
 
     @Autowired
-    BeanFactory beanFactory;
-
-    @Autowired
-    EntityManager entityManager;
+    ItemService(ItemRepository itemRepository, BeanFactory beanFactory) {
+        this.itemRepository = itemRepository;
+        this.beanFactory = beanFactory;
+    }
 
     // get all the items
     List<Item> getItems() {

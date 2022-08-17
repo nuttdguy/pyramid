@@ -6,32 +6,37 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@RequestMapping(path = {"/api/items"})
 public class ItemController {
 
-    @Autowired
-    ItemService itemService;
+    private final ItemService itemService;
 
-    @GetMapping(value={"/item", "/items"})
+    @Autowired
+    ItemController(ItemService itemService) {
+        this.itemService = itemService;
+    }
+
+    @GetMapping(value={"/"})
     List<Item> getItemCards() {
         return itemService.getItems();
     }
 
-    @GetMapping("/item/{theId}")
+    @GetMapping("/{theId}")
     Item getAnItem(@PathVariable Long theId) {
         return itemService.getAnItemBy(theId);
     }
 
-    @PostMapping("/item")
+    @PostMapping("/")
     Item addAnItem(@RequestBody Item newItem) {
         return itemService.addAnItem(newItem);
     }
 
-    @PutMapping("/item")
+    @PutMapping("/")
     Item updateAnItem(@RequestBody Item newItem) {
         return itemService.updateAnItem(newItem);
     }
 
-    @DeleteMapping("/item/{theId}")
+    @DeleteMapping("/{theId}")
     Long deleteAnItem(@PathVariable Long theId) {
         if (theId != null) {
             return itemService.deleteAnItemBy(theId);
