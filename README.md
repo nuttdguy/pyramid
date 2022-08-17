@@ -11,3 +11,4 @@ pyramid-consulting
 8. spring_xml (configuration)
 9. spring_annotation (configuration)
 10. spring_rest_jpa
+11. 
