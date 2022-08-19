@@ -36,11 +36,15 @@
         </property>
     </bean>
 
-    <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
-        <constructor-arg name="url" value="jdbc:mysql://localhost:3306/inventory" />
-        <constructor-arg name="username" value="dev" />
-        <constructor-arg name="password" value="@devPass1" />
+    <bean id="dataSource" class="org.springframework.context.support.ClassPathXmlApplicationContext" >
+        <constructor-arg value="${authDataSource.xml}" />
     </bean>
+
+<!--    <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">-->
+<!--        <constructor-arg name="url" value="jdbc:mysql://localhost:3306/inventory" />-->
+<!--        <constructor-arg name="username" value="" />-->
+<!--        <constructor-arg name="password" value="" />-->
+<!--    </bean>-->
 
 
 </beans>

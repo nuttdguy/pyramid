@@ -16,7 +16,7 @@ public class App {
         AbstractApplicationContext appContext = null;
 
         try {
-            appContext = new ClassPathXmlApplicationContext("ApplicationContext.xml");
+            appContext = new ClassPathXmlApplicationContext("ApplicationContext.xml", "authDataSource.xml");
             DataInitializer dataInitializer = appContext.getBean(DataInitializer.class);
             dataInitializer.seedTheDb();
 
