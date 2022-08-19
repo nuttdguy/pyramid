@@ -1,37 +1,38 @@
 package org.genspark;
 
-import com.sun.net.httpserver.HttpServer;
-import org.genspark.inventory.Inventory;
-import org.genspark.inventory.InventoryController;
-import org.genspark.inventory.InventoryService;
-import org.hibernate.HibernateException;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
-import org.hibernate.cfg.Configuration;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import java.io.IOException;
-import java.io.OutputStream;
-import java.net.InetSocketAddress;
+import org.genspark.inventory.domain.Inventory;
+import org.genspark.inventory.service.InventoryService;
+import org.genspark.inventory.service.InventoryServiceImpl;
+import org.springframework.context.support.AbstractApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-//@SpringBootApplication
+import java.util.List;
+import java.util.stream.Stream;
+
 public class App {
 
-    public static void main( String[] args ) throws IOException {
+    public static void main( String[] args ) {
+        AbstractApplicationContext appContext = null;
 
-        HttpServer server = HttpServer.create(new InetSocketAddress(8081), 0);
-        InventoryController inventoryController = new InventoryController(server);
+        try {
+            appContext = new ClassPathXmlApplicationContext("ApplicationContext.xml");
+            DataInitializer dataInitializer = appContext.getBean(DataInitializer.class);
+            dataInitializer.seedTheDb();
 
-        server.setExecutor(null); // creates a default executor
-        server.start();
-        System.out.println("SERVER STARTED");
+            InventoryService iService = appContext.getBean(InventoryServiceImpl.class);
+            List<Inventory> iList = iService.getInventoryList();
 
+            Stream.of(iList).forEach(System.out::println);
+
+        }  catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if(appContext != null)
+                appContext.close();
+        }
     }
 
-    private static void init() {
 
-    }
 
 }
