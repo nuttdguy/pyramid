@@ -9,22 +9,24 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import java.util.List;
 
+@Component
 public class InventoryDaoImpl implements InventoryDao {
-    private SessionFactory sessionFactory;
 
-    public SessionFactory getSessionFactory() {
-        return sessionFactory;
-    }
+    private final SessionFactory sessionFactory;
 
-    public void setSessionFactory(SessionFactory sessionFactory) {
+    @Autowired
+    public InventoryDaoImpl(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
     }
 
     @Override
     public Inventory addInventory(Inventory inventory) {
-        Session session = getSessionFactory().openSession(); // open a session
+        Session session = sessionFactory.openSession(); // open a session
         session.beginTransaction(); // begin a transaction
         session.persist(inventory);  // persist / save the object within the session
 
@@ -38,7 +40,7 @@ public class InventoryDaoImpl implements InventoryDao {
 
     @Override
     public Inventory getInventoryById(Long theId) {
-        Session session = getSessionFactory().openSession();
+        Session session = sessionFactory.openSession();
         Inventory inventory = session.get(Inventory.class, theId);
         session.close();
         return inventory;
@@ -46,7 +48,7 @@ public class InventoryDaoImpl implements InventoryDao {
 
     @Override
     public List<Inventory> getTheInventoryList() {
-        Session session = getSessionFactory().openSession();  // open session
+        Session session = sessionFactory.openSession();  // open session
         CriteriaBuilder cBuilder = session.getCriteriaBuilder();  // build query using builder
 
         // prepare query
@@ -62,4 +64,16 @@ public class InventoryDaoImpl implements InventoryDao {
         return iList;
 
     }
+
+    @Override
+    public Inventory updateInventory(Inventory inventory) {
+        return null;
+    }
+
+    @Override
+    public Integer deleteInventoryById(Long theId) {
+        return null;
+    }
+
+
 }

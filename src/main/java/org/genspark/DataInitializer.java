@@ -2,26 +2,14 @@ package org.genspark;
 
 import org.genspark.inventory.domain.Inventory;
 import org.genspark.inventory.repository.InventoryDao;
-//import org.springframework.boot.CommandLineRunner;
+import org.genspark.util.AppContextUtil;
 
 import java.util.Random;
+import java.util.stream.Stream;
 
-//@Component
-//public class DataInitializer implements CommandLineRunner {
 public class DataInitializer {
-    // all classes implementing commandLineRunner gets executed on boot
-    private InventoryDao inventoryDao;
 
-    public InventoryDao getInventoryDao() {
-        return inventoryDao;
-    }
-
-    public void setInventoryDao(InventoryDao inventoryDao) {
-        this.inventoryDao = inventoryDao;
-    }
-
-    public void seedTheDb() {
-//        inventoryDAO.deleteAll(); // delete all records from db before seeding data
+    public static void seedTheDb() {
 
         Random random = new Random();
         for (int i = 0; i < 5; i++) {
@@ -32,8 +20,12 @@ public class DataInitializer {
             inventory.setPrice(random.nextFloat() * 100);
             inventory.setWeight(random.nextFloat() * 30);
 
+            InventoryDao inventoryDao = AppContextUtil.getApplicationContext().getBean(InventoryDao.class);
             inventoryDao.addInventory(inventory);
+
+            Stream.of(inventoryDao.getTheInventoryList()).forEach(System.out::println);
         }
 
     }
+
 }

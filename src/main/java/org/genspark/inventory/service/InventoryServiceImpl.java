@@ -3,18 +3,19 @@ package org.genspark.inventory.service;
 
 import org.genspark.inventory.domain.Inventory;
 import org.genspark.inventory.repository.InventoryDao;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Component
 public class InventoryServiceImpl implements InventoryService {
 
-    private InventoryDao inventoryDao;
+    private final InventoryDao inventoryDao;
 
-    public InventoryDao getInventoryDao() {
-        return inventoryDao;
-    }
-
-    public void setInventoryDao(InventoryDao inventoryDao) {
+    @Autowired
+    InventoryServiceImpl(InventoryDao inventoryDao) {
         this.inventoryDao = inventoryDao;
     }
 
@@ -31,5 +32,15 @@ public class InventoryServiceImpl implements InventoryService {
     @Override
     public Inventory addInventory(Inventory inventory) {
         return inventoryDao.addInventory(inventory);
+    }
+
+    @Override
+    public Inventory updateInventory(Inventory inventory) {
+        return inventoryDao.updateInventory(inventory);
+    }
+
+    @Override
+    public Integer deleteInventoryById(Long theId) {
+        return inventoryDao.deleteInventoryById(theId);
     }
 }

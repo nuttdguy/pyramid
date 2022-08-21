@@ -2,3 +2,5 @@
 target/*
 src/main/resources/hibernate.cfg.xml
 src/main/resources/authDataSource.xml
+src/main/java/org/genspark/util/HibernateUtil.java
+src/main/resources/application.properties

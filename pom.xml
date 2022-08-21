@@ -1,62 +1,54 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
         http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
+    <modelVersion>4.0.0</modelVersion>
 
-  <groupId>org.genspark</groupId>
-  <artifactId>spring_hibernate</artifactId>
-  <version>1.0-SNAPSHOT</version>
-  <name>spring_hibernate</name>
+    <groupId>org.genspark</groupId>
+    <artifactId>spring_hibernate</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <name>spring_hibernate</name>
+
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.7.3</version>
+        <relativePath/>
+    </parent>
 
     <properties>
-        <springframework.version>5.2.22.RELEASE</springframework.version>
-        <springframework.test.version>2.7.2</springframework.test.version>
+        <spring.framework.version>5.2.22.RELEASE</spring.framework.version>
         <hibernate.version>5.6.10.Final</hibernate.version>
         <mysql.connector.version>8.0.28</mysql.connector.version>
         <java.version>18</java.version>
     </properties>
 
     <dependencies>
-
         <dependency>
-            <!-- utilized for instantiating, configuring and assembling beans by reading xml, annotations or java code  -->
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-context</artifactId>
-            <version>${springframework.version}</version>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
         <dependency>
-            <!-- utilized for accessing relational databases from an object-oriented language -->
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-orm</artifactId>
-            <version>${springframework.version}</version>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
         <dependency>
-            <!-- utilized for connecting to a MySQL db  -->
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-devtools</artifactId>
+            <scope>runtime</scope>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
             <version>${mysql.connector.version}</version>
-        </dependency>
-        <dependency>
-            <!-- hibernate core package -->
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-core</artifactId>
-            <version>${hibernate.version}</version>
-        </dependency>
-        <dependency>
-            <!-- hibernate implementations utilizing JPA specs -->
-            <groupId>org.hibernate.javax.persistence</groupId>
-            <artifactId>hibernate-jpa-2.1-api</artifactId>
-            <version>1.0.2.Final</version>
-        </dependency>
-        <dependency>
-            <!-- testing suite which includes jUnit, mockito and assert packages -->
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <version>${springframework.test.version}</version>
-            <scope>test</scope>
         </dependency>
     </dependencies>
 
@@ -65,15 +57,6 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-                <version>2.5.2</version>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <source>8</source>
-                    <target>8</target>
-                </configuration>
             </plugin>
         </plugins>
     </build>
