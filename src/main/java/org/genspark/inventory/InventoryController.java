@@ -43,7 +43,7 @@ public class InventoryController {
     }
 
     @DeleteMapping("/inventory/{theId}")
-    public Integer deleteInventory(@PathVariable("id") Long theId) {
+    public Integer deleteInventory(@PathVariable("theId") Long theId) {
         return inventoryServiceImpl.deleteInventoryById(theId);
     }
 

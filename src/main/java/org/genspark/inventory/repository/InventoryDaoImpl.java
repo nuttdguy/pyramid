@@ -1,9 +1,8 @@
 package org.genspark.inventory.repository;
 
 import org.genspark.inventory.domain.Inventory;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
+
+import javax.persistence.criteria.*;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -27,9 +26,14 @@ public class InventoryDaoImpl implements InventoryDao {
     @Override
     public Inventory addInventory(Inventory inventory) {
         Session session = sessionFactory.openSession(); // open a session
-        session.beginTransaction(); // begin a transaction
-        session.persist(inventory);  // persist / save the object within the session
 
+        session.beginTransaction(); // begin a transaction
+
+        if (inventory.getId() == null) {
+            session.persist(inventory);
+        } else {
+            session.merge(inventory);  // persist / save the object within the session
+        }
         // execute the transaction
         Transaction tx = session.getTransaction(); // get the transaction object
         tx.commit();  // commit the transaction to the db
@@ -42,6 +46,7 @@ public class InventoryDaoImpl implements InventoryDao {
     public Inventory getInventoryById(Long theId) {
         Session session = sessionFactory.openSession();
         Inventory inventory = session.get(Inventory.class, theId);
+
         session.close();
         return inventory;
     }
@@ -67,12 +72,41 @@ public class InventoryDaoImpl implements InventoryDao {
 
     @Override
     public Inventory updateInventory(Inventory inventory) {
-        return null;
+        Session session = sessionFactory.openSession();
+        CriteriaBuilder cBuilder = session.getCriteriaBuilder();
+
+        CriteriaUpdate<Inventory> update = cBuilder.createCriteriaUpdate(Inventory.class);
+        Root<Inventory> root = update.from(Inventory.class);
+
+        update.set("quantity", inventory.getQuantity());
+        update.set("cost", inventory.getCost());
+        update.set("price", inventory.getPrice());
+        update.set("weight", inventory.getWeight());
+        update.where(cBuilder.equal(root.get("id"), inventory.getId()));
+
+        Transaction tx = session.beginTransaction();
+        Integer count = session.createQuery(update).executeUpdate();
+        tx.commit();
+        session.close();
+
+        return getInventoryById(inventory.getId());
     }
 
     @Override
     public Integer deleteInventoryById(Long theId) {
-        return null;
+        Session session = sessionFactory.openSession();
+        CriteriaBuilder cBuilder = session.getCriteriaBuilder();
+
+        CriteriaDelete<Inventory> delete = cBuilder.createCriteriaDelete(Inventory.class);
+        Root<Inventory> root = delete.from(Inventory.class);
+        delete.where(cBuilder.equal(root.get("id"), theId));
+
+        Transaction tx = session.beginTransaction();
+        Integer count = session.createQuery(delete).executeUpdate();
+        tx.commit();
+        session.close();
+
+        return count;
     }
 
 
