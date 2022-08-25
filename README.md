@@ -12,3 +12,4 @@ pyramid-consulting
 9. spring_annotation (configuration)
 10. spring_rest_jpa
 11. html_css_bootstrap
+12. drink-frenzy-react
