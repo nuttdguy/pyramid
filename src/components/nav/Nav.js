@@ -1,16 +1,17 @@
+import {Link} from "react-router-dom";
 
 function Nav() {
 
     return (
-        <section class="row">
-            <div class="col col-md-8 g-0"></div>
-            <nav class="col col-md-4 g-0">
-                <ul class="list-group list-group-horizontal">
-                    <li class="list-group-item"><a href="index.html">Home</a></li>
-                    <li class="list-group-item"><a href="login.html">Login</a></li>
-                    <li class="list-group-item"><a href="logout.html">Logout</a></li>
-                    <li class="list-group-item"><a href="account.html">Account</a></li>
-                    <li class="list-group-item"><a href="checkout.html">Checkout</a></li>
+        <section className="row">
+            <div className="col col-md-8 g-0"></div>
+            <nav className="col col-md-4 g-0">
+                <ul className="list-group list-group-horizontal">
+                    <li className="list-group-item"><Link to="/" >Home </Link></li>
+                    <li className="list-group-item"><Link to="/checkout" >Checkout </Link></li>
+                    <li className="list-group-item"><Link to="/account" >Account </Link></li>
+                    <li className="list-group-item"><Link to="/" >Login </Link></li>
+                    <li className="list-group-item"><Link to="/" >Logout </Link></li>
                 </ul>
             </nav>
         </section>
