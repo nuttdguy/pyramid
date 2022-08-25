@@ -1,13 +1,13 @@
-import Home from "./home/Home";
+import Shop from "./shop/Shop";
 import Checkout from "./checkout/Checkout";
 import Account from "./account/Account";
 import {Routes, Route} from "react-router-dom";
 
-function Section() {
+function Body() {
 
     return (
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route path="/" element={<Shop />} />
           <Route path="/account" element={<Account />} />
           <Route path="/checkout" element={<Checkout />} />
         </Routes>
@@ -15,4 +15,4 @@ function Section() {
     
 }
 
-export default Section;
+export default Body;

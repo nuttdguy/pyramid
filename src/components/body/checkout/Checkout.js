@@ -43,10 +43,10 @@ class Checkout extends React.Component {
 
                 </div>
             </div>
-            
+{/*             
             <footer className="my-5 pt-5 text-muted text-center text-small">
                     <p className="mb-1">© 2022 Drink Frenzy</p>
-            </footer>
+            </footer> */}
 
         </section>
 
