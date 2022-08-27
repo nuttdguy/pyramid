@@ -11,5 +11,5 @@ pyramid-consulting
 8. spring_xml (configuration)
 9. spring_annotation (configuration)
 10. spring_rest_jpa
-11. html_css_bootstrap - hosted @ https://drink-frenzy.netlify.app/
-12. drink-frenzy-react
+11. html_css_bootstrap - https://drink-frenzy.netlify.app/
+12. drink-frenzy-react - https://drink-frenzy-react.netlify.app/
